@@ -7,7 +7,7 @@ type Question = {
   question: string
   choices: number[]
   answer: number
-  genre: string
+  instruction?: string
 }
 
 function generateChoices(answer: number): number[] {
@@ -20,24 +20,63 @@ function generateChoices(answer: number): number[] {
 }
 
 function generateQuestion(level: number): Question {
-  const type = Math.floor(Math.random() * 3)
+  const type = Math.floor(Math.random() * 4)
 
   if (type === 0) {
+    // 四則演算
     const a = Math.floor(Math.random() * (5 * level)) + 2
     const b = Math.floor(Math.random() * (5 * level)) + 2
     const answer = a + b
-    return { question: `${a} + ${b} = ?`, choices: generateChoices(answer), answer, genre: '四則演算' }
+    return { question: `${a} + ${b} = ?`, choices: generateChoices(answer), answer }
   } else if (type === 1) {
+    // 穴埋め
     const a = Math.floor(Math.random() * 9) + 2
     const b = Math.floor(Math.random() * 9) + 2
     const answer = a
-    return { question: `□ × ${b} = ${a * b}`, choices: generateChoices(answer), answer, genre: '穴埋め' }
-  } else {
+    return { question: `□ × ${b} = ${a * b}`, choices: generateChoices(answer), answer }
+  } else if (type === 2) {
+    // 数列
     const start = Math.floor(Math.random() * 5) + 1
     const diff = Math.floor(Math.random() * 4) + 2
     const seq = [start, start + diff, start + diff * 2, start + diff * 3]
     const answer = start + diff * 4
-    return { question: `${seq[0]}, ${seq[1]}, ${seq[2]}, ${seq[3]}, ?`, choices: generateChoices(answer), answer, genre: '数列' }
+    return { question: `${seq[0]}, ${seq[1]}, ${seq[2]}, ${seq[3]}, ?`, choices: generateChoices(answer), answer }
+  } else {
+    // 仲間はずれ
+    const patterns = [
+      () => {
+        // 1つだけ奇数
+        const evens = [2,4,6,8,10,12,14,16,18,20]
+        const odds = [3,5,7,9,11,13,15,17,19]
+        const picked = evens.sort(() => Math.random()-0.5).slice(0,3)
+        const odd = odds[Math.floor(Math.random()*odds.length)]
+        const answer = odd
+        const all = [...picked, odd].sort(() => Math.random()-0.5)
+        return { question: all.join(',  '), choices: all, answer, instruction: 'Which is the odd one out?' }
+      },
+      () => {
+        // 1つだけ素数でない
+        const primes = [2,3,5,7,11,13,17,19,23]
+        const nonPrimes = [4,6,8,9,10,12,14,15,16,18,20]
+        const picked = primes.sort(() => Math.random()-0.5).slice(0,3)
+        const nonPrime = nonPrimes[Math.floor(Math.random()*nonPrimes.length)]
+        const answer = nonPrime
+        const all = [...picked, nonPrime].sort(() => Math.random()-0.5)
+        return { question: all.join(',  '), choices: all, answer, instruction: 'Which is NOT a prime?' }
+      },
+      () => {
+        // 1つだけ平方数でない
+        const squares = [4,9,16,25,36,49,64]
+        const nonSquares = [6,8,10,12,14,15,18,20,24]
+        const picked = squares.sort(() => Math.random()-0.5).slice(0,3)
+        const nonSquare = nonSquares[Math.floor(Math.random()*nonSquares.length)]
+        const answer = nonSquare
+        const all = [...picked, nonSquare].sort(() => Math.random()-0.5)
+        return { question: all.join(',  '), choices: all, answer, instruction: 'Which is NOT a perfect square?' }
+      }
+    ]
+    const pattern = patterns[Math.floor(Math.random()*patterns.length)]()
+    return { question: pattern.question, choices: pattern.choices, answer: pattern.answer, instruction: pattern.instruction }
   }
 }
 
@@ -97,7 +136,9 @@ export default function Game() {
           <div className={`font-bold text-xl ${timerColor}`}>{timeLeft}s</div>
         </div>
         <div className="bg-white/5 border border-cyan-400/20 rounded-2xl p-8 text-center">
-          <p className="text-cyan-400/50 text-xs mb-2 tracking-widest">{question.genre}</p>
+          {question.instruction && (
+            <p className="text-cyan-400 text-sm mb-3 tracking-wide">{question.instruction}</p>
+          )}
           <p className="text-white text-3xl font-bold">{question.question}</p>
         </div>
         <div className="grid grid-cols-2 gap-3">
