@@ -1,8 +1,9 @@
 'use client'
 
 import { useSearchParams, useRouter } from 'next/navigation'
+import { Suspense } from 'react'
 
-export default function Result() {
+function ResultContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const score = Number(searchParams.get('score')) || 0
@@ -20,17 +21,13 @@ export default function Result() {
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
-
       <div className="relative z-10 w-full max-w-lg flex flex-col items-center gap-6">
-
         <div className="text-center">
           <p className="text-cyan-400/60 text-sm tracking-widest mb-2">YOUR SCORE</p>
           <p className="text-7xl font-bold text-white">{score}</p>
           <p className="text-cyan-400 text-lg mt-2">Top {percentile}% 🎉</p>
         </div>
-
         <div className="w-full border-t border-white/10" />
-
         <div className="w-full flex flex-col gap-3">
           <button
             onClick={() => {
@@ -41,14 +38,12 @@ export default function Result() {
           >
             Share on X 🚀
           </button>
-
           <button
             onClick={() => router.push('/countdown')}
             className="w-full py-4 bg-white/10 text-white font-bold text-lg rounded-full border border-white/20 hover:bg-white/20 transition"
           >
             Play Again
           </button>
-
           <button
             onClick={() => router.push('/')}
             className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
@@ -56,8 +51,15 @@ export default function Result() {
             Back to Home
           </button>
         </div>
-
       </div>
     </main>
+  )
+}
+
+export default function Result() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0A1628]" />}>
+      <ResultContent />
+    </Suspense>
   )
 }
