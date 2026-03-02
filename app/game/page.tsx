@@ -123,7 +123,7 @@ export default function Game() {
   const timerColor = timeLeft <= 10 ? 'text-red-400' : timeLeft <= 20 ? 'text-yellow-400' : 'text-cyan-400'
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-[#0A1628] relative overflow-hidden px-4">
+    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
@@ -137,7 +137,7 @@ export default function Game() {
         </div>
         <div className="bg-white/5 border border-cyan-400/20 rounded-2xl p-8 text-center">
           {question.instruction && (
-            <p className="text-cyan-400 text-sm mb-3 tracking-wide">{question.instruction}</p>
+            <p className="text-yellow-300 text-sm mb-3 tracking-wide">{question.instruction}</p>
           )}
           <p className="text-white text-3xl font-bold">{question.question}</p>
         </div>

@@ -19,7 +19,7 @@ export default function Countdown() {
   }, [count, router])
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-[#0A1628] relative overflow-hidden">
+    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
       
       {/* 背景の光エフェクト */}
       <div className="absolute inset-0 overflow-hidden">

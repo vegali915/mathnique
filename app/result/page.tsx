@@ -17,13 +17,13 @@ function ResultContent() {
     : `I scored ${score} pts on Mathnique! Think you can do better? 🎯`
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-[#0A1628] relative overflow-hidden px-4">
+    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
       <div className="relative z-10 w-full max-w-lg flex flex-col items-center gap-6">
         <div className="text-center">
-          <p className="text-cyan-400/60 text-sm tracking-widest mb-2">YOUR SCORE</p>
+          <p className="text-yellow-300/70 text-sm tracking-widest mb-2">YOUR SCORE</p>
           <p className="text-7xl font-bold text-white">{score}</p>
           <p className="text-cyan-400 text-lg mt-2">Top {percentile}% 🎉</p>
         </div>

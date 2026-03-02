@@ -8,7 +8,7 @@ export default function Home() {
 const router = useRouter()
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-[#0A1628] relative overflow-hidden">
+    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
       
       {/* 背景の光エフェクト */}
       <div className="absolute inset-0 overflow-hidden">
@@ -30,7 +30,7 @@ const router = useRouter()
           <h1 className="text-5xl font-bold text-white tracking-wider">
             Math<span className="text-cyan-400">nique</span>
           </h1>
-          <p className="text-cyan-400/60 text-sm mt-2 tracking-widest">
+          <p className="text-yellow-300/70 text-sm mt-2 tracking-widest">
             1-MINUTE MATH CHALLENGE
           </p>
         </div>
@@ -41,7 +41,7 @@ const router = useRouter()
         </button>
 
         {/* 残りプレイ回数 */}
-        <p className="text-cyan-400/50 text-sm">
+        <p className="text-yellow-300/70 text-sm">
           {playsLeft} plays remaining today
         </p>
 
