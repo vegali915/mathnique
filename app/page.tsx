@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import MathBackground from "./components/MathBackground";
 
 export default function Home() {
   const [playsLeft] = useState(3)
@@ -9,7 +10,7 @@ const router = useRouter()
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-      
+      <MathBackground />
       {/* 背景の光エフェクト */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
