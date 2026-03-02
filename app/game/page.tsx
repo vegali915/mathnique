@@ -117,7 +117,7 @@ export default function Game() {
     setTimeout(() => {
       setQuestion(generateQuestion(level))
       setAnswered(null)
-    }, 600)
+    }, 200)
   }
 
   const timerColor = timeLeft <= 10 ? 'text-red-400' : timeLeft <= 20 ? 'text-yellow-400' : 'text-cyan-400'
@@ -146,7 +146,7 @@ export default function Game() {
             <button
               key={i}
               onClick={() => handleAnswer(choice)}
-              className={`py-5 rounded-xl font-bold text-xl transition-all duration-200
+              className={`py-5 rounded-xl font-bold text-xl transition-colors
                 ${answered === null
                   ? 'bg-white/10 text-white border border-white/20 hover:bg-cyan-400/20 hover:border-cyan-400 hover:scale-105'
                   : choice === question.answer
