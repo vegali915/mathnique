@@ -88,7 +88,7 @@ function ResultContent() {
               <Tooltip
   contentStyle={{ background: '#0f2040', border: '1px solid #f472b6', borderRadius: '8px', color: '#ffffff', fontSize: '12px' }}
 itemStyle={{ color: '#ffffff' }}
-  formatter={() => [null, '']}
+  formatter={(value: any) => [`${value} people`, 'Players']}
   labelFormatter={(label) => `Score: ${label}`}
 />
               <ReferenceLine
