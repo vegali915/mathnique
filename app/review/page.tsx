@@ -99,7 +99,7 @@ export default function Review() {
         ) : (
           <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
             <p className="text-white font-bold mb-1">🎉 Perfect! No mistakes!</p>
-            <p className="text-white/60 text-sm mb-3">🔥 Can you beat your own score? Play again!</p>
+            <p className="text-white text-sm mb-3">🔥 Can you beat your own score? Play again!</p>
             <button
               onClick={() => router.push('/countdown')}
               className="w-full py-3 bg-cyan-400 text-[#0A1628] font-bold rounded-xl hover:bg-cyan-300 transition"
@@ -109,21 +109,22 @@ export default function Review() {
           </div>
         )}
 
-        {/* 戻るボタン */}
-  <div className="w-full flex flex-col gap-2">
-  <button
-    onClick={() => router.push('/result')}
-    className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
-  >
-    ← Back to Result
-  </button>
-  <button
-    onClick={() => router.push('/')}
-    className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
-  >
-    Back to Home
-  </button>
-</div>
+{/* 戻るボタン */}
+        <div className="w-full flex flex-col gap-2">
+          <button
+            onClick={() => router.back()}
+            className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
+          >
+            ← Back to Result
+          </button>
+          <button
+            onClick={() => router.push('/')}
+            className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
+          >
+            Back to Home
+          </button>
+        </div>
+
       </div>
     </main>
   )
