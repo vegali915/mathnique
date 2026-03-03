@@ -127,11 +127,17 @@ function ResultContent() {
             Share My Result 🚀
           </button>
           <button
-            onClick={() => router.push('/countdown')}
-            className="w-full py-4 bg-white/10 text-white font-bold text-lg rounded-full border border-white/20 hover:bg-white/20 transition"
-          >
-            Play Again
-          </button>
+  onClick={() => router.push('/review')}
+  className="w-full py-4 bg-white/10 text-white font-bold text-lg rounded-full border border-white/20 hover:bg-white/20 transition"
+>
+  📝 Review My Answers
+</button>
+<button
+  onClick={() => router.push('/countdown')}
+  className="w-full py-4 bg-white/10 text-white font-bold text-lg rounded-full border border-white/20 hover:bg-white/20 transition"
+>
+  Play Again
+</button>
           <button
             onClick={() => router.push('/')}
             className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"

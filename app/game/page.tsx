@@ -8,6 +8,16 @@ type Question = {
   choices: number[]
   answer: number
   instruction?: string
+  type: string
+}
+
+type HistoryItem = {
+  question: string
+  instruction?: string
+  myAnswer: number
+  correctAnswer: number
+  isCorrect: boolean
+  type: string
 }
 
 function generateChoices(answer: number): number[] {
@@ -26,18 +36,18 @@ function generateQuestion(level: number): Question {
     const a = Math.floor(Math.random() * (5 * level)) + 2
     const b = Math.floor(Math.random() * (5 * level)) + 2
     const answer = a + b
-    return { question: `${a} + ${b} = ?`, choices: generateChoices(answer), answer }
+    return { question: `${a} + ${b} = ?`, choices: generateChoices(answer), answer, type: 'arithmetic' }
   } else if (type === 1) {
     const a = Math.floor(Math.random() * 9) + 2
     const b = Math.floor(Math.random() * 9) + 2
     const answer = a
-    return { question: `□ × ${b} = ${a * b}`, choices: generateChoices(answer), answer }
+    return { question: `□ × ${b} = ${a * b}`, choices: generateChoices(answer), answer, type: 'fillblank' }
   } else if (type === 2) {
     const start = Math.floor(Math.random() * 5) + 1
     const diff = Math.floor(Math.random() * 4) + 2
     const seq = [start, start + diff, start + diff * 2, start + diff * 3]
     const answer = start + diff * 4
-    return { question: `${seq[0]}, ${seq[1]}, ${seq[2]}, ${seq[3]}, ?`, choices: generateChoices(answer), answer }
+    return { question: `${seq[0]}, ${seq[1]}, ${seq[2]}, ${seq[3]}, ?`, choices: generateChoices(answer), answer, type: 'sequence' }
   } else {
     const patterns = [
       () => {
@@ -69,7 +79,7 @@ function generateQuestion(level: number): Question {
       }
     ]
     const pattern = patterns[Math.floor(Math.random()*patterns.length)]()
-    return { question: pattern.question, choices: pattern.choices, answer: pattern.answer, instruction: pattern.instruction }
+    return { question: pattern.question, choices: pattern.choices, answer: pattern.answer, instruction: pattern.instruction, type: 'oddone' }
   }
 }
 
@@ -83,21 +93,34 @@ export default function Game() {
   const [timeLeft, setTimeLeft] = useState(60)
   const [answered, setAnswered] = useState<'correct' | 'wrong' | null>(null)
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
+  const [history, setHistory] = useState<HistoryItem[]>([])
 
   useEffect(() => {
     if (timeLeft === 0) {
+      sessionStorage.setItem('gameHistory', JSON.stringify(history))
       router.push(`/result?score=${score}`)
       return
     }
     const timer = setTimeout(() => setTimeLeft(t => t - 1), 1000)
     return () => clearTimeout(timer)
-  }, [timeLeft, score, router])
+  }, [timeLeft, score, router, history])
 
   const handleAnswer = (choice: number) => {
     if (answered) return
     const isCorrect = choice === question.answer
     setAnswered(isCorrect ? 'correct' : 'wrong')
     setSelectedChoice(choice)
+
+    const newHistory: HistoryItem = {
+      question: question.question,
+      instruction: question.instruction,
+      myAnswer: choice,
+      correctAnswer: question.answer,
+      isCorrect,
+      type: question.type
+    }
+    setHistory(prev => [...prev, newHistory])
+
     if (isCorrect) {
       const newCombo = combo + 1
       setCombo(newCombo)
