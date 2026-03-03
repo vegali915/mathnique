@@ -27,7 +27,7 @@ export default function Countdown() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center gap-6">
-        <p className="text-cyan-400/60 text-lg tracking-widest">GET READY</p>
+        <p className="text-yellow-300/70 text-lg tracking-widest">GET READY</p>
         <div className="text-9xl font-bold text-white" style={{textShadow: '0 0 40px rgba(34,211,238,0.8)'}}>
           {count === 0 ? 'GO!' : count}
         </div>
