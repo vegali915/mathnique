@@ -1,5 +1,15 @@
 import { supabase } from './supabase'
 
+// 開発者メールアドレス（制限なし）
+const DEV_EMAILS = ['bisyokukagaku723@gmail.com']
+
+// 開発者かどうかチェック
+async function isDeveloper(): Promise<boolean> {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user?.email) return false
+  return DEV_EMAILS.includes(user.email)
+}
+
 // 匿名IDを取得または作成（ログインしていないユーザー用）
 export function getAnonymousId(): string {
   if (typeof window === 'undefined') return ''
@@ -13,6 +23,10 @@ export function getAnonymousId(): string {
 
 // 今日のプレイ情報を取得
 export async function getTodayPlayInfo() {
+  if (await isDeveloper()) {
+    return { playCount: 0, sharedBonus: false }
+  }
+
   const anonymousId = getAnonymousId()
   const today = new Date().toISOString().split('T')[0]
 
@@ -35,6 +49,8 @@ export async function getTodayPlayInfo() {
 
 // プレイ回数を記録
 export async function recordPlay() {
+  if (await isDeveloper()) return
+
   const anonymousId = getAnonymousId()
   const today = new Date().toISOString().split('T')[0]
 
@@ -46,7 +62,6 @@ export async function recordPlay() {
     .single()
 
   if (!data) {
-    // 今日初めてのプレイ
     await supabase.from('daily_plays').insert({
       anonymous_id: anonymousId,
       play_date: today,
@@ -54,7 +69,6 @@ export async function recordPlay() {
       shared_bonus: false
     })
   } else {
-    // プレイ回数を+1
     await supabase
       .from('daily_plays')
       .update({ play_count: data.play_count + 1 })
@@ -65,6 +79,8 @@ export async function recordPlay() {
 
 // シェアボーナスを付与
 export async function applyShareBonus() {
+  if (await isDeveloper()) return
+
   const anonymousId = getAnonymousId()
   const today = new Date().toISOString().split('T')[0]
 
@@ -77,6 +93,8 @@ export async function applyShareBonus() {
 
 // プレイ可能かチェック
 export async function canPlay(): Promise<boolean> {
+  if (await isDeveloper()) return true
+
   const { playCount, sharedBonus } = await getTodayPlayInfo()
   const maxPlays = sharedBonus ? 5 : 3
   return playCount < maxPlays
