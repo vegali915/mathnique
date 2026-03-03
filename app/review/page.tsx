@@ -110,13 +110,20 @@ export default function Review() {
         )}
 
         {/* 戻るボタン */}
-        <button
-          onClick={() => router.push('/result')}
-          className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
-        >
-          ← Back to Result
-        </button>
-
+  <div className="w-full flex flex-col gap-2">
+  <button
+    onClick={() => router.push('/result')}
+    className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
+  >
+    ← Back to Result
+  </button>
+  <button
+    onClick={() => router.push('/')}
+    className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
+  >
+    Back to Home
+  </button>
+</div>
       </div>
     </main>
   )
