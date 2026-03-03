@@ -3,8 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense, useState, useEffect } from 'react'
 import { AreaChart, Area, XAxis, YAxis, ReferenceLine, ResponsiveContainer, Tooltip } from 'recharts'
-import { getTodayPlayInfo, applyShareBonus } from '../../lib/playCount'
-
+import { getTodayPlayInfo, applyShareBonus, canPlay, recordPlay } from '../../lib/playCount'
 function generateDistributionData() {
   const data = []
   for (let i = 0; i <= 1000; i += 20) {
@@ -73,9 +72,10 @@ function ResultContent() {
     setShowShare(false)
   }
 
-  // 何回目のプレイかで結果画面の表示を変える
-  const showSharePromo = !hasShared && playCount <= 2
-  const showPaywall = playCount >= 3
+// バナー表示条件
+  const playsRemaining = hasShared ? Math.max(0, 5 - playCount) : Math.max(0, 3 - playCount)
+  const showSharePromo = !hasShared
+  const showPaywall = playsRemaining === 0 
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
@@ -136,19 +136,23 @@ function ResultContent() {
           </ResponsiveContainer>
         </div>
 
-       {/* シェアで+2回バナー（1〜2回目・未シェア時のみ） */}
+  {/* シェアで+2回バナー（1〜2回目・未シェア時のみ） */}
         {showSharePromo && (
-          <div style={{border: '1px solid rgba(253,224,71,0.6)', backgroundColor: 'rgba(253,224,71,0.1)'}} className="w-full rounded-2xl p-4 text-center">
-            <p className="text-yellow-300 font-bold text-sm">🎁 シェアするとあと2回プレイできます！</p>
-            <p className="text-white text-xs mt-1">1日1回限り</p>
+          <div
+            onClick={() => setShowShare(true)}
+            style={{border: '1px solid rgba(253,224,71,0.6)', backgroundColor: 'rgba(253,224,71,0.1)', cursor: 'pointer'}}
+            className="w-full rounded-2xl p-4 text-center hover:opacity-80 transition"
+          >
+            <p className="text-yellow-300 font-bold text-sm">🎁 Share to unlock 2 more plays!</p>
+            <p className="text-white text-xs mt-1">Once per day</p>
           </div>
-        )}
+              )}
 
-        {/* 課金バナー（3回目以降） */}
+       {/* 課金バナー（3回目以降） */}
         {showPaywall && (
-          <div className="w-full bg-cyan-400/10 border border-cyan-400/30 rounded-2xl p-4 text-center">
-            <p className="text-cyan-400 font-bold text-sm">⚡ 無制限でプレイしたいですか？</p>
-            <p className="text-white/60 text-xs mt-1">月額$2.99で無制限プレイ＋練習モード</p>
+          <div style={{border: '1px solid rgba(251,146,60,0.6)', backgroundColor: 'rgba(251,146,60,0.1)'}} className="w-full rounded-2xl p-4 text-center">
+            <p style={{color: '#fb923c'}} className="font-bold text-sm">⚡ Want unlimited plays?</p>
+            <p style={{color: 'white'}} className="text-xs mt-1">Upgrade to Pro · Unlimited plays + Practice Mode</p>
           </div>
         )}
 
@@ -158,13 +162,8 @@ function ResultContent() {
           {/* シェアボタン */}
           <button
             onClick={() => setShowShare(true)}
-            className={`w-full py-4 font-bold text-lg rounded-full transition shadow-[0_0_20px_rgba(34,211,238,0.3)] ${
-              hasShared
-                ? 'bg-white/10 text-white/50 border border-white/20'
-                : 'bg-cyan-400 text-[#0A1628] hover:bg-cyan-300'
-            }`}
-          >
-            {hasShared ? 'Shared ✅' : 'Share My Result 🚀'}
+  className="w-full py-4 bg-cyan-400 text-[#0A1628] font-bold text-lg rounded-full hover:bg-cyan-300 transition shadow-[0_0_20px_rgba(34,211,238,0.3)]"        >
+            Share My Result 🚀
           </button>
 
           <button
@@ -173,12 +172,23 @@ function ResultContent() {
           >
             📝 Review My Answers
           </button>
-          <button
-            onClick={() => router.push('/countdown')}
+<button
+            onClick={async () => {
+              const ok = await canPlay()
+              if (!ok) {
+                router.push('/')
+                return
+              }
+              await recordPlay()
+              router.push('/countdown')
+            }}
             className="w-full py-4 bg-white/10 text-white font-bold text-lg rounded-full border border-white/20 hover:bg-white/20 transition"
           >
             Play Again
           </button>
+          <p className="text-white text-xs text-center">
+            <span style={{color: '#facc15'}}>{playsRemaining}</span> plays remaining today
+          </p>
           <button
             onClick={() => router.push('/')}
             className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
@@ -187,7 +197,6 @@ function ResultContent() {
           </button>
         </div>
       </div>
-
       {/* シェアポップアップ */}
       {showShare && (
         <div className="fixed inset-0 z-50 flex items-end justify-center pb-8 px-4">

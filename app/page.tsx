@@ -96,11 +96,13 @@ export default function Home() {
               className="px-16 py-5 text-gray-300 font-bold text-xl rounded-full cursor-not-allowed"
             >
               PLAY
-            </button>
+ </button>
             <p style={{color: '#FF0000'}} className="text-sm font-bold">No plays left for today</p>
-            <p className="text-white text-xs">Come back tomorrow!</p>
-          </div>
-        )}
+            <div style={{border: '1px solid rgba(251,146,60,0.6)', backgroundColor: 'rgba(251,146,60,0.1)'}} className="w-full rounded-2xl p-4 text-center mt-2">
+              <p style={{color: '#fb923c'}} className="font-bold text-sm">⚡ Want unlimited plays?</p>
+              <p style={{color: 'white'}} className="text-xs mt-1">Upgrade to Pro · Unlimited plays + Practice Mode</p>
+            </div>
+          </div>             )}
 
         {/* 残りプレイ回数 */}
         {!isLoading && canPlayToday && (
