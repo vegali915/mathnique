@@ -203,9 +203,6 @@ function ResultContent() {
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowShare(false)} />
           <div className="relative z-10 w-full max-w-lg bg-[#0f2040] rounded-3xl p-6 flex flex-col gap-4">
             <p className="text-white font-bold text-center text-lg">Share My Result! 🚀</p>
-            {!hasShared && (
-              <p className="text-yellow-300 text-sm text-center">シェアすると+2回プレイできます！🎁</p>
-            )}
             <button
               onClick={() => handleShare(() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank'))}
               className="w-full py-4 bg-black text-white font-bold text-lg rounded-2xl hover:bg-zinc-800 transition"

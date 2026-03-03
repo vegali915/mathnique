@@ -104,13 +104,12 @@ export default function Home() {
             </div>
           </div>             )}
 
-        {/* 残りプレイ回数 */}
+{/* 残りプレイ回数 */}
         {!isLoading && canPlayToday && (
-          <p className="text-yellow-300/70 text-sm">
-            {playsLeft} {playsLeft === 1 ? 'play' : 'plays'} left today
+          <p className="text-white text-sm">
+            <span style={{color: '#facc15'}}>{playsLeft}</span> {playsLeft === 1 ? 'play' : 'plays'} left today
           </p>
         )}
-
       </div>
     </main>
   )
