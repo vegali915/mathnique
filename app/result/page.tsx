@@ -2,13 +2,13 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense, useState } from 'react'
-import { AreaChart, Area, XAxis, YAxis, ReferenceLine, ResponsiveContainer,Tooltip } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, ReferenceLine, ResponsiveContainer, Tooltip } from 'recharts'
 
 function generateDistributionData() {
   const data = []
   for (let i = 0; i <= 1000; i += 20) {
-  const mean = 250
-  const std = 150
+    const mean = 250
+    const std = 150
     const value = Math.exp(-Math.pow(i - mean, 2) / (2 * std * std))
     data.push({ score: i, value: Math.round(value * 1000) })
   }
@@ -22,15 +22,27 @@ function ResultContent() {
   const [showShare, setShowShare] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const percentile = score > 500 ? 5 : score > 420 ? 10 : score > 350 ? 15 : score > 280 ? 20 : score > 200 ? 30 : 50
+  const percentile = score > 600 ? 1 : score > 500 ? 5 : score > 420 ? 10 : score > 350 ? 15 : score > 280 ? 20 : score > 200 ? 30 : 0
   const distributionData = generateDistributionData()
   const userScoreRounded = Math.min(Math.round(score / 20) * 20, 1000)
 
-  const shareText = percentile <= 5
-  ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top 5%! Can you beat me? 🔥\nTry Mathnique → mathnique.vercel.app`
-  : percentile <= 15
-  ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top ${percentile}%! Think you can beat me? 💡\nTry Mathnique → mathnique.vercel.app`
-  : `I just scored ${score} pts on a 1-minute math challenge! Can you beat my score? 🎯\nTry Mathnique → mathnique.vercel.app`
+  const getMessage = () => {
+    if (percentile === 1) return '🏆 Legendary! You\'re a math genius!'
+    if (percentile === 5) return '🔥 Outstanding! You\'re in the elite!'
+    if (percentile === 10) return '⭐ Excellent! You\'re crushing it!'
+    if (percentile === 15) return '💪 Amazing effort! You\'re so close to the top — one more game?'
+    if (percentile === 20) return '🎯 Great performance! Top 10% is totally within your reach!'
+    if (percentile === 30) return '🚀 Solid effort! The more you play, the better you get!'
+    return '🌱 Great start! Every top player began right here!'
+  }
+
+  const shareText = percentile <= 1
+    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top 1%! Can you beat me? 🏆\nTry Mathnique → mathnique.vercel.app`
+    : percentile <= 5
+    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top 5%! Can you beat me? 🔥\nTry Mathnique → mathnique.vercel.app`
+    : percentile <= 15
+    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top ${percentile}%! Think you can beat me? 💡\nTry Mathnique → mathnique.vercel.app`
+    : `I just scored ${score} pts on a 1-minute math challenge! Can you beat my score? 🎯\nTry Mathnique → mathnique.vercel.app`
 
   const shareUrl = 'https://mathnique.vercel.app'
 
@@ -50,7 +62,10 @@ function ResultContent() {
         <div className="text-center">
           <p className="text-yellow-300/70 text-sm tracking-widest mb-2">YOUR SCORE</p>
           <p className="text-7xl font-bold text-white">{score}</p>
-          <p className="text-cyan-400 text-lg mt-2">Top {percentile}% 🎉</p>
+          {percentile > 0 ? (
+            <p className="text-cyan-400 text-lg mt-2">Top {percentile}%</p>
+          ) : null}
+          <p className="text-white/80 text-sm mt-2">{getMessage()}</p>
         </div>
 
         {/* スコア分布グラフ */}
@@ -64,20 +79,20 @@ function ResultContent() {
                   <stop offset="95%" stopColor="#f472b6" stopOpacity={0} />
                 </linearGradient>
               </defs>
-             <XAxis
-  dataKey="score"
-  tick={{ fill: '#ffffff', fontSize: 10 }}
-  tickLine={false}
-  axisLine={false}
-  label={{ value: 'Score', position: 'insideBottom', fill: '#ffffff', fontSize: 11, offset: -5 }}
-/>
-<YAxis
-  tick={{ fill: '#ffffff', fontSize: 10 }}
-  tickLine={false}
-  axisLine={false}
-  width={55}
-  label={{ value: 'Players', angle: -90, position: 'insideLeft', fill: '#ffffff', fontSize: 11, offset: 10 }}
-/>
+              <XAxis
+                dataKey="score"
+                tick={{ fill: '#ffffff', fontSize: 10 }}
+                tickLine={false}
+                axisLine={false}
+                label={{ value: 'Score', position: 'insideBottom', fill: '#ffffff', fontSize: 11, offset: -5 }}
+              />
+              <YAxis
+                tick={{ fill: '#ffffff', fontSize: 10 }}
+                tickLine={false}
+                axisLine={false}
+                width={55}
+                label={{ value: 'Players', angle: -90, position: 'insideLeft', fill: '#ffffff', fontSize: 11, offset: 10 }}
+              />
               <Area
                 type="monotone"
                 dataKey="value"
@@ -86,11 +101,11 @@ function ResultContent() {
                 fill="url(#colorPink)"
               />
               <Tooltip
-  contentStyle={{ background: '#0f2040', border: '1px solid #f472b6', borderRadius: '8px', color: '#ffffff', fontSize: '12px' }}
-itemStyle={{ color: '#ffffff' }}
-  formatter={(value: any) => [value, 'Players']}
-  labelFormatter={(label) => `Score: ${label}`}
-/>
+                contentStyle={{ background: '#0f2040', border: '1px solid #f472b6', borderRadius: '8px', color: '#ffffff', fontSize: '12px' }}
+                itemStyle={{ color: '#ffffff' }}
+                formatter={(value: any) => [value, 'Players']}
+                labelFormatter={(label) => `Score: ${label}`}
+              />
               <ReferenceLine
                 x={userScoreRounded}
                 stroke="#facc15"
