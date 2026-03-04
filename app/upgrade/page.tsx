@@ -39,25 +39,24 @@ export default function UpgradePage() {
           <div className="text-5xl font-bold mb-1">$2.99</div>
           <div className="text-gray-400 mb-6">per month</div>
           
-          <ul className="text-left space-y-3 mb-8">
-            <li className="flex items-center gap-3">
-              <span className="text-green-400">✓</span>
-              <span>Unlimited plays every day</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="text-green-400">✓</span>
-              <span>Practice mode by category</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="text-green-400">✓</span>
-              <span>Track your progress over time</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="text-green-400">✓</span>
-              <span>Support indie development ❤️</span>
-            </li>
-          </ul>
-
+<ul className="text-left space-y-3 mb-8">
+  <li className="flex items-center gap-3">
+    <span>🔓</span>
+    <span>Unlimited plays every day</span>
+  </li>
+  <li className="flex items-center gap-3">
+    <span>🔓</span>
+    <span>Practice mode by category</span>
+  </li>
+  <li className="flex items-center gap-3">
+    <span>🔓</span>
+    <span>Track your progress over time</span>
+  </li>
+  <li className="flex items-center gap-3">
+    <span>🔓</span>
+    <span>Challenge Mode — can you conquer the hard questions?</span>
+  </li>
+</ul>
           <button
             onClick={handleUpgrade}
             disabled={loading}
