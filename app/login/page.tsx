@@ -10,6 +10,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(false)
+  const [showEmailForm, setShowEmailForm] = useState(false)
 
   async function handleGoogleLogin() {
     setIsLoading(true)
@@ -89,22 +90,34 @@ export default function Login() {
         </div>
 
         {/* Email Login */}
-        <div className="w-full flex flex-col gap-3">
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full py-4 px-5 bg-white/10 text-white placeholder-white/40 rounded-full border border-white/20 focus:outline-none focus:border-cyan-400"
-          />
+        {!showEmailForm ? (
           <button
-            onClick={handleEmailLogin}
-            disabled={isLoading}
-            className="w-full py-4 bg-cyan-400 text-[#0A1628] font-bold text-lg rounded-full hover:bg-cyan-300 transition"
+            onClick={() => setShowEmailForm(true)}
+            className="w-full py-4 bg-white/10 text-white font-bold text-lg rounded-full border border-white/20 hover:bg-white/20 transition"
           >
-            {isLoading ? 'Sending...' : 'Continue with Email'}
+            Continue with Email
           </button>
-        </div>
+        ) : (
+          <div className="w-full flex flex-col gap-3">
+            <p className="text-white text-xs text-center">
+               We'll email you a secure login link.
+            </p>
+            <input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full py-4 px-5 bg-white/10 text-white placeholder-white/40 rounded-full border border-white/20 focus:outline-none focus:border-cyan-400"
+            />
+            <button
+              onClick={handleEmailLogin}
+              disabled={isLoading}
+              className="w-full py-4 bg-cyan-400 text-[#0A1628] font-bold text-lg rounded-full hover:bg-cyan-300 transition"
+            >
+              {isLoading ? 'Sending...' : 'Send Login Link'}
+            </button>
+          </div>
+        )}
 
         {/* Message */}
         {message && (
