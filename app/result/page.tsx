@@ -148,14 +148,17 @@ function ResultContent() {
           </div>
               )}
 
-       {/* 課金バナー（3回目以降） */}
-        {showPaywall && (
-          <div style={{border: '1px solid rgba(251,146,60,0.6)', backgroundColor: 'rgba(251,146,60,0.1)'}} className="w-full rounded-2xl p-4 text-center">
-            <p style={{color: '#fb923c'}} className="font-bold text-sm">⚡ Want unlimited plays?</p>
-            <p style={{color: 'white'}} className="text-xs mt-1">Upgrade to Pro · Unlimited plays + Practice Mode</p>
-          </div>
-        )}
-
+{/* 課金バナー（3回目以降） */}
+{showPaywall && (
+  <div
+    onClick={() => router.push('/upgrade')}
+    style={{border: '1px solid rgba(251,146,60,0.6)', backgroundColor: 'rgba(251,146,60,0.1)', cursor: 'pointer'}}
+    className="w-full rounded-2xl p-4 text-center hover:opacity-80 transition"
+  >
+    <p style={{color: '#fb923c'}} className="font-bold text-sm">⚡ Want unlimited plays?</p>
+    <p style={{color: 'white'}} className="text-xs mt-1">Upgrade to Pro · Unlimited plays + Practice Mode</p>
+  </div>
+)}
         <div className="w-full border-t border-white/10" />
 
         <div className="w-full flex flex-col gap-3">
