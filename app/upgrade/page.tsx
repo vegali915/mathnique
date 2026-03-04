@@ -54,7 +54,7 @@ export default function UpgradePage() {
   </li>
   <li className="flex items-center gap-3">
     <span>🔓</span>
-    <span>Challenge Mode — can you conquer the hard questions?</span>
+    <span>Expert Mode — dare to take on harder questions?</span>
   </li>
 </ul>
           <button
