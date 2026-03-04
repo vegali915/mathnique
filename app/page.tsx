@@ -47,19 +47,16 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
 
-      {/* ハンバーガーメニューボタン（左上） */}
-      <div className="absolute top-6 left-6">
+   {/* メニューボタン（左上） */}
+      <div style={{position: 'fixed', top: '24px', left: '24px', zIndex: 20}}>
         <button
           onClick={() => setMenuOpen(true)}
-          className="text-white/70 hover:text-white transition"
+          className="text-white text-sm border border-cyan-400/30 px-4 py-2 rounded-full hover:bg-cyan-400/10 transition flex items-center gap-1"
         >
-          <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
+          <span>☰</span>
+          <span>MENU</span>
         </button>
-      </div>
+                 </div>
 
       {/* ログイン/アカウントボタン（右上） */}
       <div className="absolute top-6 right-6">
@@ -132,51 +129,50 @@ export default function Home() {
         )}
       </div>
 
-      {/* ハンバーガーメニュー */}
+ {/* ハンバーガーメニュー */}
       {menuOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div className="absolute inset-0 bg-black/60" onClick={() => setMenuOpen(false)} />
           <div className="relative z-10 w-72 h-full bg-[#0f2040] flex flex-col p-8 gap-4">
             <button
               onClick={() => setMenuOpen(false)}
-              className="self-end text-white/50 hover:text-white transition mb-4"
+              className="self-end text-white hover:text-cyan-400 transition mb-4 text-xl"
             >
               ✕
             </button>
-            <button
+  <button
               onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
-              className="w-full py-3 bg-yellow-400 text-gray-900 font-bold rounded-xl hover:bg-yellow-300 transition"
+              className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
             >
               ⚡ Upgrade to Pro
-            </button>
-            <button
+            </button>          
+             <button
               onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
               className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
             >
               🔒 Practice Mode
             </button>
+            <button
+              onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
+              className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
+            >
+              🔒 Expert Mode
+            </button>
             <div className="border-t border-white/10 my-2" />
             <button
-              onClick={() => { setMenuOpen(false); router.push(user ? '/account' : '/login') }}
-              className="w-full py-3 text-cyan-400 text-left hover:text-cyan-300 transition"
-            >
-              {user ? 'My Account' : 'Login / Sign Up'}
-            </button>
-            <button
               onClick={() => setMenuOpen(false)}
-              className="w-full py-3 text-white/50 text-left hover:text-white transition"
+              className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
             >
               Terms of Service
             </button>
             <button
               onClick={() => setMenuOpen(false)}
-              className="w-full py-3 text-white/50 text-left hover:text-white transition"
+              className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
             >
               Privacy Policy
             </button>
           </div>
         </div>
-      )}
-    </main>
+      )}   </main>
   )
 }
