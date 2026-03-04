@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation'
 import MathBackground from "./components/MathBackground"
 import { getTodayPlayInfo, recordPlay, canPlay } from '../lib/playCount'
 import { supabase } from '../lib/supabase'
+import { getSubscriptionStatus } from '../lib/subscription'
 
 export default function Home() {
   const [playsLeft, setPlaysLeft] = useState(3)
   const [isLoading, setIsLoading] = useState(true)
   const [canPlayToday, setCanPlayToday] = useState(true)
   const [user, setUser] = useState<any>(null)
+  const [isPro, setIsPro] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const router = useRouter()
 
@@ -22,8 +24,11 @@ export default function Home() {
   async function loadUser() {
     const { data: { session } } = await supabase.auth.getSession()
     setUser(session?.user ?? null)
+    if (session?.user) {
+      const pro = await getSubscriptionStatus()
+      setIsPro(pro)
+    }
   }
-
   async function loadPlayInfo() {
     const { playCount, sharedBonus } = await getTodayPlayInfo()
     const maxPlays = sharedBonus ? 5 : 3
@@ -129,7 +134,7 @@ export default function Home() {
         )}
       </div>
 
- {/* ハンバーガーメニュー */}
+       {/* ハンバーガーメニュー */}
       {menuOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div className="absolute inset-0 bg-black/60" onClick={() => setMenuOpen(false)} />
@@ -140,25 +145,38 @@ export default function Home() {
             >
               ✕
             </button>
-  <button
-              onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
-              className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
-            >
-              ⚡ Upgrade to Pro
-            </button>          
-             <button
-              onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
-              className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
-            >
-              🔒 Practice Mode
-            </button>
+
+            {/* 未課金ユーザーのみUpgrade to Proを表示 */}
+            {!isPro && (
+              <button
+                onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
+                className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
+              >
+                ⚡ Upgrade to Pro
+              </button>
+            )}
+
             <button
-              onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
-              className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
+              onClick={() => { setMenuOpen(false); isPro ? router.push('/practice') : router.push('/upgrade') }}
+              className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-cyan-400/20 text-cyan-400 border-cyan-400/30 hover:bg-cyan-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
             >
-              🔒 Expert Mode
+              {isPro ? '✅ Practice Mode' : '🔒 Practice Mode'}
             </button>
+
+            <button
+              onClick={() => { setMenuOpen(false); isPro ? router.push('/expert') : router.push('/upgrade') }}
+              className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-yellow-400/20 text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
+            >
+              {isPro ? '🏆 Expert Mode' : '🔒 Expert Mode'}
+            </button>
+
             <div className="border-t border-white/10 my-2" />
+            <button
+              onClick={() => { setMenuOpen(false); router.push(user ? '/account' : '/login') }}
+              className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
+            >
+              {user ? 'My Account' : 'Login / Sign Up'}
+            </button>
             <button
               onClick={() => setMenuOpen(false)}
               className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
@@ -173,6 +191,6 @@ export default function Home() {
             </button>
           </div>
         </div>
-      )}   </main>
+           )}   </main>
   )
 }
