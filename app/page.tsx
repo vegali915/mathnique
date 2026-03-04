@@ -19,8 +19,8 @@ export default function Home() {
   }, [])
 
   async function loadUser() {
-    const { data: { user } } = await supabase.auth.getUser()
-    setUser(user)
+    const { data: { session } } = await supabase.auth.getSession()
+    setUser(session?.user ?? null)
   }
 
   async function loadPlayInfo() {
