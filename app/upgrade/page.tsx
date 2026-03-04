@@ -66,13 +66,13 @@ export default function UpgradePage() {
           </button>
         </div>
 
-        <button
-          onClick={() => router.back()}
+         <button
+          onClick={() => router.push('/review')}
           className="text-gray-500 hover:text-gray-300 transition"
         >
           ← Go back
         </button>
-      </div>
+             </div>
     </main>
   )
 }
