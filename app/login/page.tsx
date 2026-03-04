@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '../../lib/supabase'
 
-export default function Login() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirect') || '/'
@@ -138,5 +138,13 @@ export default function Login() {
 
       </div>
     </main>
+  )
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0A1628]" />}>
+      <LoginForm />
+    </Suspense>
   )
 }
