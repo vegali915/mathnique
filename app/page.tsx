@@ -11,6 +11,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [canPlayToday, setCanPlayToday] = useState(true)
   const [user, setUser] = useState<any>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -44,6 +45,20 @@ export default function Home() {
       <MathBackground />
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
+      </div>
+
+      {/* ハンバーガーメニューボタン（左上） */}
+      <div className="absolute top-6 left-6">
+        <button
+          onClick={() => setMenuOpen(true)}
+          className="text-white/70 hover:text-white transition"
+        >
+          <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
       </div>
 
       {/* ログイン/アカウントボタン（右上） */}
@@ -96,21 +111,72 @@ export default function Home() {
               className="px-16 py-5 text-gray-300 font-bold text-xl rounded-full cursor-not-allowed"
             >
               PLAY
- </button>
+            </button>
             <p style={{color: '#FF0000'}} className="text-sm font-bold">No plays left for today</p>
-            <div style={{border: '1px solid rgba(251,146,60,0.6)', backgroundColor: 'rgba(251,146,60,0.1)'}} className="w-full rounded-2xl p-4 text-center mt-2">
+            <div
+              onClick={() => router.push('/upgrade')}
+              style={{border: '1px solid rgba(251,146,60,0.6)', backgroundColor: 'rgba(251,146,60,0.1)', cursor: 'pointer'}}
+              className="w-full rounded-2xl p-4 text-center mt-2 hover:opacity-80 transition"
+            >
               <p style={{color: '#fb923c'}} className="font-bold text-sm">⚡ Want unlimited plays?</p>
               <p style={{color: 'white'}} className="text-xs mt-1">Upgrade to Pro · Unlimited plays + Practice Mode</p>
             </div>
-          </div>             )}
+          </div>
+        )}
 
-{/* 残りプレイ回数 */}
+        {/* 残りプレイ回数 */}
         {!isLoading && canPlayToday && (
           <p className="text-white text-sm">
             <span style={{color: '#facc15'}}>{playsLeft}</span> {playsLeft === 1 ? 'play' : 'plays'} left today
           </p>
         )}
       </div>
+
+      {/* ハンバーガーメニュー */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setMenuOpen(false)} />
+          <div className="relative z-10 w-72 h-full bg-[#0f2040] flex flex-col p-8 gap-4">
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="self-end text-white/50 hover:text-white transition mb-4"
+            >
+              ✕
+            </button>
+            <button
+              onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
+              className="w-full py-3 bg-yellow-400 text-gray-900 font-bold rounded-xl hover:bg-yellow-300 transition"
+            >
+              ⚡ Upgrade to Pro
+            </button>
+            <button
+              onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
+              className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
+            >
+              🔒 Practice Mode
+            </button>
+            <div className="border-t border-white/10 my-2" />
+            <button
+              onClick={() => { setMenuOpen(false); router.push(user ? '/account' : '/login') }}
+              className="w-full py-3 text-cyan-400 text-left hover:text-cyan-300 transition"
+            >
+              {user ? 'My Account' : 'Login / Sign Up'}
+            </button>
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="w-full py-3 text-white/50 text-left hover:text-white transition"
+            >
+              Terms of Service
+            </button>
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="w-full py-3 text-white/50 text-left hover:text-white transition"
+            >
+              Privacy Policy
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
