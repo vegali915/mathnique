@@ -89,13 +89,13 @@ export default function Review() {
           <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
             <p className="text-white font-bold mb-1">📊 You struggled with {typeNames[weak]}!</p>
             <p className="text-yellow-300 text-sm mb-3">💡 Want to improve? Try Practice Mode!</p>
-            <button
-              onClick={() => router.push('/')}
-              className="w-full py-3 bg-cyan-400/20 text-cyan-400 font-bold rounded-xl border border-cyan-400/30 hover:bg-cyan-400/30 transition"
-            >
-              💡 Try Practice Mode
-            </button>
-          </div>
+  <button
+  onClick={() => router.push('/upgrade')}
+  className="w-full py-3 bg-cyan-400/20 text-cyan-400 font-bold rounded-xl border border-cyan-400/30 hover:bg-cyan-400/30 transition"
+>
+  💡 Try Practice Mode
+</button>
+        </div>
         ) : (
           <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
             <p className="text-white font-bold mb-1">🎉 Perfect! No mistakes!</p>
