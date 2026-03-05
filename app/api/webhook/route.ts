@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,44 +7,53 @@ const supabase = createClient(
 )
 
 export async function POST(req: NextRequest) {
-  const body = await req.text()
-  const sig = req.headers.get('stripe-signature')!
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
-
-  let event: Stripe.Event
-
   try {
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err)
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
-  }
+    const body = await req.json()
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session
-    const userId = session.metadata?.userId
-    const customerId = session.customer as string
-    const subscriptionId = session.subscription as string
+    const eventType = body.type
+    const data = body.data
 
-    if (userId) {
-      await supabase.from('subscriptions').upsert({
-        user_id: userId,
-        stripe_customer_id: customerId,
-        stripe_subscription_id: subscriptionId,
-        status: 'active',
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'user_id' })
+    console.log('Polar webhook received:', eventType)
+
+    if (eventType === 'subscription.created' || eventType === 'subscription.updated') {
+      const userId = data.metadata?.user_id
+      if (!userId) {
+        console.error('No user_id in metadata')
+        return NextResponse.json({ error: 'No user_id' }, { status: 400 })
+      }
+
+      const status = data.status === 'active' ? 'active' : 'canceled'
+
+      await supabase
+        .from('subscriptions')
+        .upsert({
+          user_id: userId,
+          status: status,
+          stripe_subscription_id: data.id,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'user_id' })
+
+      console.log(`Subscription ${status} for user ${userId}`)
     }
+
+    if (eventType === 'subscription.canceled' || eventType === 'subscription.revoked') {
+      const userId = data.metadata?.user_id
+      if (userId) {
+        await supabase
+          .from('subscriptions')
+          .update({
+            status: 'canceled',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('user_id', userId)
+
+        console.log(`Subscription canceled for user ${userId}`)
+      }
+    }
+
+    return NextResponse.json({ received: true })
+  } catch (error) {
+    console.error('Webhook error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
-
-  if (event.type === 'customer.subscription.deleted') {
-    const subscription = event.data.object as Stripe.Subscription
-    const customerId = subscription.customer as string
-
-    await supabase.from('subscriptions')
-      .update({ status: 'inactive', updated_at: new Date().toISOString() })
-      .eq('stripe_customer_id', customerId)
-  }
-
-  return NextResponse.json({ received: true })
 }

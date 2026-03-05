@@ -1,32 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export async function POST(req: NextRequest) {
   try {
     const { userId, email } = await req.json()
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'subscription',
-      customer_email: email,
-      line_items: [
-        {
-          price: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!,
-          quantity: 1,
-        },
-      ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/upgrade/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/upgrade`,
-      metadata: {
-        userId,
+    const response = await fetch('https://api.polar.sh/v1/checkouts/', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.POLAR_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        product_id: process.env.POLAR_PRODUCT_ID,
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?checkout_id={CHECKOUT_ID}`,
+        customer_email: email,
+        metadata: {
+          user_id: userId,
+        },
+      }),
     })
 
-    return NextResponse.json({ url: session.url })
+    const data = await response.json()
+
+    if (!response.ok) {
+      console.error('Polar API error:', data)
+      return NextResponse.json({ error: 'Failed to create checkout' }, { status: 500 })
+    }
+
+    return NextResponse.json({ url: data.url })
   } catch (error) {
-    console.error('Stripe error:', error)
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
+    console.error('Checkout error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
