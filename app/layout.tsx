@@ -23,8 +23,10 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Mathnique",
   },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
