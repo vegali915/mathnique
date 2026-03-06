@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         product_id: process.env.POLAR_PRODUCT_ID,
-        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?checkout_id={CHECKOUT_ID}`,
+ success_url: `${process.env.NEXT_PUBLIC_APP_URL}/upgrade/success?checkout_id={CHECKOUT_ID}`,
         customer_email: email,
         metadata: {
           user_id: userId,
