@@ -177,19 +177,19 @@ export default function Home() {
             >
               {user ? 'My Account' : 'Login / Sign Up'}
             </button>
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
-            >
-              Terms of Service
-            </button>
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
-            >
-              Privacy Policy
-            </button>
-          </div>
+ <button
+  onClick={() => { setMenuOpen(false); router.push('/terms') }}
+  className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
+>
+  Terms of Service
+</button>
+  <button
+  onClick={() => { setMenuOpen(false); router.push('/privacy') }}
+  className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
+>
+  Privacy Policy
+</button>
+        </div>
         </div>
            )}   </main>
   )
