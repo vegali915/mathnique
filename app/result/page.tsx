@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense, useState, useEffect } from 'react'
 import { AreaChart, Area, XAxis, YAxis, ReferenceLine, ResponsiveContainer, Tooltip } from 'recharts'
 import { getTodayPlayInfo, applyShareBonus, canPlay, recordPlay } from '../../lib/playCount'
+import { supabase } from '../../lib/supabase'
 function generateDistributionData() {
   const data = []
   for (let i = 0; i <= 1000; i += 20) {
@@ -24,15 +25,27 @@ function ResultContent() {
   const [hasShared, setHasShared] = useState(false)
   const [playCount, setPlayCount] = useState(0)
 
-  useEffect(() => {
+useEffect(() => {
     async function loadInfo() {
       const { playCount, sharedBonus } = await getTodayPlayInfo()
       setPlayCount(playCount)
       setHasShared(sharedBonus)
     }
     loadInfo()
-  }, [])
 
+    // スコアをSupabaseに保存
+    async function saveScore() {
+      if (!score) return
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return // ログインしていない場合は保存しない
+      await supabase.from('play_sessions').insert({
+        user_id: user.id,
+        score: score,
+        played_at: new Date().toISOString(),
+      })
+    }
+    saveScore()
+  }, [])
   const percentile = score > 600 ? 1 : score > 500 ? 5 : score > 420 ? 10 : score > 350 ? 15 : score > 280 ? 20 : score > 200 ? 30 : 0
   const distributionData = generateDistributionData()
   const userScoreRounded = Math.min(Math.round(score / 20) * 20, 1000)
