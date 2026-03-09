@@ -5,16 +5,27 @@ import { Suspense, useState, useEffect } from 'react'
 import { AreaChart, Area, XAxis, YAxis, ReferenceLine, ResponsiveContainer, Tooltip } from 'recharts'
 import { getTodayPlayInfo, applyShareBonus, canPlay, recordPlay } from '../../lib/playCount'
 import { supabase } from '../../lib/supabase'
+
 function generateDistributionData() {
   const data = []
   for (let i = 0; i <= 1000; i += 20) {
-    const mean = 250
-    const std = 150
-    const value = Math.exp(-Math.pow(i - mean, 2) / (2 * std * std))
-    data.push({ score: i, value: Math.round(value * 1000) })
+    const mean = 300
+    const std = 120
+    const raw = Math.exp(-Math.pow(i - mean, 2) / (2 * std * std))
+    const rampUp = Math.min(1, i / 150)
+    const value = Math.round(raw * rampUp * 1000)
+    data.push({ score: i, value })
   }
   return data
 }
+function calculatePercentile(score: number): number {
+  const data = generateDistributionData()
+  const total = data.reduce((sum, d) => sum + d.value, 0)
+  const above = data.filter(d => d.score > score).reduce((sum, d) => sum + d.value, 0)
+  const result = Math.round((above / total) * 100)
+  return result === 0 ? 1 : result
+}
+
 
 function ResultContent() {
   const searchParams = useSearchParams()
@@ -46,20 +57,19 @@ useEffect(() => {
     }
     saveScore()
   }, [])
-  const percentile = score > 600 ? 1 : score > 500 ? 5 : score > 420 ? 10 : score > 350 ? 15 : score > 280 ? 20 : score > 200 ? 30 : 0
+const percentile = calculatePercentile(score)
   const distributionData = generateDistributionData()
   const userScoreRounded = Math.min(Math.round(score / 20) * 20, 1000)
 
-  const getMessage = () => {
-    if (percentile === 1) return '🏆 Legendary! You\'re a math genius!'
-    if (percentile === 5) return '🔥 Outstanding! You\'re in the elite!'
-    if (percentile === 10) return '⭐ Excellent! You\'re crushing it!'
-    if (percentile === 15) return '💪 Amazing effort! You\'re so close to the top — one more game?'
-    if (percentile === 20) return '🎯 Great performance! Top 10% is totally within your reach!'
-    if (percentile === 30) return '🚀 Solid effort! The more you play, the better you get!'
-    return '🌱 Great start! Every top player began right here!'
-  }
-
+const getMessage = () => {
+  if (percentile <= 1) return '🏆 Legendary! You\'re a math genius!'
+  if (percentile <= 5) return '🔥 Outstanding! You\'re in the elite!'
+  if (percentile <= 10) return '⭐ Excellent! You\'re crushing it!'
+  if (percentile <= 15) return '💪 Amazing effort! You\'re so close to the top — one more game?'
+  if (percentile <= 20) return '🎯 Great performance! Top 10% is totally within your reach!'
+  if (percentile <= 30) return '🚀 Solid effort! The more you play, the better you get!'
+  return '🌱 Great start! Every top player began right here!'
+}
   const shareText = percentile <= 1
     ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top 1%! Can you beat me? 🏆\nTry Mathnique → mathnique.vercel.app`
     : percentile <= 5
@@ -100,10 +110,11 @@ useEffect(() => {
            <div className="text-center">
           <p className="text-yellow-300/70 text-sm tracking-widest mb-2">YOUR SCORE</p>
           <p className="text-7xl font-bold text-white">{score}</p>
-          {percentile > 0 ? (
-            <p className="text-cyan-400 text-lg mt-2">Top {percentile}%</p>
-          ) : null}
-          <p className="text-white/80 text-sm mt-2">{getMessage()}</p>
+
+  {percentile <= 30 ? (
+  <p className="text-cyan-400 text-lg mt-2">Top {percentile}%</p>
+) : null}
+        <p className="text-white/80 text-sm mt-2">{getMessage()}</p>
         </div>
 
         {/* スコア分布グラフ */}

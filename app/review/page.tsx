@@ -112,8 +112,23 @@ export default function Review() {
 {/* 戻るボタン */}
         <div className="w-full flex flex-col gap-2">
           <button
-            onClick={() => router.back()}
-            className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
+ onClick={() => {
+  const data = sessionStorage.getItem('gameHistory')
+  if (!data) { router.push('/'); return }
+  const history = JSON.parse(data)
+  let score = 0
+  let combo = 0
+  history.forEach((h: any) => {
+    if (h.isCorrect) {
+      combo++
+      score += combo >= 4 ? 25 : combo === 3 ? 20 : combo === 2 ? 15 : 10
+    } else {
+      combo = 0
+    }
+  })
+  router.push(`/result?score=${score}`)
+}}
+           className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
           >
             ← Back to Result
           </button>
