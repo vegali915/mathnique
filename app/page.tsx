@@ -163,13 +163,12 @@ export default function Home() {
               {isPro ? '✅ Practice Mode' : '🔒 Practice Mode'}
             </button>
 
-            <button
-              onClick={() => { setMenuOpen(false); isPro ? router.push('/expert') : router.push('/upgrade') }}
-              className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-yellow-400/20 text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
-            >
-              {isPro ? '🏆 Expert Mode' : '🔒 Expert Mode'}
-            </button>
-
+<button
+  onClick={() => { setMenuOpen(false); isPro ? router.push('/countdown?mode=expert') : router.push('/upgrade') }}
+  className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-yellow-400/20 text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
+>
+  {isPro ? '🏆 Expert Mode' : '🔒 Expert Mode'}
+</button>
             <div className="border-t border-white/10 my-2" />
             <button
               onClick={() => { setMenuOpen(false); router.push(user ? '/account' : '/login') }}

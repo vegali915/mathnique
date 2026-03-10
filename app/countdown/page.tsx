@@ -9,8 +9,12 @@ export default function Countdown() {
 
   useEffect(() => {
     if (count === 0) {
-      router.push('/game')
-      return
+ const params = new URLSearchParams(window.location.search)
+const mode = params.get('mode')
+setTimeout(() => {
+router.push(mode === 'expert' ? '/expert' : '/game')
+ }, 300)
+     return
     }
     const timer = setTimeout(() => {
       setCount(count - 1)
