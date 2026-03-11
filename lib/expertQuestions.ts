@@ -6,6 +6,7 @@ export type ExpertQuestion = {
   answer: string
   explanation: string
   genre: string
+  topPercent: number
 }
 
 function randInt(min: number, max: number): number {
@@ -33,61 +34,62 @@ function generateGauss(): ExpertQuestion {
       [String(answer - n), String(answer + n), String(n * n)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} です。\n\n② なぜ？\n端から順にペアを作ると\n「1 + ${n}」「2 + ${n - 1}」「3 + ${n - 2}」…\nどのペアも合計が ${n + 1} になります！\n\n③ ペアの数は ${n} ÷ 2 = ${n / 2} 組\n${n + 1} × ${n / 2} = ${answer}`,
-    genre: 'ガウスの足し算'
+    explanation: `① The answer is ${answer}.\n\n② Here's why:\nPair up numbers from both ends:\n"1 + ${n}", "2 + ${n - 1}", "3 + ${n - 2}"…\nEvery pair sums to ${n + 1}!\n\n③ Number of pairs: ${n} ÷ 2 = ${n / 2}\n${n + 1} × ${n / 2} = ${answer}`,
+    genre: "Gauss's Sum",
+    topPercent: 30
   }
 }
 
 // ジャンル2：トーナメントの試合数
 function generateTournament(): ExpertQuestion {
-  const settings = ['スポーツ大会', 'ゲーム大会', '料理大会', 'クイズ大会']
+  const settings = ['sports tournament', 'gaming tournament', 'cooking tournament', 'quiz tournament']
   const setting = settings[randInt(0, settings.length - 1)]
   const n = randInt(8, 100)
   const answer = n - 1
 
   return {
-    question: `${n}人参加の${setting}。\nトーナメント形式で優勝者を1人決めると、全部で何試合？`,
+    question: `${n} players enter a ${setting}.\nHow many matches are needed to decide the champion?`,
     choices: makeChoices(
       String(answer),
       [String(answer - 1), String(answer + 1), String(Math.floor(n / 2))]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} 試合です。\n\n② なぜ？\nトーナメントでは1試合で必ず1人が脱落します。\n\n③ ${n}人の大会で最後に優勝者が1人残るので\n脱落する人数 = ${n} - 1 = ${answer}人\n\n④ 脱落者1人につき1試合なので\n試合数 = ${answer}試合！\nトーナメントの人数がいくつでもこの法則は成り立ちます。`,
-    genre: 'トーナメントの試合数'
+    explanation: `① The answer is ${answer} matches.\n\n② Here's why:\nIn a tournament, exactly 1 player is eliminated per match.\n\n③ With ${n} players, all but 1 must be eliminated:\n${n} - 1 = ${answer} eliminations\n\n④ One match per elimination, so:\n${answer} matches total!\nThis rule works no matter how many players there are.`,
+    genre: 'Tournament Matches',topPercent: 30
   }
 }
 
 // ジャンル3：握手・乾杯の総数
 function generateHandshake(): ExpertQuestion {
   const settings = [
-    { scene: 'パーティー', action: '握手' },
-    { scene: '飲み会', action: '乾杯' },
-    { scene: 'スポーツ大会', action: 'ハイタッチ' },
-    { scene: '会議', action: '挨拶' },
+    { scene: 'party', action: 'handshake' },
+    { scene: 'sports event', action: 'high-five' },
+    { scene: 'networking event', action: 'handshake' },
+    { scene: 'meeting', action: 'greeting' },
   ]
   const setting = settings[randInt(0, settings.length - 1)]
   const n = randInt(5, 20)
   const answer = (n * (n - 1)) / 2
 
   return {
-    question: `${n}人が参加した${setting.scene}。\n全員が互いに1回ずつ${setting.action}すると、合計何回？`,
+    question: `${n} people attend a ${setting.scene}.\nIf everyone exchanges a ${setting.action} with each other once, how many ${setting.action}s in total?`,
     choices: makeChoices(
       String(answer),
       [String(n * (n - 1)), String(answer + n), String(answer - n)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} 回です。\n\n② なぜ？\n${n}人それぞれが残り${n - 1}人と${setting.action}するので\n${n} × ${n - 1} = ${n * (n - 1)} …でも！\n\n③ これだと「AとBの${setting.action}」を\nAからもBからも数えてしまっています。\n2回ずつ数えているので最後に2で割ります。\n\n④ ${n * (n - 1)} ÷ 2 = ${answer}回`,
-    genre: '握手・乾杯の総数'
+    explanation: `① The answer is ${answer}.\n\n② Here's why:\nEach of the ${n} people exchanges a ${setting.action} with ${n - 1} others:\n${n} × ${n - 1} = ${n * (n - 1)}… but wait!\n\n③ This counts each ${setting.action} twice —\nonce for A and once for B.\nSo we divide by 2.\n\n④ ${n * (n - 1)} ÷ 2 = ${answer}`,
+    genre: 'Handshakes & High-Fives',topPercent: 15
   }
 }
 
 // ジャンル4：倍増系
 function generateDoubling(): ExpertQuestion {
   const settings = [
-    { subject: 'バクテリア', unit: '分', container: '瓶' },
-    { subject: 'スイレン', unit: '日', container: '池' },
-    { subject: '藻', unit: '時間', container: 'タンク' },
-    { subject: '菌', unit: '分', container: 'シャーレ' },
+    { subject: 'bacteria', unit: 'minute', container: 'bottle' },
+    { subject: 'water lilies', unit: 'day', container: 'pond' },
+    { subject: 'algae', unit: 'hour', container: 'tank' },
+    { subject: 'mold', unit: 'minute', container: 'petri dish' },
   ]
   const setting = settings[randInt(0, settings.length - 1)]
 
@@ -96,19 +98,19 @@ function generateDoubling(): ExpertQuestion {
       const n = randInt(10, 60)
       const answer = n - 1
       return {
-        question: `${setting.subject}が毎${setting.unit}2倍に増え続ける。\n${n}${setting.unit}後に${setting.container}が満杯になるとき、半分だったのは何${setting.unit}後？`,
-        answer: String(answer),
-        wrongs: [String(Math.floor(n / 2)), String(n - 2), String(n + 1)],
-        explanation: `① 答えは ${answer}${setting.unit}後です。\n\n② なぜ？\n毎${setting.unit}2倍に増えるということは\n逆に言うと「1${setting.unit}前は今の半分」です。\n\n③ ${n}${setting.unit}後に満杯になるなら\nその1${setting.unit}前 = ${n - 1}${setting.unit}後は半分！\n\n④ 直感では「半分なら${Math.floor(n / 2)}${setting.unit}」と思いがちですが\n倍増では最後の1${setting.unit}で一気に2倍になります。`
+        question: `${setting.subject} double every ${setting.unit}.\nIf the ${setting.container} is full after ${n} ${setting.unit}s, when was it half full?`,
+        answer: `${answer} ${setting.unit}s`,
+        wrongs: [`${Math.floor(n / 2)} ${setting.unit}s`, `${n - 2} ${setting.unit}s`, `${n + 1} ${setting.unit}s`],
+        explanation: `① The answer is ${answer} ${setting.unit}s.\n\n② Here's why:\nIf something doubles every ${setting.unit},\nthat means 1 ${setting.unit} ago it was half the current amount.\n\n③ If the ${setting.container} is full at ${n} ${setting.unit}s,\nthen 1 ${setting.unit} before = ${n - 1} ${setting.unit}s → half full!\n\n④ It's tempting to say "half = ${Math.floor(n / 2)} ${setting.unit}s",\nbut with doubling, the last ${setting.unit} doubles everything at once.`
       }
     },
     () => {
       const n = randInt(10, 60)
       return {
-        question: `${setting.subject}が毎${setting.unit}2倍に増え続ける。\n${n}${setting.unit}後に${setting.container}が満杯になるとき、${n - 2}${setting.unit}後は何%埋まっている？`,
+        question: `${setting.subject} double every ${setting.unit}.\nIf the ${setting.container} is full after ${n} ${setting.unit}s, how full is it at ${n - 2} ${setting.unit}s?`,
         answer: '25%',
         wrongs: ['50%', '75%', '12.5%'],
-        explanation: `① 答えは 25% です。\n\n② なぜ？\n${n}${setting.unit}後が100%（満杯）なら\n1${setting.unit}前の${n - 1}${setting.unit}後は 50%（半分）\nさらに1${setting.unit}前の${n - 2}${setting.unit}後は 25%（4分の1）\n\n③ 2${setting.unit}前 = 満杯の4分の1 = 25%\n\n④ 倍増では時間が経つほど急激に増えます。\nほとんどの増加が最後の数${setting.unit}に集中しています！`
+        explanation: `① The answer is 25%.\n\n② Here's why:\nAt ${n} ${setting.unit}s → 100% (full)\n1 ${setting.unit} earlier (${n - 1} ${setting.unit}s) → 50%\n1 more ${setting.unit} earlier (${n - 2} ${setting.unit}s) → 25%\n\n③ 2 ${setting.unit}s before full = one quarter = 25%\n\n④ With doubling, growth explodes at the end.\nMost of the increase happens in the final few ${setting.unit}s!`
       }
     }
   ]
@@ -120,7 +122,7 @@ function generateDoubling(): ExpertQuestion {
     choices: makeChoices(qt.answer, qt.wrongs),
     answer: qt.answer,
     explanation: qt.explanation,
-    genre: '倍増系'
+    genre: 'Doubling',topPercent: 5
   }
 }
 
@@ -139,8 +141,8 @@ function generateTimes11(): ExpertQuestion {
       [String(answer + 11), String(answer - 11), String(answer + 22)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} です。\n\n② 11との掛け算には裏ワザがあります！\n${n}の十の位は「${tens}」、一の位は「${ones}」\n\n③ 裏ワザ：両端の数字の間に\nその2つの和を挟み込む！\n${tens}・（${tens}+${ones}）・${ones}\n= ${tens}・${mid}・${ones}${mid >= 10 ? '\n\n④ 真ん中が10以上になったら繰り上がりに注意！' : `\n\n④ 並べると ${answer} になります！`}`,
-    genre: '11との掛け算'
+    explanation: `① The answer is ${answer}.\n\n② There's a trick for multiplying by 11!\n${n} has tens digit "${tens}" and ones digit "${ones}"\n\n③ The trick: insert the sum of both digits in between!\n${tens}・(${tens}+${ones})・${ones}\n= ${tens}・${mid}・${ones}${mid >= 10 ? '\n\n④ When the middle digit is 10 or more, don\'t forget to carry!' : `\n\n④ Put them together and you get ${answer}!`}`,
+    genre: 'Multiplying by 11',topPercent: 30
   }
 }
 
@@ -148,58 +150,58 @@ function generateTimes11(): ExpertQuestion {
 function generateComplementProbability(): ExpertQuestion {
   const patterns = [
     {
-      question: '3枚のコインを同時に投げるとき、\n少なくとも1枚が表になる確率は？',
+      question: 'Flip 3 coins at once.\nWhat is the probability that at least one is heads?',
       answer: '7/8',
       wrongs: ['1/2', '3/4', '6/8'],
-      explanation: `① 答えは 7/8 です。\n\n② 「少なくとも1枚表」を直接計算するのは大変！\n\n③ 余事象（反対のこと）を考えます。\n「1枚も表が出ない」= 全部裏\nその確率は (1/2)³ = 1/8\n\n④ 求める確率 = 1 - 1/8 = 7/8`
+      explanation: `① The answer is 7/8.\n\n② Calculating "at least one heads" directly is tricky!\n\n③ Instead, use the complement:\n"No heads at all" = all tails\nProbability = (1/2)³ = 1/8\n\n④ Answer = 1 - 1/8 = 7/8`
     },
     {
-      question: '2つのサイコロを同時に振るとき、\n少なくとも1つが6になる確率は？',
+      question: 'Roll 2 dice at once.\nWhat is the probability that at least one shows 6?',
       answer: '11/36',
       wrongs: ['1/6', '1/3', '2/6'],
-      explanation: `① 答えは 11/36 です。\n\n② 余事象を使います。\n「1つも6が出ない」確率は\n(5/6) × (5/6) = 25/36\n\n③ 求める確率 = 1 - 25/36 = 11/36`
+      explanation: `① The answer is 11/36.\n\n② Use the complement:\n"Neither die shows 6" =\n(5/6) × (5/6) = 25/36\n\n③ Answer = 1 - 25/36 = 11/36`
     },
     {
-      question: '4枚のコインを同時に投げるとき、\n少なくとも1枚が表になる確率は？',
+      question: 'Flip 4 coins at once.\nWhat is the probability that at least one is heads?',
       answer: '15/16',
       wrongs: ['1/2', '3/4', '7/8'],
-      explanation: `① 答えは 15/16 です。\n\n② 余事象を使います。\n「1枚も表が出ない」= 全部裏\nその確率は (1/2)⁴ = 1/16\n\n③ 求める確率 = 1 - 1/16 = 15/16`
+      explanation: `① The answer is 15/16.\n\n② Use the complement:\n"No heads at all" = all tails\nProbability = (1/2)⁴ = 1/16\n\n③ Answer = 1 - 1/16 = 15/16`
     },
     {
-      question: '5枚のコインを同時に投げるとき、\n少なくとも1枚が表になる確率は？',
+      question: 'Flip 5 coins at once.\nWhat is the probability that at least one is heads?',
       answer: '31/32',
       wrongs: ['15/16', '7/8', '1/2'],
-      explanation: `① 答えは 31/32 です。\n\n② 余事象を使います。\n「1枚も表が出ない」= 全部裏\nその確率は (1/2)⁵ = 1/32\n\n③ 求める確率 = 1 - 1/32 = 31/32`
+      explanation: `① The answer is 31/32.\n\n② Use the complement:\n"No heads at all" = all tails\nProbability = (1/2)⁵ = 1/32\n\n③ Answer = 1 - 1/32 = 31/32`
     },
     {
-      question: '3つのサイコロを同時に振るとき、\n少なくとも1つが6になる確率は？',
+      question: 'Roll 3 dice at once.\nWhat is the probability that at least one shows 6?',
       answer: '91/216',
       wrongs: ['1/6', '1/2', '125/216'],
-      explanation: `① 答えは 91/216 です。\n\n② 余事象を使います。\n「1つも6が出ない」確率は\n(5/6)³ = 125/216\n\n③ 求める確率 = 1 - 125/216 = 91/216`
+      explanation: `① The answer is 91/216.\n\n② Use the complement:\n"No die shows 6" =\n(5/6)³ = 125/216\n\n③ Answer = 1 - 125/216 = 91/216`
     },
     {
-      question: '2つのサイコロを同時に振るとき、\n少なくとも1つが偶数になる確率は？',
+      question: 'Roll 2 dice at once.\nWhat is the probability that at least one is even?',
       answer: '3/4',
       wrongs: ['1/2', '1/4', '2/3'],
-      explanation: `① 答えは 3/4 です。\n\n② 余事象を使います。\n「1つも偶数が出ない」= 両方奇数\n奇数は1,3,5の3つなので\n(3/6)² = (1/2)² = 1/4\n\n③ 求める確率 = 1 - 1/4 = 3/4`
+      explanation: `① The answer is 3/4.\n\n② Use the complement:\n"Neither die is even" = both are odd\nOdd numbers are 1, 3, 5, so:\n(3/6)² = (1/2)² = 1/4\n\n③ Answer = 1 - 1/4 = 3/4`
     },
     {
-      question: '2人でじゃんけんをするとき、\n少なくとも1人がグーを出す確率は？',
+      question: 'Two people play rock-paper-scissors.\nWhat is the probability that at least one throws Rock?',
       answer: '5/9',
       wrongs: ['1/3', '2/3', '4/9'],
-      explanation: `① 答えは 5/9 です。\n\n② 余事象を使います。\n「1人もグーを出さない」確率は\n(2/3)² = 4/9\n\n③ 求める確率 = 1 - 4/9 = 5/9`
+      explanation: `① The answer is 5/9.\n\n② Use the complement:\n"Nobody throws Rock" =\n(2/3)² = 4/9\n\n③ Answer = 1 - 4/9 = 5/9`
     },
     {
-      question: '2人でじゃんけんをするとき、\n少なくとも1人がチョキを出す確率は？',
+      question: 'Two people play rock-paper-scissors.\nWhat is the probability that at least one throws Scissors?',
       answer: '5/9',
       wrongs: ['1/3', '2/3', '4/9'],
-      explanation: `① 答えは 5/9 です。\n\n② 余事象を使います。\n「1人もチョキを出さない」確率は\n(2/3)² = 4/9\n\n③ 求める確率 = 1 - 4/9 = 5/9`
+      explanation: `① The answer is 5/9.\n\n② Use the complement:\n"Nobody throws Scissors" =\n(2/3)² = 4/9\n\n③ Answer = 1 - 4/9 = 5/9`
     },
     {
-      question: '2人でじゃんけんをするとき、\n少なくとも1人がパーを出す確率は？',
+      question: 'Two people play rock-paper-scissors.\nWhat is the probability that at least one throws Paper?',
       answer: '5/9',
       wrongs: ['1/3', '2/3', '4/9'],
-      explanation: `① 答えは 5/9 です。\n\n② 余事象を使います。\n「1人もパーを出さない」確率は\n(2/3)² = 4/9\n\n③ 求める確率 = 1 - 4/9 = 5/9`
+      explanation: `① The answer is 5/9.\n\n② Use the complement:\n"Nobody throws Paper" =\n(2/3)² = 4/9\n\n③ Answer = 1 - 4/9 = 5/9`
     },
   ]
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -209,7 +211,7 @@ function generateComplementProbability(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '余事象の確率'
+    genre: 'Complement Probability',topPercent: 15
   }
 }
 
@@ -217,52 +219,52 @@ function generateComplementProbability(): ExpertQuestion {
 function generateExponentSplit(): ExpertQuestion {
   const patterns = [
     {
-      question: '2の10乗はいくつ？',
+      question: 'What is 2 to the power of 10?',
       answer: '1024',
       wrongs: ['512', '2048', '768'],
-      explanation: `① 答えは 1024 です。\n\n② 10乗を半分に分割します。\n2¹⁰ = 2⁵ × 2⁵\n\n③ 2⁵ = 32なので\n32 × 32 = 1024！`
+      explanation: `① The answer is 1024.\n\n② Split the exponent in half:\n2¹⁰ = 2⁵ × 2⁵\n\n③ Since 2⁵ = 32:\n32 × 32 = 1024!`
     },
     {
-      question: '2の8乗はいくつ？',
+      question: 'What is 2 to the power of 8?',
       answer: '256',
       wrongs: ['128', '512', '64'],
-      explanation: `① 答えは 256 です。\n\n② 8乗を半分に分割します。\n2⁸ = 2⁴ × 2⁴\n\n③ 2⁴ = 16なので\n16 × 16 = 256！`
+      explanation: `① The answer is 256.\n\n② Split the exponent in half:\n2⁸ = 2⁴ × 2⁴\n\n③ Since 2⁴ = 16:\n16 × 16 = 256!`
     },
     {
-      question: '3の4乗はいくつ？',
+      question: 'What is 3 to the power of 4?',
       answer: '81',
       wrongs: ['64', '27', '12'],
-      explanation: `① 答えは 81 です。\n\n② 4乗を半分に分割します。\n3⁴ = 3² × 3²\n\n③ 3² = 9なので\n9 × 9 = 81！`
+      explanation: `① The answer is 81.\n\n② Split the exponent in half:\n3⁴ = 3² × 3²\n\n③ Since 3² = 9:\n9 × 9 = 81!`
     },
     {
-      question: '2の12乗はいくつ？',
+      question: 'What is 2 to the power of 12?',
       answer: '4096',
       wrongs: ['2048', '8192', '1024'],
-      explanation: `① 答えは 4096 です。\n\n② 12乗を半分に分割します。\n2¹² = 2⁶ × 2⁶\n\n③ 2⁶ = 64なので\n64 × 64 = 4096！`
+      explanation: `① The answer is 4096.\n\n② Split the exponent in half:\n2¹² = 2⁶ × 2⁶\n\n③ Since 2⁶ = 64:\n64 × 64 = 4096!`
     },
     {
-      question: '3の6乗はいくつ？',
+      question: 'What is 3 to the power of 6?',
       answer: '729',
       wrongs: ['512', '648', '810'],
-      explanation: `① 答えは 729 です。\n\n② 6乗を半分に分割します。\n3⁶ = 3³ × 3³\n\n③ 3³ = 27なので\n27 × 27 = 729！`
+      explanation: `① The answer is 729.\n\n② Split the exponent in half:\n3⁶ = 3³ × 3³\n\n③ Since 3³ = 27:\n27 × 27 = 729!`
     },
     {
-      question: '4の4乗はいくつ？',
+      question: 'What is 4 to the power of 4?',
       answer: '256',
       wrongs: ['128', '512', '64'],
-      explanation: `① 答えは 256 です。\n\n② 4乗を半分に分割します。\n4⁴ = 4² × 4²\n\n③ 4² = 16なので\n16 × 16 = 256！`
+      explanation: `① The answer is 256.\n\n② Split the exponent in half:\n4⁴ = 4² × 4²\n\n③ Since 4² = 16:\n16 × 16 = 256!`
     },
     {
-      question: '5の4乗はいくつ？',
+      question: 'What is 5 to the power of 4?',
       answer: '625',
       wrongs: ['500', '525', '650'],
-      explanation: `① 答えは 625 です。\n\n② 4乗を半分に分割します。\n5⁴ = 5² × 5²\n\n③ 5² = 25なので\n25 × 25 = 625！`
+      explanation: `① The answer is 625.\n\n② Split the exponent in half:\n5⁴ = 5² × 5²\n\n③ Since 5² = 25:\n25 × 25 = 625!`
     },
     {
-      question: '2の6乗はいくつ？',
+      question: 'What is 2 to the power of 6?',
       answer: '64',
       wrongs: ['32', '128', '48'],
-      explanation: `① 答えは 64 です。\n\n② 6乗を半分に分割します。\n2⁶ = 2³ × 2³\n\n③ 2³ = 8なので\n8 × 8 = 64！`
+      explanation: `① The answer is 64.\n\n② Split the exponent in half:\n2⁶ = 2³ × 2³\n\n③ Since 2³ = 8:\n8 × 8 = 64!`
     },
   ]
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -272,7 +274,7 @@ function generateExponentSplit(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '指数の分割計算'
+    genre: 'Exponent Split',topPercent: 15
   }
 }
 
@@ -284,14 +286,14 @@ function generateOddSum(): ExpertQuestion {
   const sequence = Array.from({length: n}, (_, i) => 2 * i + 1).join(' + ')
 
   return {
-    question: `1から始まる奇数を${n}個足すと？\n1 + 3 + 5 + … = ?`,
+    question: `Add the first ${n} odd numbers starting from 1.\n1 + 3 + 5 + … = ?`,
     choices: makeChoices(
       String(answer),
       [String(answer - 1), String(answer + 1), String(answer - n)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} です。\n\n② 実は「1から始まる奇数をn個足すとn²」という法則があります！\n\n③ ${n}個足すと ${n}² = ${answer}\n\n④ 実際に確認すると：\n${sequence} = ${answer}\nどんな数でもこの法則は成り立ちます！`,
-    genre: '奇数の和の法則'
+    explanation: `① The answer is ${answer}.\n\n② There's a rule: the sum of the first n odd numbers always equals n²!\n\n③ Adding ${n} odd numbers gives ${n}² = ${answer}\n\n④ Let's verify:\n${sequence} = ${answer}\nThis rule works for any value of n!`,
+    genre: 'Sum of Odd Numbers',topPercent: 30
   }
 }
 
@@ -304,80 +306,80 @@ function generateAdjacentPermutation(): ExpertQuestion {
   const patterns = [
     // 既存：AとBが隣り合う
     {
-      question: '4人が1列に並ぶとき、\nAとBが隣り合う並び方は何通り？',
-      answer: '12通り',
-      wrongs: ['24通り', '6通り', '48通り'],
-      explanation: `① 答えは 12通りです。\n\n② AとBを「1人のセット」として考えます。\nセットを含む3人の並び方は\n3! = 6通り\n\n③ さらにセット内でAとBが入れ替わるので\n× 2 = 12通り！`
+      question: '4 people stand in a line.\nHow many ways can they stand so that A and B are next to each other?',
+      answer: '12 ways',
+      wrongs: ['24 ways', '6 ways', '48 ways'],
+      explanation: `① The answer is 12 ways.\n\n② Treat A and B as one unit.\n3 units can be arranged in:\n3! = 6 ways\n\n③ A and B can also swap within the unit:\n× 2 = 12 ways!`
     },
     {
-      question: '5人が1列に並ぶとき、\nAとBが隣り合う並び方は何通り？',
-      answer: '48通り',
-      wrongs: ['120通り', '24通り', '96通り'],
-      explanation: `① 答えは 48通りです。\n\n② AとBを「1人のセット」として考えます。\nセットを含む4人の並び方は\n4! = 24通り\n\n③ さらにセット内でAとBが入れ替わるので\n× 2 = 48通り！`
+      question: '5 people stand in a line.\nHow many ways can they stand so that A and B are next to each other?',
+      answer: '48 ways',
+      wrongs: ['120 ways', '24 ways', '96 ways'],
+      explanation: `① The answer is 48 ways.\n\n② Treat A and B as one unit.\n4 units can be arranged in:\n4! = 24 ways\n\n③ A and B can also swap within the unit:\n× 2 = 48 ways!`
     },
     {
-      question: '6人が1列に並ぶとき、\nAとBが隣り合う並び方は何通り？',
-      answer: '240通り',
-      wrongs: ['720通り', '120通り', '480通り'],
-      explanation: `① 答えは 240通りです。\n\n② AとBを「1人のセット」として考えます。\nセットを含む5人の並び方は\n5! = 120通り\n\n③ さらにセット内でAとBが入れ替わるので\n× 2 = 240通り！`
+      question: '6 people stand in a line.\nHow many ways can they stand so that A and B are next to each other?',
+      answer: '240 ways',
+      wrongs: ['720 ways', '120 ways', '480 ways'],
+      explanation: `① The answer is 240 ways.\n\n② Treat A and B as one unit.\n5 units can be arranged in:\n5! = 120 ways\n\n③ A and B can also swap within the unit:\n× 2 = 240 ways!`
     },
     // A・B・Cが全員隣り合う
     {
-      question: '5人が1列に並ぶとき、\nA・B・Cが全員隣り合う並び方は何通り？',
-      answer: '36通り',
-      wrongs: ['12通り', '24通り', '48通り'],
-      explanation: `① 答えは 36通りです。\n\n② A・B・Cを「1つのセット」として考えます。\nセットを含む3人の並び方は\n3! = 6通り\n\n③ さらにセット内でA・B・Cが\n入れ替わるので 3! = 6通り\n\n④ 6 × 6 = 36通り！`
+      question: '5 people stand in a line.\nHow many ways can A, B, and C all stand next to each other?',
+      answer: '36 ways',
+      wrongs: ['12 ways', '24 ways', '48 ways'],
+      explanation: `① The answer is 36 ways.\n\n② Treat A, B, and C as one unit.\n3 units can be arranged in:\n3! = 6 ways\n\n③ A, B, and C can be arranged within the unit in:\n3! = 6 ways\n\n④ 6 × 6 = 36 ways!`
     },
     {
-      question: '6人が1列に並ぶとき、\nA・B・Cが全員隣り合う並び方は何通り？',
-      answer: '144通り',
-      wrongs: ['72通り', '36通り', '288通り'],
-      explanation: `① 答えは 144通りです。\n\n② A・B・Cを「1つのセット」として考えます。\nセットを含む4人の並び方は\n4! = 24通り\n\n③ さらにセット内でA・B・Cが\n入れ替わるので 3! = 6通り\n\n④ 24 × 6 = 144通り！`
+      question: '6 people stand in a line.\nHow many ways can A, B, and C all stand next to each other?',
+      answer: '144 ways',
+      wrongs: ['72 ways', '36 ways', '288 ways'],
+      explanation: `① The answer is 144 ways.\n\n② Treat A, B, and C as one unit.\n4 units can be arranged in:\n4! = 24 ways\n\n③ A, B, and C can be arranged within the unit in:\n3! = 6 ways\n\n④ 24 × 6 = 144 ways!`
     },
     // 円形
     {
-      question: '4人が円形に並ぶとき、\nAとBが隣り合う並び方は何通り？',
-      answer: '4通り',
-      wrongs: ['6通り', '8通り', '12通り'],
-      explanation: `① 答えは 4通りです。\n\n② 円形の並び方はAを固定して考えます。\n残り3人の並び方は 3! = 6通り\n\n③ BがAの隣になる確率は\n残り3席のうち2席なので 2/3\n\n④ 6 × 2/3 = 4通り！`
+      question: '4 people sit in a circle.\nHow many ways can they sit so that A and B are next to each other?',
+      answer: '4 ways',
+      wrongs: ['6 ways', '8 ways', '12 ways'],
+      explanation: `① The answer is 4 ways.\n\n② Fix A in place to count circular arrangements.\nThe remaining 3 people can be arranged in:\n3! = 6 ways\n\n③ B sits next to A in 2 out of 3 remaining seats:\n2/3 of arrangements have B next to A\n\n④ 6 × 2/3 = 4 ways!`
     },
     {
-      question: '5人が円形に並ぶとき、\nAとBが隣り合う並び方は何通り？',
-      answer: '12通り',
-      wrongs: ['24通り', '6通り', '48通り'],
-      explanation: `① 答えは 12通りです。\n\n② 円形の並び方はAを固定して考えます。\n残り4人の並び方は 4! = 24通り\n\n③ BがAの隣になる確率は\n残り4席のうち2席なので 2/4\n\n④ 24 × 2/4 = 12通り！`
+      question: '5 people sit in a circle.\nHow many ways can they sit so that A and B are next to each other?',
+      answer: '12 ways',
+      wrongs: ['24 ways', '6 ways', '48 ways'],
+      explanation: `① The answer is 12 ways.\n\n② Fix A in place to count circular arrangements.\nThe remaining 4 people can be arranged in:\n4! = 24 ways\n\n③ B sits next to A in 2 out of 4 remaining seats:\n2/4 of arrangements have B next to A\n\n④ 24 × 2/4 = 12 ways!`
     },
     {
-      question: '6人が円形に並ぶとき、\nAとBが隣り合う並び方は何通り？',
-      answer: '48通り',
-      wrongs: ['120通り', '24通り', '96通り'],
-      explanation: `① 答えは 48通りです。\n\n② 円形の並び方はAを固定して考えます。\n残り5人の並び方は 5! = 120通り\n\n③ BがAの隣になる確率は\n残り5席のうち2席なので 2/5\n\n④ 120 × 2/5 = 48通り！`
+      question: '6 people sit in a circle.\nHow many ways can they sit so that A and B are next to each other?',
+      answer: '48 ways',
+      wrongs: ['120 ways', '24 ways', '96 ways'],
+      explanation: `① The answer is 48 ways.\n\n② Fix A in place to count circular arrangements.\nThe remaining 5 people can be arranged in:\n5! = 120 ways\n\n③ B sits next to A in 2 out of 5 remaining seats:\n2/5 of arrangements have B next to A\n\n④ 120 × 2/5 = 48 ways!`
     },
     // AとBが隣り合わない
     {
-      question: '4人が1列に並ぶとき、\nAとBが隣り合わない並び方は何通り？',
-      answer: '12通り',
-      wrongs: ['6通り', '18通り', '24通り'],
-      explanation: `① 答えは 12通りです。\n\n② 全体の並び方：4! = 24通り\n\n③ AとBが隣り合う並び方：\n3! × 2 = 12通り\n\n④ 隣り合わない = 全体 - 隣り合う\n24 - 12 = 12通り！`
+      question: '4 people stand in a line.\nHow many ways can they stand so that A and B are NOT next to each other?',
+      answer: '12 ways',
+      wrongs: ['6 ways', '18 ways', '24 ways'],
+      explanation: `① The answer is 12 ways.\n\n② Total arrangements: 4! = 24 ways\n\n③ Arrangements where A and B ARE next to each other:\n3! × 2 = 12 ways\n\n④ NOT next to each other = Total - Next to each other\n24 - 12 = 12 ways!`
     },
     {
-      question: '5人が1列に並ぶとき、\nAとBが隣り合わない並び方は何通り？',
-      answer: '72通り',
-      wrongs: ['48通り', '60通り', '96通り'],
-      explanation: `① 答えは 72通りです。\n\n② 全体の並び方：5! = 120通り\n\n③ AとBが隣り合う並び方：\n4! × 2 = 48通り\n\n④ 隣り合わない = 全体 - 隣り合う\n120 - 48 = 72通り！`
+      question: '5 people stand in a line.\nHow many ways can they stand so that A and B are NOT next to each other?',
+      answer: '72 ways',
+      wrongs: ['48 ways', '60 ways', '96 ways'],
+      explanation: `① The answer is 72 ways.\n\n② Total arrangements: 5! = 120 ways\n\n③ Arrangements where A and B ARE next to each other:\n4! × 2 = 48 ways\n\n④ NOT next to each other = Total - Next to each other\n120 - 48 = 72 ways!`
     },
     // 男女交互
     {
-      question: '男子2人・女子2人が1列に並ぶとき、\n男女交互になる並び方は何通り？',
-      answer: '8通り',
-      wrongs: ['4通り', '12通り', '24通り'],
-      explanation: `① 答えは 8通りです。\n\n② 男女交互の並び方は\n「男女男女」か「女男女男」の2パターン\n\n③ 男子2人の並び方：2! = 2通り\n女子2人の並び方：2! = 2通り\n\n④ 2 × 2 × 2 = 8通り！`
+      question: '2 boys and 2 girls stand in a line.\nHow many ways can they alternate boy-girl-boy-girl?',
+      answer: '8 ways',
+      wrongs: ['4 ways', '12 ways', '24 ways'],
+      explanation: `① The answer is 8 ways.\n\n② Alternating patterns are either\nBoy-Girl-Boy-Girl or Girl-Boy-Girl-Boy: 2 patterns\n\n③ Boys can be arranged in: 2! = 2 ways\nGirls can be arranged in: 2! = 2 ways\n\n④ 2 × 2 × 2 = 8 ways!`
     },
     {
-      question: '男子3人・女子3人が1列に並ぶとき、\n男女交互になる並び方は何通り？',
-      answer: '72通り',
-      wrongs: ['36通り', '48通り', '144通り'],
-      explanation: `① 答えは 72通りです。\n\n② 男女交互の並び方は\n「男女男女男女」か「女男女男女男」の2パターン\n\n③ 男子3人の並び方：3! = 6通り\n女子3人の並び方：3! = 6通り\n\n④ 2 × 6 × 6 = 72通り！`
+      question: '3 boys and 3 girls stand in a line.\nHow many ways can they alternate boy-girl-boy-girl?',
+      answer: '72 ways',
+      wrongs: ['36 ways', '48 ways', '144 ways'],
+      explanation: `① The answer is 72 ways.\n\n② Alternating patterns are either\nBoy-Girl-Boy-Girl-Boy-Girl or Girl-Boy-Girl-Boy-Girl-Boy: 2 patterns\n\n③ Boys can be arranged in: 3! = 6 ways\nGirls can be arranged in: 3! = 6 ways\n\n④ 2 × 6 × 6 = 72 ways!`
     },
   ]
 
@@ -388,7 +390,7 @@ function generateAdjacentPermutation(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '隣り合う順列'
+    genre: 'Adjacent Permutations',topPercent:5
   }
 }
 
@@ -396,40 +398,40 @@ function generateAdjacentPermutation(): ExpertQuestion {
 function generateDigitCount(): ExpertQuestion {
   const patterns = [
     {
-      question: '1から100までの数字を全部書いたとき、\n「1」は何回登場する？',
-      answer: '21回',
-      wrongs: ['20回', '11回', '10回'],
-      explanation: `① 答えは 21回です。\n\n② 一の位に「1」が出る数：\n1, 11, 21, 31, 41, 51, 61, 71, 81, 91 → 10回\n\n③ 十の位に「1」が出る数：\n10, 11, 12, 13, 14, 15, 16, 17, 18, 19 → 10回\n\n④ 100の百の位に「1」が1回\n合計 10 + 10 + 1 = 21回！`
+      question: 'Write out all numbers from 1 to 100.\nHow many times does the digit "1" appear?',
+      answer: '21 times',
+      wrongs: ['20 times', '11 times', '10 times'],
+      explanation: `① The answer is 21 times.\n\n② "1" in the ones place:\n1, 11, 21, 31, 41, 51, 61, 71, 81, 91 → 10 times\n\n③ "1" in the tens place:\n10, 11, 12, 13, 14, 15, 16, 17, 18, 19 → 10 times\n\n④ "1" in the hundreds place:\n100 → 1 time\nTotal: 10 + 10 + 1 = 21 times!`
     },
     {
-      question: '1から50までの数字を全部書いたとき、\n「3」は何回登場する？',
-      answer: '15回',
-      wrongs: ['5回', '14回', '10回'],
-      explanation: `① 答えは 15回です。\n\n② 一の位に「3」が出る数：\n3, 13, 23, 33, 43 → 5回\n\n③ 十の位に「3」が出る数：\n30, 31, 32, 33, 34, 35, 36, 37, 38, 39 → 10回\n\n④ 合計 5 + 10 = 15回！\n33は一の位・十の位どちらにも「3」があるので2回カウントします。`
+      question: 'Write out all numbers from 1 to 50.\nHow many times does the digit "3" appear?',
+      answer: '15 times',
+      wrongs: ['5 times', '14 times', '10 times'],
+      explanation: `① The answer is 15 times.\n\n② "3" in the ones place:\n3, 13, 23, 33, 43 → 5 times\n\n③ "3" in the tens place:\n30, 31, 32, 33, 34, 35, 36, 37, 38, 39 → 10 times\n\n④ Total: 5 + 10 = 15 times!\nNote: 33 has "3" in both places, so it's counted twice.`
     },
     {
-      question: '1から100までの数字を全部書いたとき、\n「7」は何回登場する？',
-      answer: '20回',
-      wrongs: ['10回', '19回', '21回'],
-      explanation: `① 答えは 20回です。\n\n② 一の位に「7」が出る数：\n7, 17, 27, 37, 47, 57, 67, 77, 87, 97 → 10回\n\n③ 十の位に「7」が出る数：\n70, 71, 72, 73, 74, 75, 76, 77, 78, 79 → 10回\n\n④ 合計 10 + 10 = 20回！\n77は一の位・十の位どちらにも「7」があるので2回カウント済み`
+      question: 'Write out all numbers from 1 to 100.\nHow many times does the digit "7" appear?',
+      answer: '20 times',
+      wrongs: ['10 times', '19 times', '21 times'],
+      explanation: `① The answer is 20 times.\n\n② "7" in the ones place:\n7, 17, 27, 37, 47, 57, 67, 77, 87, 97 → 10 times\n\n③ "7" in the tens place:\n70, 71, 72, 73, 74, 75, 76, 77, 78, 79 → 10 times\n\n④ Total: 10 + 10 = 20 times!\nNote: 77 has "7" in both places, already counted twice.`
     },
     {
-      question: '1から200までの数字を全部書いたとき、\n「1」は何回登場する？',
-      answer: '140回',
-      wrongs: ['120回', '100回', '21回'],
-      explanation: `① 答えは 140回です。\n\n② 一の位に「1」が出る数：\n1, 11, 21…191 → 20回\n\n③ 十の位に「1」が出る数：\n10～19, 110～119 → 20回\n\n④ 百の位に「1」が出る数：\n100～199 → 100回\n\n合計 20 + 20 + 100 = 140回！`
+      question: 'Write out all numbers from 1 to 200.\nHow many times does the digit "1" appear?',
+      answer: '140 times',
+      wrongs: ['120 times', '100 times', '21 times'],
+      explanation: `① The answer is 140 times.\n\n② "1" in the ones place:\n1, 11, 21…191 → 20 times\n\n③ "1" in the tens place:\n10-19, 110-119 → 20 times\n\n④ "1" in the hundreds place:\n100-199 → 100 times\nTotal: 20 + 20 + 100 = 140 times!`
     },
     {
-      question: '1から99までの数字を全部書いたとき、\n「5」は何回登場する？',
-      answer: '20回',
-      wrongs: ['10回', '19回', '15回'],
-      explanation: `① 答えは 20回です。\n\n② 一の位に「5」が出る数：\n5, 15, 25, 35, 45, 55, 65, 75, 85, 95 → 10回\n\n③ 十の位に「5」が出る数：\n50, 51, 52, 53, 54, 55, 56, 57, 58, 59 → 10回\n\n④ 合計 10 + 10 = 20回！`
+      question: 'Write out all numbers from 1 to 99.\nHow many times does the digit "5" appear?',
+      answer: '20 times',
+      wrongs: ['10 times', '19 times', '15 times'],
+      explanation: `① The answer is 20 times.\n\n② "5" in the ones place:\n5, 15, 25, 35, 45, 55, 65, 75, 85, 95 → 10 times\n\n③ "5" in the tens place:\n50, 51, 52, 53, 54, 55, 56, 57, 58, 59 → 10 times\n\n④ Total: 10 + 10 = 20 times!`
     },
     {
-      question: '1から30までの数字を全部書いたとき、\n「2」は何回登場する？',
-      answer: '13回',
-      wrongs: ['3回', '10回', '12回'],
-      explanation: `① 答えは 13回です。\n\n② 一の位に「2」が出る数：\n2, 12, 22 → 3回\n\n③ 十の位に「2」が出る数：\n20, 21, 22, 23, 24, 25, 26, 27, 28, 29 → 10回\n\n④ 合計 3 + 10 = 13回！\n22は一の位・十の位どちらにも「2」があるので2回カウント済み`
+      question: 'Write out all numbers from 1 to 30.\nHow many times does the digit "2" appear?',
+      answer: '13 times',
+      wrongs: ['3 times', '10 times', '12 times'],
+      explanation: `① The answer is 13 times.\n\n② "2" in the ones place:\n2, 12, 22 → 3 times\n\n③ "2" in the tens place:\n20, 21, 22, 23, 24, 25, 26, 27, 28, 29 → 10 times\n\n④ Total: 3 + 10 = 13 times!\nNote: 22 has "2" in both places, already counted twice.`
     },
   ]
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -439,7 +441,7 @@ function generateDigitCount(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '数字の登場回数'
+    genre: 'Digit Count',topPercent: 15
   }
 }
 
@@ -447,40 +449,40 @@ function generateDigitCount(): ExpertQuestion {
 function generateInfiniteGeometric(): ExpertQuestion {
   const patterns = [
     {
-      question: '0.999…（9が無限に続く）は\nいくつ？',
+      question: 'What does 0.999… (9 repeating forever) equal?',
       answer: '1',
-      wrongs: ['0.999', '0.9999', '1以下'],
-      explanation: `① 答えは 1 です。\n\n② 直感では「1より少し小さい」と感じますが\n実は完全に1と等しいです！\n\n③ x = 0.999… とおくと\n10x = 9.999…\n10x - x = 9.999… - 0.999…\n9x = 9\nx = 1\n\n④ 0.999…と1は全く同じ数です！`
+      wrongs: ['0.999', '0.9999', 'less than 1'],
+      explanation: `① The answer is 1.\n\n② It feels like it should be slightly less than 1,\nbut it actually equals exactly 1!\n\n③ Let x = 0.999…\n10x = 9.999…\n10x - x = 9.999… - 0.999…\n9x = 9\nx = 1\n\n④ 0.999… and 1 are exactly the same number!`
     },
     {
-      question: '1/2 + 1/4 + 1/8 + 1/16 + …\n無限に足し続けるといくつ？',
+      question: '1/2 + 1/4 + 1/8 + 1/16 + …\nWhat does this infinite sum equal?',
       answer: '1',
       wrongs: ['1/2', '2', '∞'],
-      explanation: `① 答えは 1 です。\n\n② 無限に足し続けても1を超えません。\n\n③ S = 1/2 + 1/4 + 1/8 + …とおくと\n2S = 1 + 1/2 + 1/4 + …\n2S = 1 + S\nS = 1\n\n④ 半分ずつ足していくと\n最終的にぴったり1になります！`
+      explanation: `① The answer is 1.\n\n② Even adding forever, it never exceeds 1.\n\n③ Let S = 1/2 + 1/4 + 1/8 + …\n2S = 1 + 1/2 + 1/4 + …\n2S = 1 + S\nS = 1\n\n④ Adding half at a time,\nthe sum perfectly reaches 1!`
     },
     {
-      question: '1/3 + 1/9 + 1/27 + …\n無限に足し続けるといくつ？',
+      question: '1/3 + 1/9 + 1/27 + …\nWhat does this infinite sum equal?',
       answer: '1/2',
       wrongs: ['1/3', '1', '2/3'],
-      explanation: `① 答えは 1/2 です。\n\n② S = 1/3 + 1/9 + 1/27 + …とおくと\n3S = 1 + 1/3 + 1/9 + …\n3S = 1 + S\n2S = 1\nS = 1/2`
+      explanation: `① The answer is 1/2.\n\n② Let S = 1/3 + 1/9 + 1/27 + …\n3S = 1 + 1/3 + 1/9 + …\n3S = 1 + S\n2S = 1\nS = 1/2`
     },
     {
-      question: '1/4 + 1/16 + 1/64 + …\n無限に足し続けるといくつ？',
+      question: '1/4 + 1/16 + 1/64 + …\nWhat does this infinite sum equal?',
       answer: '1/3',
       wrongs: ['1/4', '1/2', '2/3'],
-      explanation: `① 答えは 1/3 です。\n\n② S = 1/4 + 1/16 + 1/64 + …とおくと\n4S = 1 + 1/4 + 1/16 + …\n4S = 1 + S\n3S = 1\nS = 1/3`
+      explanation: `① The answer is 1/3.\n\n② Let S = 1/4 + 1/16 + 1/64 + …\n4S = 1 + 1/4 + 1/16 + …\n4S = 1 + S\n3S = 1\nS = 1/3`
     },
     {
-      question: '0.333…（3が無限に続く）は\nいくつ？',
+      question: 'What does 0.333… (3 repeating forever) equal?',
       answer: '1/3',
       wrongs: ['0.333', '1/4', '0.3'],
-      explanation: `① 答えは 1/3 です。\n\n② x = 0.333…とおくと\n10x = 3.333…\n10x - x = 3.333… - 0.333…\n9x = 3\nx = 3/9 = 1/3`
+      explanation: `① The answer is 1/3.\n\n② Let x = 0.333…\n10x = 3.333…\n10x - x = 3.333… - 0.333…\n9x = 3\nx = 3/9 = 1/3`
     },
     {
-      question: '0.111…（1が無限に続く）は\nいくつ？',
+      question: 'What does 0.111… (1 repeating forever) equal?',
       answer: '1/9',
       wrongs: ['0.111', '1/10', '1/8'],
-      explanation: `① 答えは 1/9 です。\n\n② x = 0.111…とおくと\n10x = 1.111…\n10x - x = 1.111… - 0.111…\n9x = 1\nx = 1/9`
+      explanation: `① The answer is 1/9.\n\n② Let x = 0.111…\n10x = 1.111…\n10x - x = 1.111… - 0.111…\n9x = 1\nx = 1/9`
     },
   ]
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -490,51 +492,51 @@ function generateInfiniteGeometric(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '無限等比級数'
+    genre: 'Infinite Geometric Series',topPercent: 5
   }
 }
 
 // ジャンル12：組み合わせの総数
 function generateCombinationTotal(): ExpertQuestion {
   const settings = [
-    { scene: 'ピザのトッピングが5種類ある。', n: 5 },
-    { scene: 'アイスのフレーバーが4種類ある。', n: 4 },
-    { scene: 'Tシャツの色が6種類ある。', n: 6 },
-    { scene: 'ハンバーガーのトッピングが4種類ある。', n: 4 },
-    { scene: 'サラダのトッピングが5種類ある。', n: 5 },
-    { scene: 'ラーメンのトッピングが6種類ある。', n: 6 },
+    { scene: 'A pizza place has 5 toppings available.', n: 5 },
+    { scene: 'An ice cream shop has 4 flavors available.', n: 4 },
+    { scene: 'A store has 6 colors of T-shirts.', n: 6 },
+    { scene: 'A burger place has 4 toppings available.', n: 4 },
+    { scene: 'A salad bar has 5 toppings available.', n: 5 },
+    { scene: 'A ramen shop has 6 toppings available.', n: 6 },
   ]
   const setting = settings[randInt(0, settings.length - 1)]
   const answer = Math.pow(2, setting.n) - 1
 
   return {
-    question: `${setting.scene}\n1種類以上選ぶとしたら、選び方は何通り？`,
+    question: `${setting.scene}\nIf you must choose at least one, how many combinations are possible?`,
     choices: makeChoices(
       String(answer),
       [String(answer + 1), String(Math.pow(2, setting.n)), String(answer - 1)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} 通りです。\n\n② 各種類について「選ぶ・選ばない」の2択があります。\n\n③ ${setting.n}種類全部で 2の${setting.n}乗 = ${Math.pow(2, setting.n)} 通り\nただし「全部選ばない」の1通りを除くので\n${Math.pow(2, setting.n)} - 1 = ${answer} 通り！`,
-    genre: '組み合わせの総数'
+    explanation: `① The answer is ${answer} combinations.\n\n② For each topping, there are 2 choices: pick it or skip it.\n\n③ With ${setting.n} options, that's 2 to the power of ${setting.n} = ${Math.pow(2, setting.n)} combinations.\nBut we subtract the 1 case where nothing is chosen:\n${Math.pow(2, setting.n)} - 1 = ${answer} combinations!`,
+    genre: 'Combination Count',topPercent: 15
   }
 }
 
 // ジャンル13：リーグ戦の試合数
 function generateLeague(): ExpertQuestion {
-  const settings = ['サッカーリーグ', 'バスケットボールリーグ', '野球リーグ', 'テニスリーグ']
+  const settings = ['soccer league', 'basketball league', 'baseball league', 'tennis league']
   const setting = settings[randInt(0, settings.length - 1)]
   const n = randInt(4, 12)
   const answer = (n * (n - 1)) / 2
 
   return {
-    question: `${n}チームが参加する${setting}。\n全チームが1回ずつ対戦すると、全部で何試合？`,
+    question: `${n} teams enter a ${setting}.\nIf every team plays each other once, how many matches in total?`,
     choices: makeChoices(
       String(answer),
       [String(n * (n - 1)), String(answer + n), String(answer - 1)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} 試合です。\n\n② ${n}チームそれぞれが残り${n - 1}チームと対戦するので\n${n} × ${n - 1} = ${n * (n - 1)} …でも！\n\n③ 「AチームvsBチーム」と「BチームvsAチーム」を\n2回数えてしまっているので÷2します。\n\n④ ${n * (n - 1)} ÷ 2 = ${answer} 試合！`,
-    genre: 'リーグ戦の試合数'
+    explanation: `① The answer is ${answer} matches.\n\n② Each of the ${n} teams plays ${n - 1} others:\n${n} × ${n - 1} = ${n * (n - 1)}… but wait!\n\n③ This counts "Team A vs Team B" and "Team B vs Team A" as separate matches.\nSince each match is counted twice, we divide by 2.\n\n④ ${n * (n - 1)} ÷ 2 = ${answer} matches!`,
+    genre: 'Round Robin Matches',topPercent: 15
   }
 }
 
@@ -552,19 +554,19 @@ function generateAverageSpeed(): ExpertQuestion {
     { go: 50, back: 75, avg: 60, dist: 150 },
     { go: 60, back: 120, avg: 80, dist: 120 },
   ]
-  const vehicles = ['車', '自転車', 'バイク', '電車']
+  const vehicles = ['car', 'bicycle', 'motorcycle', 'train']
   const p = patterns[randInt(0, patterns.length - 1)]
   const vehicle = vehicles[randInt(0, vehicles.length - 1)]
 
   return {
-    question: `${vehicle}で往復した。行きは時速${p.go}km、帰りは時速${p.back}km。\n平均時速は？`,
+    question: `A ${vehicle} makes a round trip.\nGoing: ${p.go} km/h, returning: ${p.back} km/h.\nWhat is the average speed?`,
     choices: makeChoices(
-      `時速${p.avg}km`,
-      [`時速${Math.round((p.go + p.back) / 2)}km`, `時速${p.avg + 4}km`, `時速${p.avg - 4}km`]
+      `${p.avg} km/h`,
+      [`${Math.round((p.go + p.back) / 2)} km/h`, `${p.avg + 4} km/h`, `${p.avg - 4} km/h`]
     ),
-    answer: `時速${p.avg}km`,
-    explanation: `① 答えは 時速${p.avg}km です。\n\n② 直感では「(${p.go}+${p.back})÷2=${Math.round((p.go + p.back) / 2)}km」と思いがちですが\n単純に平均を取ってはいけません！\n\n③ 距離を仮に${p.dist}kmとおくと\n行きにかかる時間：${p.dist}÷${p.go} = ${p.dist / p.go}時間\n帰りにかかる時間：${p.dist}÷${p.back} = ${p.dist / p.back}時間\n\n④ 平均時速 = 合計距離 ÷ 合計時間\n= ${p.dist * 2} ÷ ${p.dist / p.go + p.dist / p.back} = 時速${p.avg}km`,
-    genre: '往復の速さ'
+    answer: `${p.avg} km/h`,
+    explanation: `① The answer is ${p.avg} km/h.\n\n② It's tempting to say "(${p.go}+${p.back})÷2=${Math.round((p.go + p.back) / 2)} km/h",\nbut you can't simply average the two speeds!\n\n③ Let's say the one-way distance is ${p.dist} km:\nTime going: ${p.dist}÷${p.go} = ${p.dist / p.go} hours\nTime returning: ${p.dist}÷${p.back} = ${p.dist / p.back} hours\n\n④ Average speed = Total distance ÷ Total time\n= ${p.dist * 2} ÷ ${p.dist / p.go + p.dist / p.back} = ${p.avg} km/h`,
+    genre: 'Average Round Trip Speed',topPercent: 5
   }
 }
 
@@ -573,21 +575,20 @@ function generateReverseHandshake(): ExpertQuestion {
   const counts = [6, 10, 15, 21, 28, 36, 45]
   const count = counts[randInt(0, counts.length - 1)]
   const n = Math.round((1 + Math.sqrt(1 + 8 * count)) / 2)
-  const scenes = ['パーティー', '会議', '結婚式', 'チームの集まり']
+  const scenes = ['party', 'meeting', 'wedding', 'team gathering']
   const scene = scenes[randInt(0, scenes.length - 1)]
 
   return {
-    question: `${scene}で全員が1回ずつ乾杯した。\n合計${count}回だったとき、何人いた？`,
+    question: `At a ${scene}, everyone toasted with each other exactly once.\nIf there were ${count} toasts in total, how many people were there?`,
     choices: makeChoices(
       String(n),
       [String(n - 1), String(n + 1), String(n + 2)]
     ),
     answer: String(n),
-    explanation: `① 答えは ${n} 人です。\n\n② n人が全員と1回ずつ乾杯すると\nn × (n-1) ÷ 2 = 回数\nという式が成り立ちます。\n\n③ ${count}回だったので\nn × (n-1) ÷ 2 = ${count}\nn × (n-1) = ${count * 2}\n\n④ ${n} × ${n - 1} = ${count * 2}なので\nn = ${n}人！`,
-    genre: '乾杯回数から人数の逆算'
+    explanation: `① The answer is ${n} people.\n\n② When n people each toast with everyone else once:\nn × (n-1) ÷ 2 = number of toasts\n\n③ Since there were ${count} toasts:\nn × (n-1) ÷ 2 = ${count}\nn × (n-1) = ${count * 2}\n\n④ ${n} × ${n - 1} = ${count * 2}, so\nn = ${n} people!`,
+    genre: 'Reverse Handshake',topPercent: 5
   }
 }
-
 
 
 // ジャンル16：レンガの重さ
@@ -597,14 +598,14 @@ function generateBrickWeight(): ExpertQuestion {
   const answer = n * 2
 
   return {
-    question: `あるレンガの重さは\n${n}kg + そのレンガの重さの半分。\nレンガは何kg？`,
+    question: `A brick weighs\n${n} kg plus half of its own weight.\nHow heavy is the brick?`,
     choices: makeChoices(
-      `${answer}kg`,
-      [`${answer + 1}kg`, `${answer - 1}kg`, `${answer + 2}kg`]
+      `${answer} kg`,
+      [`${answer + 1} kg`, `${answer - 1} kg`, `${answer + 2} kg`]
     ),
-    answer: `${answer}kg`,
-    explanation: `① 答えは ${answer}kg です。\n\n② レンガの重さをxとおくと\nx = ${n} + x/2\n\n③ 両辺からx/2を引くと\nx - x/2 = ${n}\nx/2 = ${n}\n\n④ 両辺を2倍すると\nx = ${answer}kg！`,
-    genre: 'レンガの重さ'
+    answer: `${answer} kg`,
+    explanation: `① The answer is ${answer} kg.\n\n② Let x = the weight of the brick:\nx = ${n} + x/2\n\n③ Subtract x/2 from both sides:\nx - x/2 = ${n}\nx/2 = ${n}\n\n④ Multiply both sides by 2:\nx = ${answer} kg!`,
+    genre: 'Brick Weight',topPercent: 15
   }
 }
 
@@ -616,131 +617,131 @@ function generateSequence(): ExpertQuestion {
       sequence: '1, 2, 4, 7, 11, 16, ?',
       answer: '22',
       wrongs: ['20', '21', '23'],
-      explanation: `① 答えは 22 です。\n\n② 差を見てみると\n1→2：+1\n2→4：+2\n4→7：+3\n7→11：+4\n11→16：+5\n\n③ 差が1ずつ増えているので\n16→?：+6\n16 + 6 = 22！`
+      explanation: `① The answer is 22.\n\n② Look at the differences:\n1→2: +1\n2→4: +2\n4→7: +3\n7→11: +4\n11→16: +5\n\n③ The gap increases by 1 each time, so:\n16→?: +6\n16 + 6 = 22!`
     },
     {
       sequence: '1, 3, 6, 10, 15, 21, ?',
       answer: '28',
       wrongs: ['25', '26', '27'],
-      explanation: `① 答えは 28 です。\n\n② 差を見てみると\n1→3：+2\n3→6：+3\n6→10：+4\n10→15：+5\n15→21：+6\n\n③ 差が1ずつ増えているので\n21→?：+7\n21 + 7 = 28！`
+      explanation: `① The answer is 28.\n\n② Look at the differences:\n1→3: +2\n3→6: +3\n6→10: +4\n10→15: +5\n15→21: +6\n\n③ The gap increases by 1 each time, so:\n21→?: +7\n21 + 7 = 28!`
     },
     {
       sequence: '2, 3, 5, 8, 12, 17, ?',
       answer: '23',
       wrongs: ['21', '22', '24'],
-      explanation: `① 答えは 23 です。\n\n② 差を見てみると\n2→3：+1\n3→5：+2\n5→8：+3\n8→12：+4\n12→17：+5\n\n③ 差が1ずつ増えているので\n17→?：+6\n17 + 6 = 23！`
+      explanation: `① The answer is 23.\n\n② Look at the differences:\n2→3: +1\n3→5: +2\n5→8: +3\n8→12: +4\n12→17: +5\n\n③ The gap increases by 1 each time, so:\n17→?: +6\n17 + 6 = 23!`
     },
     // 差が2ずつ増える
     {
       sequence: '1, 3, 7, 13, 21, 31, ?',
       answer: '43',
       wrongs: ['40', '41', '42'],
-      explanation: `① 答えは 43 です。\n\n② 差を見てみると\n1→3：+2\n3→7：+4\n7→13：+6\n13→21：+8\n21→31：+10\n\n③ 差が2ずつ増えているので\n31→?：+12\n31 + 12 = 43！`
+      explanation: `① The answer is 43.\n\n② Look at the differences:\n1→3: +2\n3→7: +4\n7→13: +6\n13→21: +8\n21→31: +10\n\n③ The gap increases by 2 each time, so:\n31→?: +12\n31 + 12 = 43!`
     },
     {
       sequence: '2, 4, 8, 14, 22, 32, ?',
       answer: '44',
       wrongs: ['41', '42', '43'],
-      explanation: `① 答えは 44 です。\n\n② 差を見てみると\n2→4：+2\n4→8：+4\n8→14：+6\n14→22：+8\n22→32：+10\n\n③ 差が2ずつ増えているので\n32→?：+12\n32 + 12 = 44！`
+      explanation: `① The answer is 44.\n\n② Look at the differences:\n2→4: +2\n4→8: +4\n8→14: +6\n14→22: +8\n22→32: +10\n\n③ The gap increases by 2 each time, so:\n32→?: +12\n32 + 12 = 44!`
     },
     // フィボナッチ系
     {
       sequence: '1, 1, 2, 3, 5, 8, ?',
       answer: '13',
       wrongs: ['11', '12', '14'],
-      explanation: `① 答えは 13 です。\n\n② 前の2つを足すと次の数になります。\n1+1=2\n1+2=3\n2+3=5\n3+5=8\n\n③ 5+8=13！\nこれはフィボナッチ数列と呼ばれます。`
+      explanation: `① The answer is 13.\n\n② Each number is the sum of the previous two:\n1+1=2\n1+2=3\n2+3=5\n3+5=8\n\n③ 5+8=13!\nThis is called the Fibonacci sequence.`
     },
     {
       sequence: '1, 2, 3, 5, 8, 13, ?',
       answer: '21',
       wrongs: ['18', '19', '20'],
-      explanation: `① 答えは 21 です。\n\n② 前の2つを足すと次の数になります。\n1+2=3\n2+3=5\n3+5=8\n5+8=13\n\n③ 8+13=21！\nこれはフィボナッチ数列と呼ばれます。`
+      explanation: `① The answer is 21.\n\n② Each number is the sum of the previous two:\n1+2=3\n2+3=5\n3+5=8\n5+8=13\n\n③ 8+13=21!\nThis is called the Fibonacci sequence.`
     },
     // 掛け算系
     {
       sequence: '2, 6, 18, 54, ?',
       answer: '162',
       wrongs: ['108', '144', '180'],
-      explanation: `① 答えは 162 です。\n\n② 前の数に3をかけると次の数になります。\n2×3=6\n6×3=18\n18×3=54\n\n③ 54×3=162！`
+      explanation: `① The answer is 162.\n\n② Each number is multiplied by 3:\n2×3=6\n6×3=18\n18×3=54\n\n③ 54×3=162!`
     },
     {
       sequence: '3, 6, 12, 24, 48, ?',
       answer: '96',
       wrongs: ['72', '84', '108'],
-      explanation: `① 答えは 96 です。\n\n② 前の数に2をかけると次の数になります。\n3×2=6\n6×2=12\n12×2=24\n24×2=48\n\n③ 48×2=96！`
+      explanation: `① The answer is 96.\n\n② Each number is multiplied by 2:\n3×2=6\n6×2=12\n12×2=24\n24×2=48\n\n③ 48×2=96!`
     },
     {
       sequence: '5, 15, 45, 135, ?',
       answer: '405',
       wrongs: ['270', '350', '450'],
-      explanation: `① 答えは 405 です。\n\n② 前の数に3をかけると次の数になります。\n5×3=15\n15×3=45\n45×3=135\n\n③ 135×3=405！`
+      explanation: `① The answer is 405.\n\n② Each number is multiplied by 3:\n5×3=15\n15×3=45\n45×3=135\n\n③ 135×3=405!`
     },
     // 2乗系
     {
       sequence: '1, 4, 9, 16, 25, ?',
       answer: '36',
       wrongs: ['30', '32', '34'],
-      explanation: `① 答えは 36 です。\n\n② それぞれの数は自然数の2乗です。\n1²=1\n2²=4\n3²=9\n4²=16\n5²=25\n\n③ 6²=36！`
+      explanation: `① The answer is 36.\n\n② Each number is a perfect square:\n1²=1\n2²=4\n3²=9\n4²=16\n5²=25\n\n③ 6²=36!`
     },
     {
       sequence: '2, 5, 10, 17, 26, ?',
       answer: '37',
       wrongs: ['33', '35', '39'],
-      explanation: `① 答えは 37 です。\n\n② それぞれの数は自然数の2乗+1です。\n1²+1=2\n2²+1=5\n3²+1=10\n4²+1=17\n5²+1=26\n\n③ 6²+1=37！`
+      explanation: `① The answer is 37.\n\n② Each number is n² + 1:\n1²+1=2\n2²+1=5\n3²+1=10\n4²+1=17\n5²+1=26\n\n③ 6²+1=37!`
     },
     {
       sequence: '0, 3, 8, 15, 24, ?',
       answer: '35',
       wrongs: ['30', '32', '33'],
-      explanation: `① 答えは 35 です。\n\n② それぞれの数は自然数の2乗-1です。\n1²-1=0\n2²-1=3\n3²-1=8\n4²-1=15\n5²-1=24\n\n③ 6²-1=35！`
+      explanation: `① The answer is 35.\n\n② Each number is n² - 1:\n1²-1=0\n2²-1=3\n3²-1=8\n4²-1=15\n5²-1=24\n\n③ 6²-1=35!`
     },
     {
       sequence: '3, 6, 11, 18, 27, ?',
       answer: '38',
       wrongs: ['34', '36', '40'],
-      explanation: `① 答えは 38 です。\n\n② それぞれの数は自然数の2乗+2です。\n1²+2=3\n2²+2=6\n3²+2=11\n4²+2=18\n5²+2=27\n\n③ 6²+2=38！`
+      explanation: `① The answer is 38.\n\n② Each number is n² + 2:\n1²+2=3\n2²+2=6\n3²+2=11\n4²+2=18\n5²+2=27\n\n③ 6²+2=38!`
     },
     {
       sequence: '-1, 2, 7, 14, 23, ?',
       answer: '34',
       wrongs: ['30', '32', '36'],
-      explanation: `① 答えは 34 です。\n\n② それぞれの数は自然数の2乗-2です。\n1²-2=-1\n2²-2=2\n3²-2=7\n4²-2=14\n5²-2=23\n\n③ 6²-2=34！`
+      explanation: `① The answer is 34.\n\n② Each number is n² - 2:\n1²-2=-1\n2²-2=2\n3²-2=7\n4²-2=14\n5²-2=23\n\n③ 6²-2=34!`
     },
     {
       sequence: '2, 6, 12, 20, 30, ?',
       answer: '42',
       wrongs: ['36', '38', '40'],
-      explanation: `① 答えは 42 です。\n\n② それぞれの数はn²+nです。\n1²+1=2\n2²+2=6\n3²+3=12\n4²+4=20\n5²+5=30\n\n③ 6²+6=42！`
+      explanation: `① The answer is 42.\n\n② Each number follows n² + n:\n1²+1=2\n2²+2=6\n3²+3=12\n4²+4=20\n5²+5=30\n\n③ 6²+6=42!`
     },
     // 交互パターン
     {
       sequence: '1, 4, 2, 8, 3, 12, ?',
       answer: '4',
       wrongs: ['5', '6', '16'],
-      explanation: `① 答えは 4 です。\n\n② 奇数番目と偶数番目に分けて見ると\n奇数番目：1, 2, 3, ? → 1ずつ増える\n偶数番目：4, 8, 12 → 4ずつ増える\n\n③ 奇数番目の次は4！`
+      explanation: `① The answer is 4.\n\n② Split into odd and even positions:\nOdd positions: 1, 2, 3, ? → increases by 1\nEven positions: 4, 8, 12 → increases by 4\n\n③ The next odd position is 4!`
     },
     {
       sequence: '2, 6, 3, 9, 4, 12, ?',
       answer: '5',
       wrongs: ['6', '15', '16'],
-      explanation: `① 答えは 5 です。\n\n② 奇数番目と偶数番目に分けて見ると\n奇数番目：2, 3, 4, ? → 1ずつ増える\n偶数番目：6, 9, 12 → 3ずつ増える\n\n③ 奇数番目の次は5！`
+      explanation: `① The answer is 5.\n\n② Split into odd and even positions:\nOdd positions: 2, 3, 4, ? → increases by 1\nEven positions: 6, 9, 12 → increases by 3\n\n③ The next odd position is 5!`
     },
     // 3乗系
     {
       sequence: '1, 8, 27, 64, 125, ?',
       answer: '216',
       wrongs: ['180', '196', '200'],
-      explanation: `① 答えは 216 です。\n\n② それぞれの数は自然数の3乗です。\n1³=1\n2³=8\n3³=27\n4³=64\n5³=125\n\n③ 6³=216！`
+      explanation: `① The answer is 216.\n\n② Each number is a perfect cube:\n1³=1\n2³=8\n3³=27\n4³=64\n5³=125\n\n③ 6³=216!`
     },
   ]
   const p = patterns[randInt(0, patterns.length - 1)]
 
   return {
-    question: `数列の規則を見つけよう。\n${p.sequence}`,
+    question: `Find the pattern in the sequence.\n${p.sequence}`,
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '数列の規則発見'
+    genre: 'Sequence Patterns',topPercent: 15
   }
 }
 
@@ -761,14 +762,14 @@ function generateExponentialSpread(): ExpertQuestion {
   const p = patterns[randInt(0, patterns.length - 1)]
 
   return {
-    question: `1人が${p.people}人に話を広めた。\nその${p.people}人がまた${p.people}人に広めていくと\n${p.stages}段階目には何人に伝わっている？`,
+    question: `One person tells ${p.people} others a piece of news.\nEach of those ${p.people} people tells ${p.people} more, and so on.\nHow many people have heard the news by stage ${p.stages}?`,
     choices: makeChoices(
-      `${p.answer}人`,
-      [`${p.answer + 10}人`, `${p.answer - 10}人`, `${p.answer * p.people}人`]
+      `${p.answer} people`,
+      [`${p.answer + 10} people`, `${p.answer - 10} people`, `${p.answer * p.people} people`]
     ),
-    answer: `${p.answer}人`,
-    explanation: `① 答えは ${p.answer}人 です。\n\n② 1段階ごとに${p.people}倍に増えていきます。\n1段階目：${p.people}人\n2段階目：${p.people * p.people}人\n3段階目：${p.people ** 3}人\n\n③ ${p.stages}段階目は${p.people}を${p.stages}回かけると\n${p.people}^${p.stages} = ${p.answer}人！`,
-    genre: '指数的拡散'
+    answer: `${p.answer} people`,
+    explanation: `① The answer is ${p.answer} people.\n\n② The number multiplies by ${p.people} at every stage:\nStage 1: ${p.people} people\nStage 2: ${p.people * p.people} people\nStage 3: ${p.people ** 3} people\n\n③ At stage ${p.stages}, multiply ${p.people} by itself ${p.stages} times:\n${p.people}^${p.stages} = ${p.answer} people!`,
+    genre: 'Exponential Spread',topPercent: 15
   }
 }
 
@@ -785,14 +786,14 @@ function generateDoublingReverse(): ExpertQuestion {
   const answer = fullDay - fraction.daysBack
 
   return {
-    question: `毎日2倍に増えるバクテリアがいる。\n${fullDay}日目に容器が満杯になった。\n${fraction.label}だったのは何日目？`,
+    question: `Bacteria double in count every day.\nThe container is full on day ${fullDay}.\nOn which day was it ${fraction.label} full?`,
     choices: makeChoices(
-      `${answer}日目`,
-      [`${answer - 1}日目`, `${answer + 1}日目`, `${answer - 2}日目`]
+      `Day ${answer}`,
+      [`Day ${answer - 1}`, `Day ${answer + 1}`, `Day ${answer - 2}`]
     ),
-    answer: `${answer}日目`,
-    explanation: `① 答えは ${answer}日目 です。\n\n② 毎日2倍になるということは\n前の日は必ず半分！\n\n③ ${fullDay}日目が満杯なら\n${fullDay - 1}日目は1/2\n${fullDay - 2}日目は1/4\n${fullDay - 3}日目は1/8\n\n④ ${fraction.label}は${answer}日目！\n逆から考えるのがポイントです！`,
-    genre: '倍増系②'
+    answer: `Day ${answer}`,
+    explanation: `① The answer is Day ${answer}.\n\n② If the count doubles every day,\nthen the previous day always had half as much!\n\n③ If day ${fullDay} is full, then:\nDay ${fullDay - 1} → 1/2 full\nDay ${fullDay - 2} → 1/4 full\nDay ${fullDay - 3} → 1/8 full\n\n④ ${fraction.label} full = Day ${answer}!\nThe key is to think backwards!`,
+    genre: 'Doubling Reverse',topPercent: 5
   }
 }
 
@@ -803,14 +804,14 @@ function generateRule72(): ExpertQuestion {
   const answer = 72 / rate
 
   return {
-    question: `年利${rate}%で複利運用すると\n元本が2倍になるのは約何年後？`,
+    question: `If you invest at ${rate}% annual compound interest,\napproximately how many years will it take to double your money?`,
     choices: makeChoices(
-      `約${answer}年`,
-      [`約${answer + 2}年`, `約${answer - 2}年`, `約${answer * 2}年`]
+      `~${answer} years`,
+      [`~${answer + 2} years`, `~${answer - 2} years`, `~${answer * 2} years`]
     ),
-    answer: `約${answer}年`,
-    explanation: `① 答えは 約${answer}年 です。\n\n② 「72の法則」を使います。\n72 ÷ 金利(%) = 2倍になる年数\n\n③ 72 ÷ ${rate} = ${answer}年！\n\n④ 複利運用では「72÷金利」で\n2倍になる年数が素早く計算できます！`,
-    genre: '72の法則'
+    answer: `~${answer} years`,
+    explanation: `① The answer is ~${answer} years.\n\n② Use the "Rule of 72":\n72 ÷ interest rate (%) = years to double\n\n③ 72 ÷ ${rate} = ${answer} years!\n\n④ With compound interest, dividing 72 by the rate\ngives you a quick estimate of how long it takes to double!`,
+    genre: 'Rule of 72',topPercent: 15
   }
 }
 
@@ -825,14 +826,14 @@ function generateGauss2(): ExpertQuestion {
   const p = patterns[randInt(0, patterns.length - 1)]
 
   return {
-    question: `${p.mult}+${p.mult * 2}+${p.mult * 3}+…+${p.max}\n${p.mult}の倍数を全部足すといくつ？`,
+    question: `${p.mult} + ${p.mult * 2} + ${p.mult * 3} + … + ${p.max}\nAdd up all multiples of ${p.mult}. What is the total?`,
     choices: makeChoices(
       String(p.answer),
       [String(p.answer + 100), String(p.answer - 100), String(p.answer + 50)]
     ),
     answer: String(p.answer),
-    explanation: `① 答えは ${p.answer} です。\n\n② まず${p.mult}でくくります。\n${p.mult}×(1+2+3+…+${p.n})\n\n③ カッコの中はガウスの公式で\n1+2+3+…+${p.n} = ${p.n}×${p.n + 1}÷2 = ${p.n * (p.n + 1) / 2}\n\n④ ${p.mult} × ${p.n * (p.n + 1) / 2} = ${p.answer}！`,
-    genre: 'ガウスの足し算②'
+    explanation: `① The answer is ${p.answer}.\n\n② First, factor out ${p.mult}:\n${p.mult} × (1 + 2 + 3 + … + ${p.n})\n\n③ Use Gauss's formula for the sum inside:\n1 + 2 + 3 + … + ${p.n} = ${p.n} × ${p.n + 1} ÷ 2 = ${p.n * (p.n + 1) / 2}\n\n④ ${p.mult} × ${p.n * (p.n + 1) / 2} = ${p.answer}!`,
+    genre: "Gauss's Sum II",topPercent: 5
   }
 }
 
@@ -855,10 +856,10 @@ function generateCutting(): ExpertQuestion {
   const p1pieces = p1.length / p1.interval
   const p1answer = p1pieces - 1
   patterns.push({
-    question: `${p1.length}cmのロープを${p1.interval}cmずつに切ると\n何回切る必要がある？`,
-    answer: `${p1answer}回`,
-    wrongs: [`${p1answer + 1}回`, `${p1pieces}回`, `${p1answer - 1}回`],
-    explanation: `① 答えは ${p1answer}回 です。\n\n② ${p1.length}÷${p1.interval} = ${p1pieces}つに分かれます。\n\n③ ${p1pieces}つに切り分けるには\n${p1pieces} - 1 = ${p1answer}回！\n\n④ 直感では${p1pieces}回と思いがちですが\n最後の1つは切らなくていいので\n個数 - 1 = 切る回数です！`
+    question: `A ${p1.length} cm rope is cut into ${p1.interval} cm pieces.\nHow many cuts are needed?`,
+    answer: `${p1answer} cuts`,
+    wrongs: [`${p1answer + 1} cuts`, `${p1pieces} cuts`, `${p1answer - 1} cuts`],
+    explanation: `① The answer is ${p1answer} cuts.\n\n② ${p1.length} ÷ ${p1.interval} = ${p1pieces} pieces.\n\n③ To get ${p1pieces} pieces, you need:\n${p1pieces} - 1 = ${p1answer} cuts!\n\n④ It's tempting to say ${p1pieces} cuts, but\nthe last piece doesn't need a cut.\nNumber of pieces - 1 = number of cuts!`
   })
 
   // パターン2：丸太を等分
@@ -866,10 +867,10 @@ function generateCutting(): ExpertQuestion {
   const p2n = p2Options[randInt(0, p2Options.length - 1)]
   const p2answer = p2n - 1
   patterns.push({
-    question: `丸太を${p2n}等分するには\n何回切る必要がある？`,
-    answer: `${p2answer}回`,
-    wrongs: [`${p2n}回`, `${p2answer - 1}回`, `${p2answer + 2}回`],
-    explanation: `① 答えは ${p2answer}回 です。\n\n② ${p2n}等分するには\n${p2n} - 1 = ${p2answer}回！\n\n③ 直感では${p2n}回と思いがちですが\n最後の1つは切らなくていいので\n個数 - 1 = 切る回数です！`
+    question: `How many cuts are needed to divide a log into ${p2n} equal pieces?`,
+    answer: `${p2answer} cuts`,
+    wrongs: [`${p2n} cuts`, `${p2answer - 1} cuts`, `${p2answer + 2} cuts`],
+    explanation: `① The answer is ${p2answer} cuts.\n\n② To get ${p2n} pieces, you need:\n${p2n} - 1 = ${p2answer} cuts!\n\n③ It's tempting to say ${p2n} cuts, but\nthe last piece doesn't need a cut.\nNumber of pieces - 1 = number of cuts!`
   })
 
   // パターン3：時間がかかる
@@ -887,22 +888,22 @@ function generateCutting(): ExpertQuestion {
   const p3cuts = p3.pieces - 1
   const p3answer = p3cuts * p3.time
   patterns.push({
-    question: `1回切るのに${p3.time}分かかる。\n丸太を${p3.pieces}つに切り分けるには\n何分かかる？`,
-    answer: `${p3answer}分`,
-    wrongs: [`${p3.pieces * p3.time}分`, `${p3answer + p3.time}分`, `${p3answer - p3.time}分`],
-    explanation: `① 答えは ${p3answer}分 です。\n\n② ${p3.pieces}つに切り分けるには\n${p3.pieces} - 1 = ${p3cuts}回切る必要があります。\n\n③ 1回${p3.time}分なので\n${p3cuts} × ${p3.time} = ${p3answer}分！\n\n④ 直感では${p3.pieces}×${p3.time}=${p3.pieces * p3.time}分と思いがちですが\n最後の1つは切らなくていいので\n${p3cuts}回で済みます！`
+    question: `Each cut takes ${p3.time} minutes.\nHow many minutes does it take to cut a log into ${p3.pieces} pieces?`,
+    answer: `${p3answer} minutes`,
+    wrongs: [`${p3.pieces * p3.time} minutes`, `${p3answer + p3.time} minutes`, `${p3answer - p3.time} minutes`],
+    explanation: `① The answer is ${p3answer} minutes.\n\n② To get ${p3.pieces} pieces, you need:\n${p3.pieces} - 1 = ${p3cuts} cuts.\n\n③ Each cut takes ${p3.time} minutes, so:\n${p3cuts} × ${p3.time} = ${p3answer} minutes!\n\n④ It's tempting to say ${p3.pieces}×${p3.time}=${p3.pieces * p3.time} minutes,\nbut the last piece needs no cut.\n${p3cuts} cuts is all it takes!`
   })
 
-// パターン4：両端から同時
+  // パターン4：両端から同時
   const p4Options = [9, 11, 13, 15, 17, 19]
   const p4n = p4Options[randInt(0, p4Options.length - 1)]
   const p4cuts = p4n - 1
   const p4answer = p4cuts / 2
   patterns.push({
-    question: `両端から同時に切れる機械がある。\n丸太を${p4n}等分するには何回切る必要がある？`,
-    answer: `${p4answer}回`,
-    wrongs: [`${p4cuts}回`, `${p4answer + 1}回`, `${p4answer + 2}回`],
-    explanation: `① 答えは ${p4answer}回 です。\n\n② まず普通に切る回数は\n${p4n} - 1 = ${p4cuts}回\n\n③ 両端から同時に切れるので\n${p4cuts} ÷ 2 = ${p4answer}回で完成！\n\n④ 知っていれば一瞬、\n知らないと${p4cuts}回と答えてしまいます！`
+    question: `A machine can cut both ends simultaneously.\nHow many cuts are needed to divide a log into ${p4n} equal pieces?`,
+    answer: `${p4answer} cuts`,
+    wrongs: [`${p4cuts} cuts`, `${p4answer + 1} cuts`, `${p4answer + 2} cuts`],
+    explanation: `① The answer is ${p4answer} cuts.\n\n② Normally, you would need:\n${p4n} - 1 = ${p4cuts} cuts.\n\n③ Since both ends are cut at once:\n${p4cuts} ÷ 2 = ${p4answer} cuts!\n\n④ Easy if you know the trick —\nbut without it, ${p4cuts} cuts feels like the obvious answer!`
   })
 
   // パターン5：折ってから切る
@@ -910,10 +911,10 @@ function generateCutting(): ExpertQuestion {
   const p5cuts = p5Options[randInt(0, p5Options.length - 1)]
   const p5answer = (p5cuts + 1) * 2
   patterns.push({
-    question: `ロープを半分に折ってから${p5cuts}回切ると\n何つに分かれる？`,
-    answer: `${p5answer}つ`,
-    wrongs: [`${p5cuts + 1}つ`, `${p5answer - 2}つ`, `${p5answer + 2}つ`],
-    explanation: `① 答えは ${p5answer}つ です。\n\n② 半分に折ると2枚重なります。\n\n③ 2枚重ねた状態で${p5cuts}回切ると\n${p5cuts} + 1 = ${p5cuts + 1}つに分かれます。\n\n④ 広げると ${p5cuts + 1} × 2 = ${p5answer}つ！`
+    question: `A rope is folded in half, then cut ${p5cuts} time${p5cuts > 1 ? 's' : ''}.\nHow many pieces do you end up with?`,
+    answer: `${p5answer} pieces`,
+    wrongs: [`${p5cuts + 1} pieces`, `${p5answer - 2} pieces`, `${p5answer + 2} pieces`],
+    explanation: `① The answer is ${p5answer} pieces.\n\n② Folding in half creates 2 layers.\n\n③ Cutting ${p5cuts} time${p5cuts > 1 ? 's' : ''} through 2 layers gives:\n${p5cuts} + 1 = ${p5cuts + 1} sections per layer.\n\n④ Unfold and you get:\n${p5cuts + 1} × 2 = ${p5answer} pieces!`
   })
 
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -923,7 +924,7 @@ function generateCutting(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '切る回数と個数'
+    genre: 'Cuts and Pieces',topPercent: 15
   }
 }
 
@@ -941,10 +942,10 @@ function generateTournamentDiff(): ExpertQuestion {
   const p1 = p1Options[randInt(0, p1Options.length - 1)]
   const p1diff = p1.b - p1.a
   patterns.push({
-    question: `${p1.a}人トーナメントと${p1.b}人トーナメントでは\n試合数がいくつ違う？`,
-    answer: `${p1diff}試合`,
-    wrongs: [`${p1diff + 1}試合`, `${p1diff - 1}試合`, `${p1diff * 2}試合`],
-    explanation: `① 答えは ${p1diff}試合 です。\n\n② トーナメントの試合数は\n参加人数 - 1 で求められます。\n\n③ ${p1.a}人：${p1.a}-1 = ${p1.a - 1}試合\n${p1.b}人：${p1.b}-1 = ${p1.b - 1}試合\n\n④ ${p1.b - 1} - ${p1.a - 1} = ${p1diff}試合の差！\n実は差はそのまま ${p1.b} - ${p1.a} = ${p1diff}になります！`
+    question: `How many more matches does a ${p1.b}-player tournament have\nthan a ${p1.a}-player tournament?`,
+    answer: `${p1diff} matches`,
+    wrongs: [`${p1diff + 1} matches`, `${p1diff - 1} matches`, `${p1diff * 2} matches`],
+    explanation: `① The answer is ${p1diff} matches.\n\n② Matches in a tournament = players - 1.\n\n③ ${p1.a} players: ${p1.a} - 1 = ${p1.a - 1} matches\n${p1.b} players: ${p1.b} - 1 = ${p1.b - 1} matches\n\n④ ${p1.b - 1} - ${p1.a - 1} = ${p1diff} matches difference!\nThe difference is simply ${p1.b} - ${p1.a} = ${p1diff}!`
   })
 
   // 角度②：3つの合計
@@ -957,20 +958,20 @@ function generateTournamentDiff(): ExpertQuestion {
   const p2 = p2Options[randInt(0, p2Options.length - 1)]
   const p2answer = (p2.a - 1) + (p2.b - 1) + (p2.c - 1)
   patterns.push({
-    question: `${p2.a}人・${p2.b}人・${p2.c}人の\n3つのトーナメントの試合数を\n全部足すといくつ？`,
-    answer: `${p2answer}試合`,
-    wrongs: [`${p2answer + 3}試合`, `${p2answer - 3}試合`, `${p2.a + p2.b + p2.c - 1}試合`],
-    explanation: `① 答えは ${p2answer}試合 です。\n\n② トーナメントの試合数は\n参加人数 - 1 で求められます。\n\n③ ${p2.a}人：${p2.a}-1 = ${p2.a - 1}試合\n${p2.b}人：${p2.b}-1 = ${p2.b - 1}試合\n${p2.c}人：${p2.c}-1 = ${p2.c - 1}試合\n\n④ ${p2.a - 1} + ${p2.b - 1} + ${p2.c - 1} = ${p2answer}試合！`
+    question: `Three tournaments have ${p2.a}, ${p2.b}, and ${p2.c} players each.\nWhat is the total number of matches across all three?`,
+    answer: `${p2answer} matches`,
+    wrongs: [`${p2answer + 3} matches`, `${p2answer - 3} matches`, `${p2.a + p2.b + p2.c - 1} matches`],
+    explanation: `① The answer is ${p2answer} matches.\n\n② Matches in a tournament = players - 1.\n\n③ ${p2.a} players: ${p2.a} - 1 = ${p2.a - 1} matches\n${p2.b} players: ${p2.b} - 1 = ${p2.b - 1} matches\n${p2.c} players: ${p2.c} - 1 = ${p2.c - 1} matches\n\n④ ${p2.a - 1} + ${p2.b - 1} + ${p2.c - 1} = ${p2answer} matches!`
   })
 
   // 角度③：逆算系
   const p3matches = randInt(10, 99)
   const p3answer = p3matches + 1
   patterns.push({
-    question: `あるトーナメントの試合数が${p3matches}試合だった。\n何人参加していた？`,
-    answer: `${p3answer}人`,
-    wrongs: [`${p3answer - 1}人`, `${p3answer + 1}人`, `${p3answer * 2}人`],
-    explanation: `① 答えは ${p3answer}人 です。\n\n② トーナメントの試合数は\n参加人数 - 1 で求められます。\n\n③ つまり参加人数 = 試合数 + 1\n${p3matches} + 1 = ${p3answer}人！\n\n④ 知っていれば一瞬で解けます！`
+    question: `A tournament had ${p3matches} matches in total.\nHow many players participated?`,
+    answer: `${p3answer} players`,
+    wrongs: [`${p3answer - 1} players`, `${p3answer + 1} players`, `${p3answer * 2} players`],
+    explanation: `① The answer is ${p3answer} players.\n\n② Matches in a tournament = players - 1.\n\n③ So: players = matches + 1\n${p3matches} + 1 = ${p3answer} players!\n\n④ Once you know the rule, this is instant!`
   })
 
   // 角度④：チーム戦
@@ -978,10 +979,10 @@ function generateTournamentDiff(): ExpertQuestion {
   const p4members = randInt(3, 8)
   const p4answer = (p4teams - 1) * p4members
   patterns.push({
-    question: `1チーム${p4members}人で戦うトーナメントに\n${p4teams}チーム参加した。\n負けたチームの選手は全員引退する。\n引退する選手は全部で何人？`,
-    answer: `${p4answer}人`,
-    wrongs: [`${p4answer + p4members}人`, `${p4answer - p4members}人`, `${p4teams * p4members}人`],
-    explanation: `① 答えは ${p4answer}人 です。\n\n② トーナメントの試合数は\n${p4teams} - 1 = ${p4teams - 1}試合\n\n③ 1試合で1チームが負けて\n${p4members}人が引退するので\n${p4teams - 1} × ${p4members} = ${p4answer}人！`
+    question: `A team tournament has ${p4teams} teams of ${p4members} players each.\nEvery losing team retires immediately.\nHow many players retire in total?`,
+    answer: `${p4answer} players`,
+    wrongs: [`${p4answer + p4members} players`, `${p4answer - p4members} players`, `${p4teams * p4members} players`],
+    explanation: `① The answer is ${p4answer} players.\n\n② Number of matches in the tournament:\n${p4teams} - 1 = ${p4teams - 1} matches\n\n③ Each match eliminates one team of ${p4members} players:\n${p4teams - 1} × ${p4members} = ${p4answer} players retire!`
   })
 
   // 角度⑤：男女別
@@ -989,10 +990,10 @@ function generateTournamentDiff(): ExpertQuestion {
   const p5women = randInt(10, 30)
   const p5answer = (p5men - 1) + (p5women - 1)
   patterns.push({
-    question: `男子${p5men}人・女子${p5women}人が\nそれぞれ別々にトーナメントを行う。\n合計何試合になる？`,
-    answer: `${p5answer}試合`,
-    wrongs: [`${p5answer + 2}試合`, `${p5answer - 2}試合`, `${p5men + p5women - 1}試合`],
-    explanation: `① 答えは ${p5answer}試合 です。\n\n② 男子トーナメント：\n${p5men} - 1 = ${p5men - 1}試合\n\n③ 女子トーナメント：\n${p5women} - 1 = ${p5women - 1}試合\n\n④ ${p5men - 1} + ${p5women - 1} = ${p5answer}試合！`
+    question: `${p5men} men and ${p5women} women each hold their own separate tournament.\nHow many matches are there in total?`,
+    answer: `${p5answer} matches`,
+    wrongs: [`${p5answer + 2} matches`, `${p5answer - 2} matches`, `${p5men + p5women - 1} matches`],
+    explanation: `① The answer is ${p5answer} matches.\n\n② Men's tournament:\n${p5men} - 1 = ${p5men - 1} matches\n\n③ Women's tournament:\n${p5women} - 1 = ${p5women - 1} matches\n\n④ ${p5men - 1} + ${p5women - 1} = ${p5answer} matches!`
   })
 
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -1002,55 +1003,54 @@ function generateTournamentDiff(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'トーナメント試合数の差'
+    genre: 'Tournament Variations',topPercent: 15
   }
 }
-
 
 // ジャンル24：倍数でない数の個数
 function generateNonMultiple(): ExpertQuestion {
   const patterns = [
     {
-      question: '1から100までの整数のうち\n3の倍数でも5の倍数でもない数は何個？',
-      answer: '53個',
-      wrongs: ['47個', '50個', '60個'],
-      explanation: `① 答えは 53個です。\n\n② 1から100のうち\n3の倍数：100÷3 = 33個\n5の倍数：100÷5 = 20個\n15の倍数：100÷15 = 6個\n\n③ 3または5の倍数：\n33 + 20 - 6 = 47個\n\n④ どちらでもない数：\n100 - 47 = 53個！`
+      question: 'Among the integers from 1 to 100,\nhow many are neither multiples of 3 nor multiples of 5?',
+      answer: '53',
+      wrongs: ['47', '50', '60'],
+      explanation: `① The answer is 53.\n\n② From 1 to 100:\nMultiples of 3: 100÷3 = 33\nMultiples of 5: 100÷5 = 20\nMultiples of 15: 100÷15 = 6\n\n③ Multiples of 3 or 5:\n33 + 20 - 6 = 47\n\n④ Neither:\n100 - 47 = 53!`
     },
     {
-      question: '1から100までの整数のうち\n2の倍数でも3の倍数でもない数は何個？',
-      answer: '33個',
-      wrongs: ['34個', '50個', '17個'],
-      explanation: `① 答えは 33個です。\n\n② 1から100のうち\n2の倍数：100÷2 = 50個\n3の倍数：100÷3 = 33個\n6の倍数：100÷6 = 16個\n\n③ 2または3の倍数：\n50 + 33 - 16 = 67個\n\n④ どちらでもない数：\n100 - 67 = 33個！`
+      question: 'Among the integers from 1 to 100,\nhow many are neither multiples of 2 nor multiples of 3?',
+      answer: '33',
+      wrongs: ['34', '50', '17'],
+      explanation: `① The answer is 33.\n\n② From 1 to 100:\nMultiples of 2: 100÷2 = 50\nMultiples of 3: 100÷3 = 33\nMultiples of 6: 100÷6 = 16\n\n③ Multiples of 2 or 3:\n50 + 33 - 16 = 67\n\n④ Neither:\n100 - 67 = 33!`
     },
     {
-      question: '1から100までの整数のうち\n2の倍数でも5の倍数でもない数は何個？',
-      answer: '40個',
-      wrongs: ['50個', '30個', '60個'],
-      explanation: `① 答えは 40個です。\n\n② 1から100のうち\n2の倍数：100÷2 = 50個\n5の倍数：100÷5 = 20個\n10の倍数：100÷10 = 10個\n\n③ 2または5の倍数：\n50 + 20 - 10 = 60個\n\n④ どちらでもない数：\n100 - 60 = 40個！`
+      question: 'Among the integers from 1 to 100,\nhow many are neither multiples of 2 nor multiples of 5?',
+      answer: '40',
+      wrongs: ['50', '30', '60'],
+      explanation: `① The answer is 40.\n\n② From 1 to 100:\nMultiples of 2: 100÷2 = 50\nMultiples of 5: 100÷5 = 20\nMultiples of 10: 100÷10 = 10\n\n③ Multiples of 2 or 5:\n50 + 20 - 10 = 60\n\n④ Neither:\n100 - 60 = 40!`
     },
     {
-      question: '1から50までの整数のうち\n3の倍数でも5の倍数でもない数は何個？',
-      answer: '27個',
-      wrongs: ['23個', '25個', '30個'],
-      explanation: `① 答えは 27個です。\n\n② 1から50のうち\n3の倍数：50÷3 = 16個\n5の倍数：50÷5 = 10個\n15の倍数：50÷15 = 3個\n\n③ 3または5の倍数：\n16 + 10 - 3 = 23個\n\n④ どちらでもない数：\n50 - 23 = 27個！`
+      question: 'Among the integers from 1 to 50,\nhow many are neither multiples of 3 nor multiples of 5?',
+      answer: '27',
+      wrongs: ['23', '25', '30'],
+      explanation: `① The answer is 27.\n\n② From 1 to 50:\nMultiples of 3: 50÷3 = 16\nMultiples of 5: 50÷5 = 10\nMultiples of 15: 50÷15 = 3\n\n③ Multiples of 3 or 5:\n16 + 10 - 3 = 23\n\n④ Neither:\n50 - 23 = 27!`
     },
     {
-      question: '1から50までの整数のうち\n2の倍数でも3の倍数でもない数は何個？',
-      answer: '17個',
-      wrongs: ['16個', '25個', '33個'],
-      explanation: `① 答えは 17個です。\n\n② 1から50のうち\n2の倍数：50÷2 = 25個\n3の倍数：50÷3 = 16個\n6の倍数：50÷6 = 8個\n\n③ 2または3の倍数：\n25 + 16 - 8 = 33個\n\n④ どちらでもない数：\n50 - 33 = 17個！`
+      question: 'Among the integers from 1 to 50,\nhow many are neither multiples of 2 nor multiples of 3?',
+      answer: '17',
+      wrongs: ['16', '25', '33'],
+      explanation: `① The answer is 17.\n\n② From 1 to 50:\nMultiples of 2: 50÷2 = 25\nMultiples of 3: 50÷3 = 16\nMultiples of 6: 50÷6 = 8\n\n③ Multiples of 2 or 3:\n25 + 16 - 8 = 33\n\n④ Neither:\n50 - 33 = 17!`
     },
     {
-      question: '1から100までの整数のうち\n3の倍数でも7の倍数でもない数は何個？',
-      answer: '57個',
-      wrongs: ['43個', '50個', '55個'],
-      explanation: `① 答えは 57個です。\n\n② 1から100のうち\n3の倍数：100÷3 = 33個\n7の倍数：100÷7 = 14個\n21の倍数：100÷21 = 4個\n\n③ 3または7の倍数：\n33 + 14 - 4 = 43個\n\n④ どちらでもない数：\n100 - 43 = 57個！`
+      question: 'Among the integers from 1 to 100,\nhow many are neither multiples of 3 nor multiples of 7?',
+      answer: '57',
+      wrongs: ['43', '50', '55'],
+      explanation: `① The answer is 57.\n\n② From 1 to 100:\nMultiples of 3: 100÷3 = 33\nMultiples of 7: 100÷7 = 14\nMultiples of 21: 100÷21 = 4\n\n③ Multiples of 3 or 7:\n33 + 14 - 4 = 43\n\n④ Neither:\n100 - 43 = 57!`
     },
     {
-      question: '1から200までの整数のうち\n2の倍数でも5の倍数でもない数は何個？',
-      answer: '80個',
-      wrongs: ['100個', '60個', '120個'],
-      explanation: `① 答えは 80個です。\n\n② 1から200のうち\n2の倍数：200÷2 = 100個\n5の倍数：200÷5 = 40個\n10の倍数：200÷10 = 20個\n\n③ 2または5の倍数：\n100 + 40 - 20 = 120個\n\n④ どちらでもない数：\n200 - 120 = 80個！`
+      question: 'Among the integers from 1 to 200,\nhow many are neither multiples of 2 nor multiples of 5?',
+      answer: '80',
+      wrongs: ['100', '60', '120'],
+      explanation: `① The answer is 80.\n\n② From 1 to 200:\nMultiples of 2: 200÷2 = 100\nMultiples of 5: 200÷5 = 40\nMultiples of 10: 200÷10 = 20\n\n③ Multiples of 2 or 5:\n100 + 40 - 20 = 120\n\n④ Neither:\n200 - 120 = 80!`
     },
   ]
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -1060,7 +1060,7 @@ function generateNonMultiple(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '倍数でない数の個数'
+    genre: 'Non-Multiples Count',topPercent: 5
   }
 }
 
@@ -1072,14 +1072,14 @@ function generateSquareEndingIn5(): ExpertQuestion {
   const answer = tens * (tens + 1) * 100 + 25
 
   return {
-    question: `${n}²はいくつ？`,
+    question: `What is ${n}²?`,
     choices: makeChoices(
       String(answer),
       [String(answer + 100), String(answer - 100), String(answer + 200)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} です。\n\n② 一の位が5の数の2乗には裏ワザがあります！\n\n③ ${n}²の場合\n十の位「${tens}」を取り出して\n${tens} × (${tens}+1) = ${tens} × ${tens + 1} = ${tens * (tens + 1)}\n\n④ 後ろに「25」をつけると\n${answer}！`,
-    genre: '一の位が5の2乗'
+    explanation: `① The answer is ${answer}.\n\n② There's a trick for squaring numbers that end in 5!\n\n③ For ${n}²:\nTake the tens digit "${tens}" and multiply:\n${tens} × (${tens}+1) = ${tens} × ${tens + 1} = ${tens * (tens + 1)}\n\n④ Attach "25" at the end:\n${answer}!`,
+    genre: 'Squaring Numbers Ending in 5',topPercent: 30
   }
 }
 
@@ -1104,8 +1104,8 @@ function generateNear100Multiply(): ExpertQuestion {
       [String(answer + 100), String(answer - 100), String(answer + da * db)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} です。\n\n② 100との差を使います。\n${p.a} = 100 - ${da}\n${p.b} = 100 - ${db}\n\n③ ${p.a} × ${p.b}\n= (100-${da})(100-${db})\n= 10000 - ${da * 100} - ${db * 100} + ${da * db}\n= ${answer}！`,
-    genre: '100に近い数の掛け算'
+    explanation: `① The answer is ${answer}.\n\n② Use each number's distance from 100:\n${p.a} = 100 - ${da}\n${p.b} = 100 - ${db}\n\n③ ${p.a} × ${p.b}\n= (100-${da})(100-${db})\n= 10000 - ${da * 100} - ${db * 100} + ${da * db}\n= ${answer}!`,
+    genre: 'Multiplying Near 100',topPercent: 15
   }
 }
 
@@ -1122,8 +1122,8 @@ function generateTimes25(): ExpertQuestion {
       [String(answer + 25), String(answer - 25), String(answer + 100)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} です。\n\n② 25 = 100 ÷ 4 を使います。\n\n③ ${n} × 25\n= ${n} × 100 ÷ 4\n= ${n * 100} ÷ 4\n= ${answer}！`,
-    genre: '×25の変換'
+    explanation: `① The answer is ${answer}.\n\n② Use the fact that 25 = 100 ÷ 4.\n\n③ ${n} × 25\n= ${n} × 100 ÷ 4\n= ${n * 100} ÷ 4\n= ${answer}!`,
+    genre: 'Multiplying by 25',topPercent: 30
   }
 }
 
@@ -1135,14 +1135,14 @@ function generateNear100Square(): ExpertQuestion {
   const answer = 10000 + 2 * diff * 100 + diff * diff
 
   return {
-    question: `${n}²はいくつ？`,
+    question: `What is ${n}²?`,
     choices: makeChoices(
       String(answer),
       [String(answer + 100), String(answer - 100), String(answer + 200)]
     ),
     answer: String(answer),
-    explanation: `① 答えは ${answer} です。\n\n② 100との差を使います。\n${n} = 100 ${diff >= 0 ? '+' : '-'} ${Math.abs(diff)}\n\n③ ${n}²\n= (100${diff >= 0 ? '+' : '-'}${Math.abs(diff)})²\n= 10000 ${diff >= 0 ? '+' : '-'} ${Math.abs(2 * diff * 100)} + ${diff * diff}\n= ${answer}！`,
-    genre: '100付近の2乗'
+    explanation: `① The answer is ${answer}.\n\n② Use the number's distance from 100:\n${n} = 100 ${diff >= 0 ? '+' : '-'} ${Math.abs(diff)}\n\n③ ${n}²\n= (100${diff >= 0 ? '+' : '-'}${Math.abs(diff)})²\n= 10000 ${diff >= 0 ? '+' : '-'} ${Math.abs(2 * diff * 100)} + ${diff * diff}\n= ${answer}!`,
+    genre: 'Squaring Near 100',topPercent: 15
   }
 }
 
@@ -1172,8 +1172,8 @@ function generateSymmetricMultiply(): ExpertQuestion {
       [String(p.answer + 100), String(p.answer - 100), String(p.center * p.center)]
     ),
     answer: String(p.answer),
-    explanation: `① 答えは ${p.answer} です。\n\n② ${p.a}と${p.b}は${p.center}を中心に対称です。\n${p.a} = ${p.center} - ${p.diff}\n${p.b} = ${p.center} + ${p.diff}\n\n③ (${p.center}-${p.diff})(${p.center}+${p.diff}) = ${p.center}² - ${p.diff}²\n= ${p.center * p.center} - ${p.diff * p.diff} = ${p.answer}！\n\n④ (a-b)(a+b) = a²-b²\nという公式を使います。`,
-    genre: '対称な掛け算'
+    explanation: `① The answer is ${p.answer}.\n\n② ${p.a} and ${p.b} are symmetric around ${p.center}:\n${p.a} = ${p.center} - ${p.diff}\n${p.b} = ${p.center} + ${p.diff}\n\n③ (${p.center}-${p.diff})(${p.center}+${p.diff}) = ${p.center}² - ${p.diff}²\n= ${p.center * p.center} - ${p.diff * p.diff} = ${p.answer}!\n\n④ This uses the difference of squares formula:\n(a-b)(a+b) = a² - b²`,
+    genre: 'Symmetric Multiplication',topPercent: 15
   }
 }
 
@@ -1194,13 +1194,13 @@ function generateSnailClimb(): ExpertQuestion {
   ]
   const p1 = p1Options[randInt(0, p1Options.length - 1)]
   patterns.push({
-    question: `カタツムリが${p1.wall}mの壁を登っている。\n昼間に${p1.up}m登り、夜に${p1.down}m滑り落ちる。\n何日目に頂上に着く？`,
-    answer: `${p1.day}日目`,
-    wrongs: [`${p1.day - 1}日目`, `${p1.day + 1}日目`, `${p1.wall - p1.up}日目`],
-    explanation: `① 答えは ${p1.day}日目 です。\n\n② 1日で正味${p1.up - p1.down}m進みます。\n\n③ ただし最後の日は滑らない！\n${p1.day - 1}日目の終わり：${(p1.day - 1) * (p1.up - p1.down)}m地点\n${p1.day}日目の昼間：${(p1.day - 1) * (p1.up - p1.down)}+${p1.up}=${(p1.day - 1) * (p1.up - p1.down) + p1.up}m→到達！\n\n④ 直感では${p1.wall}日目と思いがちですが\n最後の日は滑らないのがポイントです！`
+    question: `A snail is climbing a ${p1.wall} m wall.\nIt climbs ${p1.up} m during the day and slides ${p1.down} m at night.\nOn which day does it reach the top?`,
+    answer: `Day ${p1.day}`,
+    wrongs: [`Day ${p1.day - 1}`, `Day ${p1.day + 1}`, `Day ${p1.wall - p1.up}`],
+    explanation: `① The answer is Day ${p1.day}.\n\n② The snail makes a net gain of ${p1.up - p1.down} m per day.\n\n③ But on the final day, it doesn't slide back!\nEnd of Day ${p1.day - 1}: ${(p1.day - 1) * (p1.up - p1.down)} m\nDay ${p1.day} daytime: ${(p1.day - 1) * (p1.up - p1.down)} + ${p1.up} = ${(p1.day - 1) * (p1.up - p1.down) + p1.up} m → Reached!\n\n④ It's tempting to say Day ${p1.wall},\nbut the snail doesn't slide on the final day!`
   })
 
-// 角度②：逆算パターン
+  // 角度②：逆算パターン
   const p2Options = [
     { day: 8, up: 3, down: 2, wall: 10 },
     { day: 12, up: 4, down: 3, wall: 15 },
@@ -1210,12 +1210,12 @@ function generateSnailClimb(): ExpertQuestion {
   ]
   const p2 = p2Options[randInt(0, p2Options.length - 1)]
   patterns.push({
-    question: `カタツムリが昼間に${p2.up}m登り、夜に${p2.down}m滑り落ちる。\n${p2.day}日目に頂上に着いた。\n壁は何m？`,
-    answer: `${p2.wall}m`,
-    wrongs: [`${p2.wall + 1}m`, `${p2.wall - 1}m`, `${p2.wall + p2.up}m`],
-    explanation: `① 答えは ${p2.wall}m です。\n\n② 最終日の前日の位置を考えます。\n${p2.day - 1}日目の終わりまでに\n${p2.up - p2.down}m × ${p2.day - 2}日 = ${(p2.day - 2) * (p2.up - p2.down)}m地点\n\n③ 最終日に${p2.up}m登って頂上に到達するので\n壁の高さ = ${(p2.day - 2) * (p2.up - p2.down)} + ${p2.up} = ${p2.wall}m！`
+    question: `A snail climbs ${p2.up} m during the day and slides ${p2.down} m at night.\nIt reached the top on Day ${p2.day}.\nHow tall is the wall?`,
+    answer: `${p2.wall} m`,
+    wrongs: [`${p2.wall + 1} m`, `${p2.wall - 1} m`, `${p2.wall + p2.up} m`],
+    explanation: `① The answer is ${p2.wall} m.\n\n② Think about where the snail was at the end of the previous day.\nAfter ${p2.day - 1} nights: ${p2.up - p2.down} m × ${p2.day - 2} days = ${(p2.day - 2) * (p2.up - p2.down)} m\n\n③ On the final day it climbs ${p2.up} m to reach the top:\nWall height = ${(p2.day - 2) * (p2.up - p2.down)} + ${p2.up} = ${p2.wall} m!`
   })
-  
+
   // 角度③：合計時間パターン
   const p3Options = [
     { wall: 10, up: 3, down: 2, time: 2, day: 8, total: 16 },
@@ -1226,24 +1226,24 @@ function generateSnailClimb(): ExpertQuestion {
   ]
   const p3 = p3Options[randInt(0, p3Options.length - 1)]
   patterns.push({
-    question: `カタツムリが${p3.wall}mの壁を登っている。\n昼間に${p3.up}m登るのに${p3.time}時間かかる。\n夜に${p3.down}m滑り落ちる。\n頂上に着くまで合計何時間登った？`,
-    answer: `${p3.total}時間`,
-    wrongs: [`${p3.total + p3.time}時間`, `${p3.total - p3.time}時間`, `${p3.wall * p3.time}時間`],
-    explanation: `① 答えは ${p3.total}時間 です。\n\n② ${p3.day}日目に到達します。\n\n③ 毎日昼間に${p3.time}時間登るので\n${p3.day} × ${p3.time} = ${p3.total}時間！\n\n④ 最終日も昼間に登るので\n全${p3.day}日分の登り時間になります。`
+    question: `A snail is climbing a ${p3.wall} m wall.\nIt takes ${p3.time} hours to climb ${p3.up} m during the day,\nthen slides ${p3.down} m at night.\nHow many total hours does it spend climbing?`,
+    answer: `${p3.total} hours`,
+    wrongs: [`${p3.total + p3.time} hours`, `${p3.total - p3.time} hours`, `${p3.wall * p3.time} hours`],
+    explanation: `① The answer is ${p3.total} hours.\n\n② The snail reaches the top on Day ${p3.day}.\n\n③ It climbs ${p3.time} hours each day, so:\n${p3.day} × ${p3.time} = ${p3.total} hours!\n\n④ The snail still climbs on the final day,\nso all ${p3.day} days of climbing count.`
   })
 
   // 角度④：2匹パターン
   const p4Options = [
-    { wall: 15, up1: 3, down1: 2, day1: 13, up2: 4, down2: 3, day2: 12, winner: '2匹目' },
-    { wall: 20, up1: 3, down1: 2, day1: 18, up2: 5, down2: 4, day2: 16, winner: '2匹目' },
-    { wall: 12, up1: 3, down1: 2, day1: 10, up2: 4, down2: 3, day2: 9, winner: '2匹目' },
+    { wall: 15, up1: 3, down1: 2, day1: 13, up2: 4, down2: 3, day2: 12, winner: 'Snail 2' },
+    { wall: 20, up1: 3, down1: 2, day1: 18, up2: 5, down2: 4, day2: 16, winner: 'Snail 2' },
+    { wall: 12, up1: 3, down1: 2, day1: 10, up2: 4, down2: 3, day2: 9, winner: 'Snail 2' },
   ]
   const p4 = p4Options[randInt(0, p4Options.length - 1)]
   patterns.push({
-    question: `2匹のカタツムリが${p4.wall}mの壁を登る。\n1匹目：昼間${p4.up1}m登り夜${p4.down1}m滑る\n2匹目：昼間${p4.up2}m登り夜${p4.down2}m滑る\n先に頂上に着くのはどちら？`,
+    question: `Two snails are climbing a ${p4.wall} m wall.\nSnail 1: climbs ${p4.up1} m by day, slides ${p4.down1} m at night\nSnail 2: climbs ${p4.up2} m by day, slides ${p4.down2} m at night\nWhich snail reaches the top first?`,
     answer: p4.winner,
-    wrongs: ['1匹目', '同時', '分からない'],
-    explanation: `① 答えは ${p4.winner} です。\n\n② 1匹目の到達日：\n1日${p4.up1 - p4.down1}m進み${p4.day1 - 1}日目終わりに${(p4.day1 - 1) * (p4.up1 - p4.down1)}m\n${p4.day1}日目昼間：${(p4.day1 - 1) * (p4.up1 - p4.down1)}+${p4.up1}=${(p4.day1 - 1) * (p4.up1 - p4.down1) + p4.up1}m→${p4.day1}日目\n\n③ 2匹目の到達日：\n1日${p4.up2 - p4.down2}m進み${p4.day2 - 1}日目終わりに${(p4.day2 - 1) * (p4.up2 - p4.down2)}m\n${p4.day2}日目昼間：${(p4.day2 - 1) * (p4.up2 - p4.down2)}+${p4.up2}=${(p4.day2 - 1) * (p4.up2 - p4.down2) + p4.up2}m→${p4.day2}日目\n\n④ ${p4.day1}日目 vs ${p4.day2}日目なので${p4.winner}の勝ち！`
+    wrongs: ['Snail 1', 'They tie', 'Cannot be determined'],
+    explanation: `① The answer is ${p4.winner}.\n\n② Snail 1's arrival day:\nNet ${p4.up1 - p4.down1} m/day → end of Day ${p4.day1 - 1}: ${(p4.day1 - 1) * (p4.up1 - p4.down1)} m\nDay ${p4.day1}: ${(p4.day1 - 1) * (p4.up1 - p4.down1)} + ${p4.up1} = ${(p4.day1 - 1) * (p4.up1 - p4.down1) + p4.up1} m → Day ${p4.day1}\n\n③ Snail 2's arrival day:\nNet ${p4.up2 - p4.down2} m/day → end of Day ${p4.day2 - 1}: ${(p4.day2 - 1) * (p4.up2 - p4.down2)} m\nDay ${p4.day2}: ${(p4.day2 - 1) * (p4.up2 - p4.down2)} + ${p4.up2} = ${(p4.day2 - 1) * (p4.up2 - p4.down2) + p4.up2} m → Day ${p4.day2}\n\n④ Day ${p4.day1} vs Day ${p4.day2} → ${p4.winner} wins!`
   })
 
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -1253,7 +1253,7 @@ function generateSnailClimb(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: '壁登りの到達日'
+    genre: 'Snail Climb',topPercent: 5
   }
 }
 
@@ -1261,64 +1261,64 @@ function generateSnailClimb(): ExpertQuestion {
 function generateRecycle(): ExpertQuestion {
   const patterns = [
     {
-      question: '空き瓶3本でジュース1本と交換できる。\n最初に9本買うと最大何本飲める？',
-      answer: '13本',
-      wrongs: ['12本', '14本', '11本'],
-      explanation: `① 答えは 13本です。\n\n② 最初の9本を飲む→空き瓶9本\n9÷3 = 3本と交換→空き瓶3本\n3÷3 = 1本と交換→空き瓶1本\n\n③ 合計 9 + 3 + 1 = 13本！`
+      question: 'Every 3 empty bottles can be exchanged for 1 full bottle.\nIf you start with 9 bottles, what is the maximum you can drink?',
+      answer: '13 bottles',
+      wrongs: ['12 bottles', '14 bottles', '11 bottles'],
+      explanation: `① The answer is 13 bottles.\n\n② Drink the first 9 → 9 empty bottles\n9 ÷ 3 = exchange for 3 more → 3 empty bottles\n3 ÷ 3 = exchange for 1 more → 1 empty bottle\n\n③ Total: 9 + 3 + 1 = 13 bottles!`
     },
     {
-      question: '空き瓶3本でジュース1本と交換できる。\n最初に12本買うと最大何本飲める？',
-      answer: '17本',
-      wrongs: ['16本', '18本', '15本'],
-      explanation: `① 答えは 17本です。\n\n② 最初の12本を飲む→空き瓶12本\n12÷3 = 4本と交換→空き瓶4本\n4÷3 = 1本と交換→空き瓶1本\n\n③ 合計 12 + 4 + 1 = 17本！`
+      question: 'Every 3 empty bottles can be exchanged for 1 full bottle.\nIf you start with 12 bottles, what is the maximum you can drink?',
+      answer: '17 bottles',
+      wrongs: ['16 bottles', '18 bottles', '15 bottles'],
+      explanation: `① The answer is 17 bottles.\n\n② Drink the first 12 → 12 empty bottles\n12 ÷ 3 = exchange for 4 more → 4 empty bottles\n4 ÷ 3 = exchange for 1 more → 1 empty bottle\n\n③ Total: 12 + 4 + 1 = 17 bottles!`
     },
     {
-      question: '空き瓶3本でジュース1本と交換できる。\n最初に15本買うと最大何本飲める？',
-      answer: '21本',
-      wrongs: ['20本', '22本', '18本'],
-      explanation: `① 答えは 21本です。\n\n② 最初の15本を飲む→空き瓶15本\n15÷3 = 5本と交換→空き瓶5本\n5÷3 = 1本と交換→空き瓶2本\n\n③ 合計 15 + 5 + 1 = 21本！`
+      question: 'Every 3 empty bottles can be exchanged for 1 full bottle.\nIf you start with 15 bottles, what is the maximum you can drink?',
+      answer: '21 bottles',
+      wrongs: ['20 bottles', '22 bottles', '18 bottles'],
+      explanation: `① The answer is 21 bottles.\n\n② Drink the first 15 → 15 empty bottles\n15 ÷ 3 = exchange for 5 more → 5 empty bottles\n5 ÷ 3 = exchange for 1 more → 2 empty bottles left\n\n③ Total: 15 + 5 + 1 = 21 bottles!`
     },
     {
-      question: '空き瓶3本でジュース1本と交換できる。\n最初に18本買うと最大何本飲める？',
-      answer: '26本',
-      wrongs: ['25本', '27本', '24本'],
-      explanation: `① 答えは 26本です。\n\n② 最初の18本を飲む→空き瓶18本\n18÷3 = 6本と交換→空き瓶6本\n6÷3 = 2本と交換→空き瓶2本\n\n③ 合計 18 + 6 + 2 = 26本！`
+      question: 'Every 3 empty bottles can be exchanged for 1 full bottle.\nIf you start with 18 bottles, what is the maximum you can drink?',
+      answer: '26 bottles',
+      wrongs: ['25 bottles', '27 bottles', '24 bottles'],
+      explanation: `① The answer is 26 bottles.\n\n② Drink the first 18 → 18 empty bottles\n18 ÷ 3 = exchange for 6 more → 6 empty bottles\n6 ÷ 3 = exchange for 2 more → 2 empty bottles left\n\n③ Total: 18 + 6 + 2 = 26 bottles!`
     },
     {
-      question: '空き瓶3本でジュース1本と交換できる。\n最初に27本買うと最大何本飲める？',
-      answer: '40本',
-      wrongs: ['39本', '41本', '36本'],
-      explanation: `① 答えは 40本です。\n\n② 最初の27本を飲む→空き瓶27本\n27÷3 = 9本と交換→空き瓶9本\n9÷3 = 3本と交換→空き瓶3本\n3÷3 = 1本と交換→空き瓶1本\n\n③ 合計 27 + 9 + 3 + 1 = 40本！`
+      question: 'Every 3 empty bottles can be exchanged for 1 full bottle.\nIf you start with 27 bottles, what is the maximum you can drink?',
+      answer: '40 bottles',
+      wrongs: ['39 bottles', '41 bottles', '36 bottles'],
+      explanation: `① The answer is 40 bottles.\n\n② Drink the first 27 → 27 empty bottles\n27 ÷ 3 = exchange for 9 more → 9 empty bottles\n9 ÷ 3 = exchange for 3 more → 3 empty bottles\n3 ÷ 3 = exchange for 1 more → 1 empty bottle\n\n③ Total: 27 + 9 + 3 + 1 = 40 bottles!`
     },
     {
-      question: '空き瓶4本でジュース1本と交換できる。\n最初に16本買うと最大何本飲める？',
-      answer: '21本',
-      wrongs: ['20本', '22本', '18本'],
-      explanation: `① 答えは 21本です。\n\n② 最初の16本を飲む→空き瓶16本\n16÷4 = 4本と交換→空き瓶4本\n4÷4 = 1本と交換→空き瓶1本\n\n③ 合計 16 + 4 + 1 = 21本！`
+      question: 'Every 4 empty bottles can be exchanged for 1 full bottle.\nIf you start with 16 bottles, what is the maximum you can drink?',
+      answer: '21 bottles',
+      wrongs: ['20 bottles', '22 bottles', '18 bottles'],
+      explanation: `① The answer is 21 bottles.\n\n② Drink the first 16 → 16 empty bottles\n16 ÷ 4 = exchange for 4 more → 4 empty bottles\n4 ÷ 4 = exchange for 1 more → 1 empty bottle\n\n③ Total: 16 + 4 + 1 = 21 bottles!`
     },
     {
-      question: '空き瓶4本でジュース1本と交換できる。\n最初に20本買うと最大何本飲める？',
-      answer: '26本',
-      wrongs: ['25本', '27本', '24本'],
-      explanation: `① 答えは 26本です。\n\n② 最初の20本を飲む→空き瓶20本\n20÷4 = 5本と交換→空き瓶5本\n5÷4 = 1本と交換→空き瓶1本\n\n③ 合計 20 + 5 + 1 = 26本！`
+      question: 'Every 4 empty bottles can be exchanged for 1 full bottle.\nIf you start with 20 bottles, what is the maximum you can drink?',
+      answer: '26 bottles',
+      wrongs: ['25 bottles', '27 bottles', '24 bottles'],
+      explanation: `① The answer is 26 bottles.\n\n② Drink the first 20 → 20 empty bottles\n20 ÷ 4 = exchange for 5 more → 5 empty bottles\n5 ÷ 4 = exchange for 1 more → 1 empty bottle\n\n③ Total: 20 + 5 + 1 = 26 bottles!`
     },
     {
-      question: '空き瓶4本でジュース1本と交換できる。\n最初に24本買うと最大何本飲める？',
-      answer: '31本',
-      wrongs: ['30本', '32本', '28本'],
-      explanation: `① 答えは 31本です。\n\n② 最初の24本を飲む→空き瓶24本\n24÷4 = 6本と交換→空き瓶6本\n6÷4 = 1本と交換→空き瓶2本\n\n③ 合計 24 + 6 + 1 = 31本！`
+      question: 'Every 4 empty bottles can be exchanged for 1 full bottle.\nIf you start with 24 bottles, what is the maximum you can drink?',
+      answer: '31 bottles',
+      wrongs: ['30 bottles', '32 bottles', '28 bottles'],
+      explanation: `① The answer is 31 bottles.\n\n② Drink the first 24 → 24 empty bottles\n24 ÷ 4 = exchange for 6 more → 6 empty bottles\n6 ÷ 4 = exchange for 1 more → 2 empty bottles left\n\n③ Total: 24 + 6 + 1 = 31 bottles!`
     },
     {
-      question: '空き瓶5本でジュース1本と交換できる。\n最初に25本買うと最大何本飲める？',
-      answer: '31本',
-      wrongs: ['30本', '32本', '28本'],
-      explanation: `① 答えは 31本です。\n\n② 最初の25本を飲む→空き瓶25本\n25÷5 = 5本と交換→空き瓶5本\n5÷5 = 1本と交換→空き瓶1本\n\n③ 合計 25 + 5 + 1 = 31本！`
+      question: 'Every 5 empty bottles can be exchanged for 1 full bottle.\nIf you start with 25 bottles, what is the maximum you can drink?',
+      answer: '31 bottles',
+      wrongs: ['30 bottles', '32 bottles', '28 bottles'],
+      explanation: `① The answer is 31 bottles.\n\n② Drink the first 25 → 25 empty bottles\n25 ÷ 5 = exchange for 5 more → 5 empty bottles\n5 ÷ 5 = exchange for 1 more → 1 empty bottle\n\n③ Total: 25 + 5 + 1 = 31 bottles!`
     },
     {
-      question: '空き瓶5本でジュース1本と交換できる。\n最初に20本買うと最大何本飲める？',
-      answer: '24本',
-      wrongs: ['23本', '25本', '20本'],
-      explanation: `① 答えは 24本です。\n\n② 最初の20本を飲む→空き瓶20本\n20÷5 = 4本と交換→空き瓶4本\n4本は交換できないので終了\n\n③ 合計 20 + 4 = 24本！`
+      question: 'Every 5 empty bottles can be exchanged for 1 full bottle.\nIf you start with 20 bottles, what is the maximum you can drink?',
+      answer: '24 bottles',
+      wrongs: ['23 bottles', '25 bottles', '20 bottles'],
+      explanation: `① The answer is 24 bottles.\n\n② Drink the first 20 → 20 empty bottles\n20 ÷ 5 = exchange for 4 more → 4 empty bottles\n4 bottles can't be exchanged, so we stop.\n\n③ Total: 20 + 4 = 24 bottles!`
     },
   ]
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -1328,7 +1328,7 @@ function generateRecycle(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'リサイクル交換の最大数'
+    genre: 'Bottle Recycling',topPercent: 15
   }
 }
 
@@ -1336,34 +1336,34 @@ function generateRecycle(): ExpertQuestion {
 function generateRockPaperScissors(): ExpertQuestion {
   const patterns = [
     {
-      question: '3人でじゃんけんをするとき\n1回で勝負がつく確率は？',
+      question: 'Three people play rock-paper-scissors.\nWhat is the probability that one person wins outright?',
       answer: '1/3',
       wrongs: ['2/3', '1/9', '2/9'],
-      explanation: `① 答えは 1/3 です。\n\n② 3人の手の組み合わせは\n3³ = 27通り\n\n③ 勝負がつくのは\n1人が勝つ場合：3種類×3人 = 9通り\n\n④ 9 ÷ 27 = 1/3！`
+      explanation: `① The answer is 1/3.\n\n② Total combinations of throws:\n3³ = 27\n\n③ Combinations where one person wins outright:\n3 throw types × 3 possible winners = 9\n\n④ 9 ÷ 27 = 1/3!`
     },
     {
-      question: '2人でじゃんけんをするとき\n1回で勝負がつく確率は？',
+      question: 'Two people play rock-paper-scissors.\nWhat is the probability that one person wins outright?',
       answer: '2/3',
       wrongs: ['1/3', '1/2', '2/9'],
-      explanation: `① 答えは 2/3 です。\n\n② 2人の手の組み合わせは\n3² = 9通り\n\n③ 勝負がつくのは\nグーvsチョキ・チョキvsパー・パーvsグー\nそれぞれ2通りで 3×2 = 6通り\n\n④ 6 ÷ 9 = 2/3！`
+      explanation: `① The answer is 2/3.\n\n② Total combinations of throws:\n3² = 9\n\n③ Combinations where one person wins:\nRock vs Scissors, Scissors vs Paper, Paper vs Rock\n2 outcomes each → 3 × 2 = 6\n\n④ 6 ÷ 9 = 2/3!`
     },
     {
-      question: '3人でじゃんけんをするとき\nアイコになる確率は？',
+      question: 'Three people play rock-paper-scissors.\nWhat is the probability of a draw?',
       answer: '2/3',
       wrongs: ['1/3', '1/9', '1/2'],
-      explanation: `① 答えは 2/3 です。\n\n② 3人の手の組み合わせは\n3³ = 27通り\n\n③ 勝負がつくのは\n1人が勝つ場合：3種類×3人 = 9通り\n\n④ アイコ = 勝負がつかない\n1 - 9/27 = 1 - 1/3 = 2/3！`
+      explanation: `① The answer is 2/3.\n\n② Total combinations of throws:\n3³ = 27\n\n③ Combinations where one person wins outright:\n3 throw types × 3 possible winners = 9\n\n④ Draw = no outright winner:\n1 - 9/27 = 1 - 1/3 = 2/3!`
     },
     {
-      question: '2人でじゃんけんをするとき\nアイコになる確率は？',
+      question: 'Two people play rock-paper-scissors.\nWhat is the probability of a draw?',
       answer: '1/3',
       wrongs: ['2/3', '1/2', '1/9'],
-      explanation: `① 答えは 1/3 です。\n\n② 2人の手の組み合わせは\n3² = 9通り\n\n③ 勝負がつくのは\nグーvsチョキ・チョキvsパー・パーvsグー\nそれぞれ2通りで 3×2 = 6通り\n\n④ アイコ = 勝負がつかない\n1 - 6/9 = 1 - 2/3 = 1/3！`
+      explanation: `① The answer is 1/3.\n\n② Total combinations of throws:\n3² = 9\n\n③ Combinations where one person wins:\nRock vs Scissors, Scissors vs Paper, Paper vs Rock\n2 outcomes each → 3 × 2 = 6\n\n④ Draw = no outright winner:\n1 - 6/9 = 1 - 2/3 = 1/3!`
     },
     {
-      question: '3人でじゃんけんをするとき\n全員が同じ手を出す確率は？',
+      question: 'Three people play rock-paper-scissors.\nWhat is the probability that all three throw the same sign?',
       answer: '1/9',
       wrongs: ['1/3', '1/27', '2/9'],
-      explanation: `① 答えは 1/9 です。\n\n② 3人の手の組み合わせは\n3³ = 27通り\n\n③ 全員同じ手は\nグー・チョキ・パーの3通り\n\n④ 3 ÷ 27 = 1/9！`
+      explanation: `① The answer is 1/9.\n\n② Total combinations of throws:\n3³ = 27\n\n③ All three the same:\nRock, Scissors, or Paper → 3 combinations\n\n④ 3 ÷ 27 = 1/9!`
     },
   ]
   const p = patterns[randInt(0, patterns.length - 1)]
@@ -1373,10 +1373,9 @@ function generateRockPaperScissors(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'じゃんけんの確率'
+    genre: 'Rock-Paper-Scissors Probability',topPercent: 15
   }
 }
-
 
 const generators = [
   generateGauss,

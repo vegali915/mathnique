@@ -27,7 +27,8 @@ export default function ExpertGame() {
         myAnswer: null,
         isCorrect: false,
         explanation: question.explanation,
-        genre: question.genre
+        genre: question.genre,
+        topPercent: question.topPercent
       }))
       return
     }
@@ -46,7 +47,8 @@ export default function ExpertGame() {
       myAnswer: choice,
       isCorrect,
       explanation: question.explanation,
-      genre: question.genre
+      genre: question.genre,
+      topPercent: question.topPercent
     }))
   }
 
@@ -68,8 +70,8 @@ export default function ExpertGame() {
   if (!question) return null
 
   return (
- <main className="min-h-screen flex flex-col items-center justify-center relative px-4 py-8">
-         <div className="absolute inset-0 overflow-hidden">
+    <main className="min-h-screen flex flex-col items-center justify-center relative px-4 py-8">
+      <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-yellow-500/10 rounded-full blur-3xl" />
       </div>
 
@@ -100,32 +102,32 @@ export default function ExpertGame() {
           ))}
         </div>
 
-{(answered !== null || timeUp) && (
-  <div className="flex flex-col items-center gap-3">
-    <p className={`text-2xl font-bold ${answered === 'correct' ? 'text-yellow-400' : 'text-red-400'}`}>
-      {timeUp ? '⏰ 時間切れ！' : answered === 'correct' ? '✅ 正解！' : '❌ 不正解'}
-    </p>
-    <button
-      onClick={() => router.push('/expert/explanation')}
-      style={{backgroundColor: '#facc15', color: '#0A1628', width: '100%', padding: '16px', fontWeight: 'bold', fontSize: '18px', borderRadius: '12px'}}
-    >
-      解説を見る →
-    </button>
- <button
-  onClick={() => {
-    setQuestion(null)
-    setTimeout(() => setQuestion(generateExpertQuestion()), 0)
-    setTimeLeft(60)
-    setAnswered(null)
-    setSelectedChoice(null)
-    setTimeUp(false)
-  }}
-  style={{color: 'rgba(255,255,255,0.5)', width: '100%', padding: '10px', fontSize: '14px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)'}}
->
-  もう一度挑戦
-</button>
- </div>
-)}
+        {(answered !== null || timeUp) && (
+          <div className="flex flex-col items-center gap-3">
+            <p className={`text-2xl font-bold ${answered === 'correct' ? 'text-yellow-400' : 'text-red-400'}`}>
+              {timeUp ? '⏰ Time\'s up!' : answered === 'correct' ? '✅ Correct!' : '❌ Wrong!'}
+            </p>
+            <button
+              onClick={() => router.push('/expert/explanation')}
+              style={{backgroundColor: '#facc15', color: '#0A1628', width: '100%', padding: '16px', fontWeight: 'bold', fontSize: '18px', borderRadius: '12px'}}
+            >
+              See Explanation →
+            </button>
+            <button
+              onClick={() => {
+                setQuestion(null)
+                setTimeout(() => setQuestion(generateExpertQuestion()), 0)
+                setTimeLeft(60)
+                setAnswered(null)
+                setSelectedChoice(null)
+                setTimeUp(false)
+              }}
+              style={{color: 'rgba(255,255,255,0.5)', width: '100%', padding: '10px', fontSize: '14px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)'}}
+            >
+              Try Again
+            </button>
+          </div>
+        )}
       </div>
     </main>
   )
