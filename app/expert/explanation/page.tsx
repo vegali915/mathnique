@@ -57,15 +57,23 @@ export default function ExpertExplanation() {
           <p className={`text-2xl font-bold mb-2 ${result.isCorrect ? 'text-yellow-400' : 'text-red-400'}`}>
             {result.isCorrect ? '✅ Correct!' : '❌ Wrong!'}
           </p>
-          {/* 難易度表示 */}
-          <p className="text-white text-xs mb-2 tracking-widest">
-            {result.isCorrect ? 'You\'re in the top ' : 'Only the top '}
-            <span style={{fontWeight: 'bold', color: getDifficultyColor(result.topPercent)}}>
-              {result.topPercent}%
-            </span>
-            {result.isCorrect ? ' who solved this!' : ' can solve this one!'}
-          </p>
-          <p className="text-yellow-300/70 font-bold">Answer: {result.answer}</p>
+
+   <p className="text-white text-xs mb-2 tracking-widest">
+  {result.isCorrect
+    ? `You're in the top `
+    : result.topPercent >= 30
+      ? `The top `
+      : `Only the top `}
+  <span style={{fontWeight: 'bold', color: getDifficultyColor(result.topPercent)}}>
+    {result.topPercent}%
+  </span>
+  {result.isCorrect
+    ? ` who solved this!`
+    : result.topPercent >= 30
+      ? ` of people can solve this one!`
+      : ` can solve this one!`}
+</p>
+       <p className="text-yellow-300/70 font-bold">Answer: {result.answer}</p>
 
 
           {!result.isCorrect && (
