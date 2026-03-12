@@ -122,7 +122,7 @@ function generateDoubling(): ExpertQuestion {
     choices: makeChoices(qt.answer, qt.wrongs),
     answer: qt.answer,
     explanation: qt.explanation,
-    genre: 'Doubling',topPercent: 5
+    genre: 'Doubling',topPercent: 10
   }
 }
 
@@ -142,7 +142,7 @@ function generateTimes11(): ExpertQuestion {
     ),
     answer: String(answer),
     explanation: `① The answer is ${answer}.\n\n② There's a trick for multiplying by 11!\n${n} has tens digit "${tens}" and ones digit "${ones}"\n\n③ The trick: insert the sum of both digits in between!\n${tens}・(${tens}+${ones})・${ones}\n= ${tens}・${mid}・${ones}${mid >= 10 ? '\n\n④ When the middle digit is 10 or more, don\'t forget to carry!' : `\n\n④ Put them together and you get ${answer}!`}`,
-    genre: 'Multiplying by 11',topPercent: 30
+    genre: 'Multiplying by 11',topPercent: 15
   }
 }
 
@@ -211,7 +211,7 @@ function generateComplementProbability(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'Complement Probability',topPercent: 15
+    genre: 'Complement Probability',topPercent: 30
   }
 }
 
@@ -390,7 +390,7 @@ function generateAdjacentPermutation(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'Adjacent Permutations',topPercent:5
+    genre: 'Adjacent Permutations',topPercent:15
   }
 }
 
@@ -441,7 +441,7 @@ function generateDigitCount(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'Digit Count',topPercent: 15
+    genre: 'Digit Count',topPercent: 10
   }
 }
 
@@ -536,7 +536,7 @@ function generateLeague(): ExpertQuestion {
     ),
     answer: String(answer),
     explanation: `① The answer is ${answer} matches.\n\n② Each of the ${n} teams plays ${n - 1} others:\n${n} × ${n - 1} = ${n * (n - 1)}… but wait!\n\n③ This counts "Team A vs Team B" and "Team B vs Team A" as separate matches.\nSince each match is counted twice, we divide by 2.\n\n④ ${n * (n - 1)} ÷ 2 = ${answer} matches!`,
-    genre: 'Round Robin Matches',topPercent: 15
+    genre: 'Round Robin Matches',topPercent: 30
   }
 }
 
@@ -741,7 +741,7 @@ function generateSequence(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'Sequence Patterns',topPercent: 15
+    genre: 'Sequence Patterns',topPercent: 10
   }
 }
 
@@ -769,7 +769,7 @@ function generateExponentialSpread(): ExpertQuestion {
     ),
     answer: `${p.answer} people`,
     explanation: `① The answer is ${p.answer} people.\n\n② The number multiplies by ${p.people} at every stage:\nStage 1: ${p.people} people\nStage 2: ${p.people * p.people} people\nStage 3: ${p.people ** 3} people\n\n③ At stage ${p.stages}, multiply ${p.people} by itself ${p.stages} times:\n${p.people}^${p.stages} = ${p.answer} people!`,
-    genre: 'Exponential Spread',topPercent: 15
+    genre: 'Exponential Spread',topPercent: 30
   }
 }
 
@@ -793,7 +793,7 @@ function generateDoublingReverse(): ExpertQuestion {
     ),
     answer: `Day ${answer}`,
     explanation: `① The answer is Day ${answer}.\n\n② If the count doubles every day,\nthen the previous day always had half as much!\n\n③ If day ${fullDay} is full, then:\nDay ${fullDay - 1} → 1/2 full\nDay ${fullDay - 2} → 1/4 full\nDay ${fullDay - 3} → 1/8 full\n\n④ ${fraction.label} full = Day ${answer}!\nThe key is to think backwards!`,
-    genre: 'Doubling Reverse',topPercent: 5
+    genre: 'Doubling Reverse',topPercent: 10
   }
 }
 
@@ -833,7 +833,7 @@ function generateGauss2(): ExpertQuestion {
     ),
     answer: String(p.answer),
     explanation: `① The answer is ${p.answer}.\n\n② First, factor out ${p.mult}:\n${p.mult} × (1 + 2 + 3 + … + ${p.n})\n\n③ Use Gauss's formula for the sum inside:\n1 + 2 + 3 + … + ${p.n} = ${p.n} × ${p.n + 1} ÷ 2 = ${p.n * (p.n + 1) / 2}\n\n④ ${p.mult} × ${p.n * (p.n + 1) / 2} = ${p.answer}!`,
-    genre: "Gauss's Sum II",topPercent: 5
+    genre: "Gauss's Sum II",topPercent: 10
   }
 }
 
@@ -1003,7 +1003,7 @@ function generateTournamentDiff(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'Tournament Variations',topPercent: 15
+    genre: 'Tournament Variations',topPercent: 30
   }
 }
 
@@ -1060,7 +1060,7 @@ function generateNonMultiple(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'Non-Multiples Count',topPercent: 5
+    genre: 'Non-Multiples Count',topPercent: 10
   }
 }
 
@@ -1079,7 +1079,7 @@ function generateSquareEndingIn5(): ExpertQuestion {
     ),
     answer: String(answer),
     explanation: `① The answer is ${answer}.\n\n② There's a trick for squaring numbers that end in 5!\n\n③ For ${n}²:\nTake the tens digit "${tens}" and multiply:\n${tens} × (${tens}+1) = ${tens} × ${tens + 1} = ${tens * (tens + 1)}\n\n④ Attach "25" at the end:\n${answer}!`,
-    genre: 'Squaring Numbers Ending in 5',topPercent: 30
+    genre: 'Squaring Numbers Ending in 5',topPercent: 15
   }
 }
 
@@ -1173,7 +1173,7 @@ function generateSymmetricMultiply(): ExpertQuestion {
     ),
     answer: String(p.answer),
     explanation: `① The answer is ${p.answer}.\n\n② ${p.a} and ${p.b} are symmetric around ${p.center}:\n${p.a} = ${p.center} - ${p.diff}\n${p.b} = ${p.center} + ${p.diff}\n\n③ (${p.center}-${p.diff})(${p.center}+${p.diff}) = ${p.center}² - ${p.diff}²\n= ${p.center * p.center} - ${p.diff * p.diff} = ${p.answer}!\n\n④ This uses the difference of squares formula:\n(a-b)(a+b) = a² - b²`,
-    genre: 'Symmetric Multiplication',topPercent: 15
+    genre: 'Symmetric Multiplication',topPercent: 10
   }
 }
 
@@ -1328,7 +1328,7 @@ function generateRecycle(): ExpertQuestion {
     choices: makeChoices(p.answer, p.wrongs),
     answer: p.answer,
     explanation: p.explanation,
-    genre: 'Bottle Recycling',topPercent: 15
+    genre: 'Bottle Recycling',topPercent: 10
   }
 }
 
