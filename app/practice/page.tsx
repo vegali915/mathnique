@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 type Question = {
   question: string
@@ -34,11 +35,8 @@ function generateChoices(answer: number): number[] {
   }
   return [...choices].sort(() => Math.random() - 0.5)
 }
-
-function generateQuestion(level: number): Question {
-  const type = Math.floor(Math.random() * 4)
-
-  if (type === 0) {
+function generateQuestionByGenre(genre: string, level: number): Question {
+  if (genre === 'arithmetic') {
     const ops = ['+', '-', '×', '÷']
     const op = ops[Math.floor(Math.random() * ops.length)]
 
@@ -64,7 +62,7 @@ function generateQuestion(level: number): Question {
       return { question: `${a} ÷ ${b} = ?`, choices: generateChoices(answer), answer, type: 'arithmetic' }
     }
 
-  } else if (type === 1) {
+  } else if (genre === 'fillblank') {
     const patterns = [
       () => { const b = Math.floor(Math.random() * 9) + 1; const answer = Math.floor(Math.random() * 9) + 1; return { question: `□ + ${b} = ${answer + b}`, answer } },
       () => { const a = Math.floor(Math.random() * 9) + 1; const answer = Math.floor(Math.random() * 9) + 1; return { question: `${a} + □ = ${a + answer}`, answer } },
@@ -78,7 +76,7 @@ function generateQuestion(level: number): Question {
     const p = patterns[Math.floor(Math.random() * patterns.length)]()
     return { question: p.question, choices: generateChoices(p.answer), answer: p.answer, type: 'fillblank' }
 
-  } else if (type === 2) {
+  } else if (genre === 'sequence') {
     const isGeometric = Math.random() < 0.5
     if (isGeometric) {
       const ratio = [2, 3][Math.floor(Math.random() * 2)]
@@ -137,27 +135,32 @@ function generateQuestion(level: number): Question {
   }
 }
 
-export default function Game() {
+function PracticeContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const genre = searchParams.get('genre') || 'arithmetic'
+
   const [level, setLevel] = useState(1)
   const [score, setScore] = useState(0)
   const [combo, setCombo] = useState(0)
   const [questionCount, setQuestionCount] = useState(0)
-  const [question, setQuestion] = useState<Question>(() => generateQuestion(1))
+  const [correctCount, setCorrectCount] = useState(0)
+  const [history, setHistory] = useState<HistoryItem[]>([])
+  const [question, setQuestion] = useState<Question>(() => generateQuestionByGenre(genre, 1))
   const [timeLeft, setTimeLeft] = useState(60)
   const [answered, setAnswered] = useState<'correct' | 'wrong' | null>(null)
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
-  const [history, setHistory] = useState<HistoryItem[]>([])
 
-  useEffect(() => {
+useEffect(() => {
     if (timeLeft === 0) {
-      sessionStorage.setItem('gameHistory', JSON.stringify(history))
-      router.push(`/result?score=${score}`)
+      sessionStorage.setItem('practiceHistory', JSON.stringify(history))
+      sessionStorage.setItem('practiceScore', String(score))
+      router.push(`/practice/result?score=${score}&genre=${genre}&total=${questionCount}&correct=${correctCount}`)
       return
     }
     const timer = setTimeout(() => setTimeLeft(t => t - 1), 1000)
     return () => clearTimeout(timer)
-  }, [timeLeft, score, router, history])
+  }, [timeLeft, score, router, genre, history, questionCount, correctCount])
 
   const handleAnswer = (choice: number) => {
     if (answered) return
@@ -180,15 +183,18 @@ export default function Game() {
       setCombo(newCombo)
       const points = newCombo >= 4 ? 25 : newCombo === 3 ? 20 : newCombo === 2 ? 15 : 10
       setScore(s => s + points)
+      setCorrectCount(c => c + 1)
     } else {
       setCombo(0)
     }
+
     const newCount = questionCount + 1
     setQuestionCount(newCount)
     const newLevel = newCount % 5 === 0 ? level + 1 : level
     if (newCount % 5 === 0) setLevel(newLevel)
+
     setTimeout(() => {
-      setQuestion(generateQuestion(newLevel))
+      setQuestion(generateQuestionByGenre(genre, newLevel))
       setAnswered(null)
       setSelectedChoice(null)
     }, 200)
@@ -209,6 +215,13 @@ export default function Game() {
     return 'bg-white/5 text-white/30 border border-white/10'
   }
 
+  const genreLabel: Record<string, string> = {
+    arithmetic: '➕ Arithmetic',
+    fillblank: '□ Fill in Blank',
+    sequence: '〜 Sequence',
+    oddone: '🔍 Odd One Out',
+  }
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
       <div className="absolute inset-0 overflow-hidden">
@@ -221,6 +234,9 @@ export default function Game() {
             <div className="text-yellow-400 font-bold text-sm animate-pulse">🔥 {combo} COMBO!</div>
           )}
           <div className={`font-bold text-xl ${timerColor}`}>{timeLeft}s</div>
+        </div>
+        <div className="text-center">
+          <span style={{color: 'rgba(34,211,238,0.9)', fontSize: '12px', letterSpacing: '0.1em'}}>PRACTICE · {genreLabel[genre]}</span>
         </div>
         <div className="bg-white/5 border border-cyan-400/20 rounded-2xl p-8 text-center">
           {question.instruction && (
@@ -241,5 +257,13 @@ export default function Game() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function Practice() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0A1628]" />}>
+      <PracticeContent />
+    </Suspense>
   )
 }

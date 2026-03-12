@@ -14,6 +14,7 @@ export default function Home() {
   const [user, setUser] = useState<any>(null)
   const [isPro, setIsPro] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [practiceOpen, setPracticeOpen] = useState(false) // ← 追加：アコーディオンの開閉
   const router = useRouter()
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function Home() {
       setIsPro(pro)
     }
   }
+
   async function loadPlayInfo() {
     const { playCount, sharedBonus } = await getTodayPlayInfo()
     const maxPlays = sharedBonus ? 5 : 3
@@ -45,6 +47,14 @@ export default function Home() {
     router.push('/countdown')
   }
 
+  // ジャンル一覧
+  const genres = [
+    { id: 'arithmetic', label: '➕ Arithmetic' },
+    { id: 'fillblank',  label: '□ Fill in Blank' },
+    { id: 'sequence',   label: '〜 Sequence' },
+    { id: 'oddone',     label: '🔍 Odd One Out' },
+  ]
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
       <MathBackground />
@@ -52,7 +62,7 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
 
-   {/* メニューボタン（左上） */}
+      {/* メニューボタン（左上） */}
       <div style={{position: 'fixed', top: '24px', left: '24px', zIndex: 20}}>
         <button
           onClick={() => setMenuOpen(true)}
@@ -61,7 +71,7 @@ export default function Home() {
           <span>☰</span>
           <span>MENU</span>
         </button>
-                 </div>
+      </div>
 
       {/* ログイン/アカウントボタン（右上） */}
       <div className="absolute top-6 right-6">
@@ -134,11 +144,11 @@ export default function Home() {
         )}
       </div>
 
-       {/* ハンバーガーメニュー */}
+      {/* ハンバーガーメニュー */}
       {menuOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div className="absolute inset-0 bg-black/60" onClick={() => setMenuOpen(false)} />
-          <div className="relative z-10 w-72 h-full bg-[#0f2040] flex flex-col p-8 gap-4">
+          <div className="relative z-10 w-72 h-full bg-[#0f2040] flex flex-col p-8 gap-4 overflow-y-auto">
             <button
               onClick={() => setMenuOpen(false)}
               className="self-end text-white hover:text-cyan-400 transition mb-4 text-xl"
@@ -156,40 +166,74 @@ export default function Home() {
               </button>
             )}
 
+            {/* Practice Mode アコーディオン */}
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => {
+                  if (!isPro) { setMenuOpen(false); router.push('/upgrade'); return }
+                  setPracticeOpen(prev => !prev)
+                }}
+                className={`w-full py-3 font-bold rounded-xl border transition flex items-center justify-between px-4 ${isPro ? 'bg-cyan-400/20 text-cyan-400 border-cyan-400/30 hover:bg-cyan-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
+              >
+                <span>{isPro ? '✅ Practice Mode' : '🔒 Practice Mode'}</span>
+                {isPro && <span className="text-sm">{practiceOpen ? '▲' : '▼'}</span>}
+              </button>
+
+ {/* ジャンル一覧（アコーディオン展開部分） */}
+              {isPro && practiceOpen && (
+                <div className="flex flex-col pl-3">
+                  {genres.map((genre, index) => (
+                    <div key={genre.id}>
+                      <button
+                        onClick={() => {
+                          setMenuOpen(false)
+                          router.push(`/practice?genre=${genre.id}`)
+                        }}
+                        className="w-full py-3 text-sm text-left pl-4 transition hover:opacity-100 opacity-80"
+                        style={{color: 'white'}}
+                      >
+                        {genre.label}
+                      </button>
+                      {index < genres.length - 1 && (
+                        <div style={{height: '1px', backgroundColor: 'rgba(34,211,238,0.3)'}} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+                       {/* Expert Mode */}
             <button
-              onClick={() => { setMenuOpen(false); isPro ? router.push('/practice') : router.push('/upgrade') }}
-              className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-cyan-400/20 text-cyan-400 border-cyan-400/30 hover:bg-cyan-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
+              onClick={() => { setMenuOpen(false); isPro ? router.push('/countdown?mode=expert') : router.push('/upgrade') }}
+              className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-yellow-400/20 text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
             >
-              {isPro ? '✅ Practice Mode' : '🔒 Practice Mode'}
+              {isPro ? '🏆 Expert Mode' : '🔒 Expert Mode'}
             </button>
 
-<button
-  onClick={() => { setMenuOpen(false); isPro ? router.push('/countdown?mode=expert') : router.push('/upgrade') }}
-  className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-yellow-400/20 text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
->
-  {isPro ? '🏆 Expert Mode' : '🔒 Expert Mode'}
-</button>
             <div className="border-t border-white/10 my-2" />
+
             <button
               onClick={() => { setMenuOpen(false); router.push(user ? '/account' : '/login') }}
               className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
             >
               {user ? 'My Account' : 'Login / Sign Up'}
             </button>
- <button
-  onClick={() => { setMenuOpen(false); router.push('/terms') }}
-  className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
->
-  Terms of Service
-</button>
-  <button
-  onClick={() => { setMenuOpen(false); router.push('/privacy') }}
-  className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
->
-  Privacy Policy
-</button>
+            <button
+              onClick={() => { setMenuOpen(false); router.push('/terms') }}
+              className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
+            >
+              Terms of Service
+            </button>
+            <button
+              onClick={() => { setMenuOpen(false); router.push('/privacy') }}
+              className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
+            >
+              Privacy Policy
+            </button>
+          </div>
         </div>
-        </div>
-           )}   </main>
+      )}
+    </main>
   )
 }
