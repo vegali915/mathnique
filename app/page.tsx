@@ -155,6 +155,28 @@ export default function Home() {
             >
               ✕
             </button>
+{/* Daily Quest */}
+            <button
+              onClick={() => { setMenuOpen(false); router.push('/daily-quest') }}
+              className="w-full py-3 font-bold rounded-xl border transition"
+              style={{backgroundColor: 'rgba(253,224,71,0.15)', color: 'rgba(253,224,71,0.9)', border: '1px solid rgba(253,224,71,0.3)'}}
+            >
+              🎯 Daily Quest
+            </button>
+
+            {/* 未課金ユーザーのみUpgrade to Proを表示 */}
+            {!isPro && (
+              <button
+                onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
+                className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
+              >
+                ⚡ Upgrade to Pro
+              </button>
+            )}
+
+
+
+
 
             {/* 未課金ユーザーのみUpgrade to Proを表示 */}
             {!isPro && (

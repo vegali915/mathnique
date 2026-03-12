@@ -172,7 +172,7 @@ const getMessage = () => {
           </div>
               )}
 
-{/* 課金バナー（3回目以降） */}
+ {/* 課金バナー（3回目以降） */}
 {showPaywall && (
   <div
     onClick={() => router.push('/upgrade')}
@@ -183,7 +183,13 @@ const getMessage = () => {
     <p style={{color: 'white'}} className="text-xs mt-1">Upgrade to Pro · Unlimited plays + Practice Mode</p>
   </div>
 )}
-        <div className="w-full border-t border-white/10" />
+
+{/* PWA追加バナー（残りプレイ0のときのみ） */}
+{showPaywall && (
+<div className="w-full p-2 text-center">
+                <p style={{color: 'rgba(255,255,255,0.5)', fontSize: '13px'}}>📲 Add to your Home Screen to never miss your 3 free plays!</p>
+              </div>)}
+       <div className="w-full border-t border-white/10" />
 
         <div className="w-full flex flex-col gap-3">
           {/* シェアボタン */}

@@ -1412,7 +1412,9 @@ const generators = [
   generateRockPaperScissors,
 ]
 
-export function generateExpertQuestion(): ExpertQuestion {
-  const generator = generators[randInt(0, generators.length - 1)]
-  return generator()
+export function generateExpertQuestion(genreIndex?: number): ExpertQuestion {
+  const index = genreIndex !== undefined
+    ? genreIndex % generators.length
+    : randInt(0, generators.length - 1)
+  return generators[index]()
 }

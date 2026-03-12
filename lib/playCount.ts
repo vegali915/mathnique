@@ -111,3 +111,53 @@ export async function canPlay(): Promise<boolean> {
   const maxPlays = sharedBonus ? 5 : 3
   return playCount < maxPlays
 }
+
+
+// Daily Questをプレイ済みかチェック
+export async function canPlayQuest(): Promise<boolean> {
+  if (await isDeveloper()) return true
+
+  const anonymousId = getAnonymousId()
+  const today = new Date().toISOString().split('T')[0]
+
+  const { data } = await supabase
+    .from('daily_plays')
+    .select('quest_played')
+    .eq('anonymous_id', anonymousId)
+    .eq('play_date', today)
+    .single()
+
+  if (!data) return true
+  return !data.quest_played
+}
+
+// Daily Questのプレイを記録
+export async function recordQuestPlay() {
+  if (await isDeveloper()) return
+
+  const anonymousId = getAnonymousId()
+  const today = new Date().toISOString().split('T')[0]
+
+  const { data } = await supabase
+    .from('daily_plays')
+    .select('*')
+    .eq('anonymous_id', anonymousId)
+    .eq('play_date', today)
+    .single()
+
+  if (!data) {
+    await supabase.from('daily_plays').insert({
+      anonymous_id: anonymousId,
+      play_date: today,
+      play_count: 0,
+      shared_bonus: false,
+      quest_played: true
+    })
+  } else {
+    await supabase
+      .from('daily_plays')
+      .update({ quest_played: true })
+      .eq('anonymous_id', anonymousId)
+      .eq('play_date', today)
+  }
+}
