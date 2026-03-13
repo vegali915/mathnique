@@ -15,6 +15,17 @@ export default function DailyQuest() {
   const [timeLeft, setTimeLeft] = useState(60)
   const [timeUp, setTimeUp] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const correctSoundRef = useRef<HTMLAudioElement | null>(null)
+  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
+  const isMutedRef = useRef(false)
+
+  useEffect(() => {
+    isMutedRef.current = localStorage.getItem('soundMuted') === 'true'
+    correctSoundRef.current = new Audio('/sounds/correct.mp3')
+    correctSoundRef.current.volume = 0.3
+    wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
+    wrongSoundRef.current.volume = 0.3
+  }, [])
 
   useEffect(() => {
     async function init() {
@@ -54,6 +65,11 @@ export default function DailyQuest() {
     const isCorrect = choice === question?.answer
     setAnswered(isCorrect ? 'correct' : 'wrong')
     setSelectedChoice(choice)
+    const sound = isCorrect ? correctSoundRef.current : wrongSoundRef.current
+    if (!isMutedRef.current && sound) {
+      sound.currentTime = 0
+      sound.play().catch(() => {})
+    }
     await recordQuestPlay()
   }
 
@@ -155,10 +171,9 @@ export default function DailyQuest() {
             }}>
               {timeUp && !answered ? "⏰ Time's up!" : answered === 'correct' ? '🎉 Correct!' : '❌ Not quite...'}
             </p>
- <p style={{color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '16px'}} className="whitespace-pre-line">{question?.explanation}</p>           <div className="flex flex-col gap-3 mt-6">
-             
-             
-<p style={{color: 'rgba(255,255,255,0.5)', fontSize: '12px', textAlign: 'center'}}>Want to test your basic math skills?</p>
+            <p style={{color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '16px'}} className="whitespace-pre-line">{question?.explanation}</p>
+            <div className="flex flex-col gap-3 mt-6">
+              <p style={{color: 'rgba(255,255,255,0.5)', fontSize: '12px', textAlign: 'center'}}>Want to test your basic math skills?</p>
               <button
                 onClick={() => router.push('/')}
                 style={{backgroundColor: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.6)', color: 'rgba(251,191,36,1)', fontWeight: 'bold', fontSize: '18px', borderRadius: '9999px', padding: '16px', width: '100%'}}
@@ -172,9 +187,8 @@ export default function DailyQuest() {
               >
                 🔓 Unlock Expert Mode with Pro!
               </button>
-              {/* PWA追加バナー */}
-<div className="w-full p-2 text-center">
-                <p style={{color: 'rgba(255, 255, 255, 0.94)', fontSize: '13px'}}>📲 Add to your Home Screen to never miss your Daily Quest!</p>
+              <div className="w-full p-2 text-center">
+                <p style={{color: 'rgba(255,255,255,0.94)', fontSize: '13px'}}>📲 Add to your Home Screen to never miss your Daily Quest!</p>
               </div>
               <button
                 onClick={() => router.push('/')}

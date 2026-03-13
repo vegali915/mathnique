@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
 type Question = {
@@ -149,6 +149,26 @@ export default function Game() {
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [history, setHistory] = useState<HistoryItem[]>([])
 
+const correctSoundRef = useRef<HTMLAudioElement | null>(null)
+  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
+  const isMutedRef = useRef(false)
+
+  useEffect(() => {
+    isMutedRef.current = localStorage.getItem('soundMuted') === 'true'
+    correctSoundRef.current = new Audio('/sounds/correct.mp3')
+    correctSoundRef.current.volume = 0.3
+    wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
+    wrongSoundRef.current.volume = 0.3
+  }, [])
+
+  const playSound = (type: 'correct' | 'wrong') => {
+    if (isMutedRef.current) return
+    const sound = type === 'correct' ? correctSoundRef.current : wrongSoundRef.current
+    if (sound) {
+      sound.currentTime = 0
+      sound.play().catch(() => {})
+    }
+  }
   useEffect(() => {
     if (timeLeft === 0) {
       sessionStorage.setItem('gameHistory', JSON.stringify(history))
@@ -164,6 +184,7 @@ export default function Game() {
     const isCorrect = choice === question.answer
     setAnswered(isCorrect ? 'correct' : 'wrong')
     setSelectedChoice(choice)
+    playSound(isCorrect ? 'correct' : 'wrong')
 
     const newHistory: HistoryItem = {
       question: question.question,

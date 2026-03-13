@@ -14,13 +14,22 @@ export default function Home() {
   const [user, setUser] = useState<any>(null)
   const [isPro, setIsPro] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [practiceOpen, setPracticeOpen] = useState(false) // ← 追加：アコーディオンの開閉
+  const [practiceOpen, setPracticeOpen] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     loadPlayInfo()
     loadUser()
+    const savedMute = localStorage.getItem('soundMuted')
+    if (savedMute === 'true') setIsMuted(true)
   }, [])
+
+  const toggleMute = () => {
+    const newMuted = !isMuted
+    setIsMuted(newMuted)
+    localStorage.setItem('soundMuted', String(newMuted))
+  }
 
   async function loadUser() {
     const { data: { session } } = await supabase.auth.getSession()
@@ -47,7 +56,6 @@ export default function Home() {
     router.push('/countdown')
   }
 
-  // ジャンル一覧
   const genres = [
     { id: 'arithmetic', label: '➕ Arithmetic' },
     { id: 'fillblank',  label: '□ Fill in Blank' },
@@ -73,9 +81,10 @@ export default function Home() {
         </button>
       </div>
 
-      {/* ログイン/アカウントボタン（右上） */}
-      <div className="absolute top-6 right-6">
+{/* 右上：ログイン/アカウントボタン＋ミュートボタン */}
+      <div style={{position: 'fixed', top: '24px', right: '24px', zIndex: 20}} className="flex flex-col items-end gap-2">
         {user ? (
+
           <button
             onClick={() => router.push('/account')}
             className="text-cyan-400 text-sm border border-cyan-400/30 px-4 py-2 rounded-full hover:bg-cyan-400/10 transition"
@@ -89,9 +98,14 @@ export default function Home() {
           >
             Login
           </button>
-        )}
+)}
+  <button
+          onClick={toggleMute}
+          style={{fontSize: '22px', opacity: 0.5, padding: '4px', alignSelf: 'center',marginTop: '12px'}}
+        >
+          {isMuted ? '🔇' : '🔊'}
+        </button>      
       </div>
-
       {/* メインコンテンツ */}
       <div className="relative z-10 flex flex-col items-center gap-8">
 
@@ -155,7 +169,8 @@ export default function Home() {
             >
               ✕
             </button>
-{/* Daily Quest */}
+
+            {/* Daily Quest */}
             <button
               onClick={() => { setMenuOpen(false); router.push('/daily-quest') }}
               className="w-full py-3 font-bold rounded-xl border transition"
@@ -163,20 +178,6 @@ export default function Home() {
             >
               🎯 Daily Quest
             </button>
-
-            {/* 未課金ユーザーのみUpgrade to Proを表示 */}
-            {!isPro && (
-              <button
-                onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
-                className="w-full py-3 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition"
-              >
-                ⚡ Upgrade to Pro
-              </button>
-            )}
-
-
-
-
 
             {/* 未課金ユーザーのみUpgrade to Proを表示 */}
             {!isPro && (
@@ -201,7 +202,6 @@ export default function Home() {
                 {isPro && <span className="text-sm">{practiceOpen ? '▲' : '▼'}</span>}
               </button>
 
- {/* ジャンル一覧（アコーディオン展開部分） */}
               {isPro && practiceOpen && (
                 <div className="flex flex-col pl-3">
                   {genres.map((genre, index) => (
@@ -224,8 +224,8 @@ export default function Home() {
                 </div>
               )}
             </div>
-            
-                       {/* Expert Mode */}
+
+            {/* Expert Mode */}
             <button
               onClick={() => { setMenuOpen(false); isPro ? router.push('/countdown?mode=expert') : router.push('/upgrade') }}
               className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-yellow-400/20 text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
@@ -233,7 +233,7 @@ export default function Home() {
               {isPro ? '🏆 Expert Mode' : '🔒 Expert Mode'}
             </button>
 
-   <div className="border-t border-white/10 my-2" />
+            <div className="border-t border-white/10 my-2" />
 
             <button
               onClick={() => { setMenuOpen(false); router.push('/about') }}
@@ -248,7 +248,8 @@ export default function Home() {
             >
               {user ? 'My Account' : 'Login / Sign Up'}
             </button>
-                     <button
+
+            <button
               onClick={() => { setMenuOpen(false); router.push('/terms') }}
               className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
             >

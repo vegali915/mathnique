@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { generateExpertQuestion, ExpertQuestion } from '../../lib/expertQuestions'
 
@@ -12,8 +12,17 @@ export default function ExpertGame() {
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null)
   const [timeUp, setTimeUp] = useState(false)
 
+  const correctSoundRef = useRef<HTMLAudioElement | null>(null)
+  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
+  const isMutedRef = useRef(false)
+
   useEffect(() => {
     setQuestion(generateExpertQuestion())
+    isMutedRef.current = localStorage.getItem('soundMuted') === 'true'
+    correctSoundRef.current = new Audio('/sounds/correct.mp3')
+    correctSoundRef.current.volume = 0.3
+    wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
+    wrongSoundRef.current.volume = 0.3
   }, [])
 
   useEffect(() => {
@@ -41,6 +50,11 @@ export default function ExpertGame() {
     const isCorrect = choice === question.answer
     setAnswered(isCorrect ? 'correct' : 'wrong')
     setSelectedChoice(choice)
+    const sound = isCorrect ? correctSoundRef.current : wrongSoundRef.current
+    if (!isMutedRef.current && sound) {
+      sound.currentTime = 0
+      sound.play().catch(() => {})
+    }
     sessionStorage.setItem('expertResult', JSON.stringify({
       question: question.question,
       answer: question.answer,
