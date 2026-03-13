@@ -153,14 +153,23 @@ const correctSoundRef = useRef<HTMLAudioElement | null>(null)
   const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
   const isMutedRef = useRef(false)
 
-  useEffect(() => {
+useEffect(() => {
     isMutedRef.current = localStorage.getItem('soundMuted') === 'true'
     correctSoundRef.current = new Audio('/sounds/correct.mp3')
     correctSoundRef.current.volume = 0.3
     wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
     wrongSoundRef.current.volume = 0.3
-  }, [])
 
+    // iOSで音声を事前に認識させる
+    const unlock = () => {
+      correctSoundRef.current?.play().then(() => correctSoundRef.current?.pause())
+      wrongSoundRef.current?.play().then(() => wrongSoundRef.current?.pause())
+      document.removeEventListener('touchstart', unlock)
+    }
+    document.addEventListener('touchstart', unlock)
+    return () => document.removeEventListener('touchstart', unlock)
+  }, [])
+  
   const playSound = (type: 'correct' | 'wrong') => {
     if (isMutedRef.current) return
     const sound = type === 'correct' ? correctSoundRef.current : wrongSoundRef.current
