@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 
@@ -152,18 +152,6 @@ function PracticeContent() {
   const [answered, setAnswered] = useState<'correct' | 'wrong' | null>(null)
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
 
-  const correctSoundRef = useRef<HTMLAudioElement | null>(null)
-  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
-  const isMutedRef = useRef(false)
-
-  useEffect(() => {
-    isMutedRef.current = localStorage.getItem('soundMuted') === 'true'
-    correctSoundRef.current = new Audio('/sounds/correct.mp3')
-    correctSoundRef.current.volume = 0.3
-    wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
-    wrongSoundRef.current.volume = 0.3
-  }, [])
-
   useEffect(() => {
     if (timeLeft === 0) {
       sessionStorage.setItem('practiceHistory', JSON.stringify(history))
@@ -180,11 +168,6 @@ function PracticeContent() {
     const isCorrect = choice === question.answer
     setAnswered(isCorrect ? 'correct' : 'wrong')
     setSelectedChoice(choice)
-    const sound = isCorrect ? correctSoundRef.current : wrongSoundRef.current
-    if (!isMutedRef.current && sound) {
-      sound.currentTime = 0
-      sound.play().catch(() => {})
-    }
 
     const newHistory: HistoryItem = {
       question: question.question,

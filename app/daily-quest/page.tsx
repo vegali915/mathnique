@@ -15,17 +15,6 @@ export default function DailyQuest() {
   const [timeLeft, setTimeLeft] = useState(60)
   const [timeUp, setTimeUp] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
-  const correctSoundRef = useRef<HTMLAudioElement | null>(null)
-  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
-  const isMutedRef = useRef(false)
-
-  useEffect(() => {
-    isMutedRef.current = localStorage.getItem('soundMuted') === 'true'
-    correctSoundRef.current = new Audio('/sounds/correct.mp3')
-    correctSoundRef.current.volume = 0.3
-    wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
-    wrongSoundRef.current.volume = 0.3
-  }, [])
 
   useEffect(() => {
     async function init() {
@@ -65,11 +54,6 @@ export default function DailyQuest() {
     const isCorrect = choice === question?.answer
     setAnswered(isCorrect ? 'correct' : 'wrong')
     setSelectedChoice(choice)
-    const sound = isCorrect ? correctSoundRef.current : wrongSoundRef.current
-    if (!isMutedRef.current && sound) {
-      sound.currentTime = 0
-      sound.play().catch(() => {})
-    }
     await recordQuestPlay()
   }
 

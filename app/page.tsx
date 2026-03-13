@@ -15,21 +15,14 @@ export default function Home() {
   const [isPro, setIsPro] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [practiceOpen, setPracticeOpen] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
+
   const router = useRouter()
 
   useEffect(() => {
     loadPlayInfo()
     loadUser()
-    const savedMute = localStorage.getItem('soundMuted')
-    if (savedMute === 'true') setIsMuted(true)
   }, [])
 
-  const toggleMute = () => {
-    const newMuted = !isMuted
-    setIsMuted(newMuted)
-    localStorage.setItem('soundMuted', String(newMuted))
-  }
 
   async function loadUser() {
     const { data: { session } } = await supabase.auth.getSession()
@@ -99,12 +92,6 @@ export default function Home() {
             Login
           </button>
 )}
-  <button
-          onClick={toggleMute}
-          style={{fontSize: '22px', opacity: 0.5, padding: '4px', alignSelf: 'center',marginTop: '12px'}}
-        >
-          {isMuted ? '🔇' : '🔊'}
-        </button>      
       </div>
       {/* メインコンテンツ */}
       <div className="relative z-10 flex flex-col items-center gap-8">
