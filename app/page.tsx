@@ -233,7 +233,14 @@ export default function Home() {
               {isPro ? '🏆 Expert Mode' : '🔒 Expert Mode'}
             </button>
 
-            <div className="border-t border-white/10 my-2" />
+   <div className="border-t border-white/10 my-2" />
+
+            <button
+              onClick={() => { setMenuOpen(false); router.push('/about') }}
+              className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
+            >
+              About
+            </button>
 
             <button
               onClick={() => { setMenuOpen(false); router.push(user ? '/account' : '/login') }}
@@ -241,7 +248,7 @@ export default function Home() {
             >
               {user ? 'My Account' : 'Login / Sign Up'}
             </button>
-            <button
+                     <button
               onClick={() => { setMenuOpen(false); router.push('/terms') }}
               className="w-full py-3 text-white text-left hover:text-cyan-400 transition"
             >
