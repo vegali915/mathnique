@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { canPlayQuest, recordQuestPlay } from '../../lib/playCount'
 import { generateExpertQuestion, ExpertQuestion } from '../../lib/expertQuestions'
+import { supabase } from '../../lib/supabase'
+import { getSubscriptionStatus } from '../../lib/subscription'
 
 export default function DailyQuest() {
   const router = useRouter()
@@ -14,6 +16,7 @@ export default function DailyQuest() {
   const [alreadyPlayed, setAlreadyPlayed] = useState(false)
   const [timeLeft, setTimeLeft] = useState(60)
   const [timeUp, setTimeUp] = useState(false)
+  const [isPro, setIsPro] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
@@ -24,6 +27,8 @@ export default function DailyQuest() {
         setLoading(false)
         return
       }
+      const pro = await getSubscriptionStatus()
+      setIsPro(pro)
       const today = new Date().toISOString().split('T')[0]
       const seed = today.replace(/-/g, '')
       setQuestion(generateExpertQuestion(Number(seed) % 32))
@@ -157,20 +162,26 @@ export default function DailyQuest() {
             </p>
             <p style={{color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '16px'}} className="whitespace-pre-line">{question?.explanation}</p>
             <div className="flex flex-col gap-3 mt-6">
-              <p style={{color: 'rgba(255,255,255,0.5)', fontSize: '12px', textAlign: 'center'}}>Want to test your basic math skills?</p>
-              <button
-                onClick={() => router.push('/')}
-                style={{backgroundColor: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.6)', color: 'rgba(251,191,36,1)', fontWeight: 'bold', fontSize: '18px', borderRadius: '9999px', padding: '16px', width: '100%'}}
-              >
-                ⚡ Try Normal Mode — free, 3x a day!
-              </button>
-              <p style={{color: 'rgba(255,255,255,0.5)', fontSize: '12px', textAlign: 'center'}}>Want more challenges like this?</p>
-              <button
-                onClick={() => router.push('/upgrade')}
-                style={{backgroundColor: 'rgba(34,211,238,0.2)', border: '1px solid rgba(34,211,238,0.4)', color: 'rgba(34,211,238,1)', fontWeight: 'bold', fontSize: '18px', borderRadius: '9999px', padding: '16px', width: '100%'}}
-              >
-                🔓 Unlock Expert Mode with Pro!
-              </button>
+
+              {!isPro && (
+                <>
+                  <p style={{color: 'rgba(255,255,255,0.5)', fontSize: '12px', textAlign: 'center'}}>Want to test your basic math skills?</p>
+                  <button
+                    onClick={() => router.push('/')}
+                    style={{backgroundColor: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.6)', color: 'rgba(251,191,36,1)', fontWeight: 'bold', fontSize: '18px', borderRadius: '9999px', padding: '16px', width: '100%'}}
+                  >
+                    ⚡ Try Normal Mode — free, 3x a day!
+                  </button>
+                  <p style={{color: 'rgba(255,255,255,0.5)', fontSize: '12px', textAlign: 'center'}}>Want more challenges like this?</p>
+                  <button
+                    onClick={() => router.push('/upgrade')}
+                    style={{backgroundColor: 'rgba(34,211,238,0.2)', border: '1px solid rgba(34,211,238,0.4)', color: 'rgba(34,211,238,1)', fontWeight: 'bold', fontSize: '18px', borderRadius: '9999px', padding: '16px', width: '100%'}}
+                  >
+                    🔓 Unlock Expert Mode with Pro!
+                  </button>
+                </>
+              )}
+
               <div className="w-full p-2 text-center">
                 <p style={{color: 'rgba(255,255,255,0.94)', fontSize: '13px'}}>📲 Add to your Home Screen to never miss your Daily Quest!</p>
               </div>
