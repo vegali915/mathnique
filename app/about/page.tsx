@@ -54,7 +54,7 @@ export default function About() {
           <div className="flex flex-col gap-2">
             <p style={{color: 'rgba(253,224,71,0.9)', fontWeight: 'bold', fontSize: '16px'}}>🎯 Daily Quest</p>
             <p style={{color: 'rgba(255,255,255,0.8)', fontSize: '14px', lineHeight: '1.7'}}>
-              One special problem, every day. Expert Mode-level questions — normally locked behind the Pro plan — are unlocked for everyone, free or Pro, once a day. Miss it and you'll regret it!
+              One special problem, every day. Expert Mode-level questions — normally locked behind the Pro plan — are unlocked for everyone, free or Pro, once a day. A new challenge awaits every day — don't miss out!
             </p>
           </div>
 
