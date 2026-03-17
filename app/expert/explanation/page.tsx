@@ -85,10 +85,10 @@ export default function ExpertExplanation() {
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
           <p className="text-cyan-400 text-xs font-bold mb-3 tracking-widest">💡 Explanation</p>
           <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
-            {result.explanation.split('\n\n').map((block, i) => (
-              <p key={i} style={{color: 'white', lineHeight: '1.7', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)'}}>{block}</p>
-            ))}
-          </div>
+   {result.explanation.split('\n\n').map((block, i) => (
+  <p key={i} style={{color: 'white', lineHeight: '1.7', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)', whiteSpace: 'pre-wrap'}}>{block}</p>
+))}
+       </div>
         </div>
 
         {/* ボタン */}

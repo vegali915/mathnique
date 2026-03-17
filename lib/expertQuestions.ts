@@ -1615,8 +1615,7 @@ function generateExponentialSpread(): ExpertQuestion {
   }).join('\n')
 
   return {
-    question: `One person tells ${p.people} others a piece of news.\nEach of those ${p.people} people tells ${p.people} more, and so on.\nAfter this happens ${p.stages} times, how many people have heard the news?`,
-    choices: makeChoices(
+ question: `One person tells ${p.people} others a piece of news.\nEach person who hears it always tells ${p.people} more people.\nHow many people hear the news in the ${p.stages}th round of spreading?`,   choices: makeChoices(
       `${p.answer} people`,
       [
         `${p.people * p.stages} people`,              // 掛け算と勘違いするミス
