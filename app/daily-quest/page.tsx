@@ -117,7 +117,7 @@ export default function DailyQuest() {
         {/* ヘッダー */}
         <div className="flex items-center justify-between">
           <p style={{color: 'rgba(253,224,71,0.9)', fontSize: '12px', letterSpacing: '0.1em'}}>
-            DAILY QUEST · {question?.genre}
+            DAILY QUEST 
           </p>
           <p style={{
             color: timeLeft <= 10 ? 'rgba(239,68,68,1)' : 'rgba(255,255,255,0.7)',
