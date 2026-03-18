@@ -49,7 +49,7 @@ function LoginForm() {
     } else {
       setMessage('Email sent! Click the link in your inbox to log in.')
       setIsError(false)
-      setCooldown(30)
+      setCooldown(15)
       const timer = setInterval(() => {
         setCooldown(prev => {
           if (prev <= 1) { clearInterval(timer); return 0 }
