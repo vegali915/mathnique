@@ -8,9 +8,9 @@ import { supabase } from '../../lib/supabase'
 
 function generateDistributionData() {
   const data = []
-  for (let i = 0; i <= 1000; i += 20) {
-    const mean = 300
-    const std = 120
+  for (let i = 0; i <= 1200; i += 20) {
+    const mean = 420
+    const std = 150
     const raw = Math.exp(-Math.pow(i - mean, 2) / (2 * std * std))
     const rampUp = Math.min(1, i / 150)
     const value = Math.round(raw * rampUp * 1000)
@@ -18,6 +18,7 @@ function generateDistributionData() {
   }
   return data
 }
+
 function calculatePercentile(score: number): number {
   const data = generateDistributionData()
   const total = data.reduce((sum, d) => sum + d.value, 0)
@@ -59,8 +60,7 @@ useEffect(() => {
   }, [])
 const percentile = calculatePercentile(score)
   const distributionData = generateDistributionData()
-  const userScoreRounded = Math.min(Math.round(score / 20) * 20, 1000)
-
+const userScoreRounded = Math.min(Math.round(score / 20) * 20, 1200)
 const getMessage = () => {
   if (percentile <= 1) return '🏆 Legendary! You\'re a math genius!'
   if (percentile <= 5) return '🔥 Outstanding! You\'re in the elite!'
