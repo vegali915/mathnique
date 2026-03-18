@@ -10,6 +10,7 @@ function LoginForm() {
   const redirectTo = searchParams.get('redirect') || '/'
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [cooldown, setCooldown] = useState(0)
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(false)
   const [showEmailForm, setShowEmailForm] = useState(false)
@@ -48,6 +49,13 @@ function LoginForm() {
     } else {
       setMessage('Email sent! Click the link in your inbox to log in.')
       setIsError(false)
+      setCooldown(30)
+      const timer = setInterval(() => {
+        setCooldown(prev => {
+          if (prev <= 1) { clearInterval(timer); return 0 }
+          return prev - 1
+        })
+      }, 1000)
     }
     setIsLoading(false)
   }
@@ -100,9 +108,9 @@ function LoginForm() {
             Continue with Email
           </button>
         ) : (
-          <div className="w-full flex flex-col gap-3">
+          <div className="w-full flex flex-col gap-6">
             <p className="text-white text-xs text-center">
-               We'll email you a secure login link.
+              We'll email you a secure login link.
             </p>
             <input
               type="email"
@@ -113,10 +121,10 @@ function LoginForm() {
             />
             <button
               onClick={handleEmailLogin}
-              disabled={isLoading}
-              className="w-full py-4 bg-cyan-400 text-[#0A1628] font-bold text-lg rounded-full hover:bg-cyan-300 transition"
+              disabled={isLoading || cooldown > 0}
+              className="w-full py-4 bg-cyan-400 text-[#0A1628] font-bold text-lg rounded-full hover:bg-cyan-300 transition disabled:opacity-50"
             >
-              {isLoading ? 'Sending...' : 'Send Login Link'}
+              {isLoading ? 'Sending...' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Send Login Link'}
             </button>
           </div>
         )}
