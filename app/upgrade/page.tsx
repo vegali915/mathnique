@@ -62,8 +62,7 @@ export default function UpgradePage() {
           <button
             onClick={handleUpgrade}
             disabled={loading}
-            className="w-full bg-yellow-400 text-gray-900 font-bold py-4 rounded-xl text-lg hover:bg-yellow-300 transition disabled:opacity-50"
-          >
+   className="w-full bg-cyan-400 text-gray-900 font-bold py-4 rounded-xl text-lg hover:bg-cyan-300 hover:scale-105 transition-all duration-200 shadow-[0_0_30px_rgba(34,211,238,0.4)] disabled:opacity-50"       >
             {loading ? 'Loading...' : 'Upgrade Now'}
           </button>
         </div>
