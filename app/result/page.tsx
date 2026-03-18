@@ -5,12 +5,13 @@ import { Suspense, useState, useEffect } from 'react'
 import { AreaChart, Area, XAxis, YAxis, ReferenceLine, ResponsiveContainer, Tooltip } from 'recharts'
 import { getTodayPlayInfo, applyShareBonus, canPlay, recordPlay } from '../../lib/playCount'
 import { supabase } from '../../lib/supabase'
+import { getSubscriptionStatus } from '../../lib/subscription'
 
 function generateDistributionData() {
   const data = []
   for (let i = 0; i <= 1200; i += 20) {
-    const mean = 420
-    const std = 150
+    const mean = 500
+    const std = 160
     const raw = Math.exp(-Math.pow(i - mean, 2) / (2 * std * std))
     const rampUp = Math.min(1, i / 150)
     const value = Math.round(raw * rampUp * 1000)
@@ -27,7 +28,6 @@ function calculatePercentile(score: number): number {
   return result === 0 ? 1 : result
 }
 
-
 function ResultContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -36,20 +36,22 @@ function ResultContent() {
   const [copied, setCopied] = useState(false)
   const [hasShared, setHasShared] = useState(false)
   const [playCount, setPlayCount] = useState(0)
+  const [isPro, setIsPro] = useState(false)
 
-useEffect(() => {
+  useEffect(() => {
     async function loadInfo() {
       const { playCount, sharedBonus } = await getTodayPlayInfo()
       setPlayCount(playCount)
       setHasShared(sharedBonus)
+      const pro = await getSubscriptionStatus()
+      setIsPro(pro)
     }
     loadInfo()
 
-    // スコアをSupabaseに保存
     async function saveScore() {
       if (!score) return
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return // ログインしていない場合は保存しない
+      if (!user) return
       await supabase.from('play_sessions').insert({
         user_id: user.id,
         score: score,
@@ -58,27 +60,30 @@ useEffect(() => {
     }
     saveScore()
   }, [])
-const percentile = calculatePercentile(score)
-  const distributionData = generateDistributionData()
-const userScoreRounded = Math.min(Math.round(score / 20) * 20, 1200)
-const getMessage = () => {
-  if (percentile <= 1) return '🏆 Legendary! You\'re a math genius!'
-  if (percentile <= 5) return '🔥 Outstanding! You\'re in the elite!'
-  if (percentile <= 10) return '⭐ Excellent! You\'re crushing it!'
-  if (percentile <= 15) return '💪 Amazing effort! You\'re so close to the top — one more game?'
-  if (percentile <= 20) return '🎯 Great performance! Top 10% is totally within your reach!'
-  if (percentile <= 30) return '🚀 Solid effort! The more you play, the better you get!'
-  return '🌱 Great start! Every top player began right here!'
-}
-  const shareText = percentile <= 1
-    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top 1%! Can you beat me? 🏆\nTry Mathnique → mathnique.vercel.app`
-    : percentile <= 5
-    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top 5%! Can you beat me? 🔥\nTry Mathnique → mathnique.vercel.app`
-    : percentile <= 15
-    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top ${percentile}%! Think you can beat me? 💡\nTry Mathnique → mathnique.vercel.app`
-    : `I just scored ${score} pts on a 1-minute math challenge! Can you beat my score? 🎯\nTry Mathnique → mathnique.vercel.app`
 
-  const shareUrl = 'https://mathnique.vercel.app'
+  const percentile = calculatePercentile(score)
+  const distributionData = generateDistributionData()
+  const userScoreRounded = Math.min(Math.round(score / 20) * 20, 1200)
+
+  const getMessage = () => {
+    if (percentile <= 1) return '🏆 Legendary! You\'re a math genius!'
+    if (percentile <= 5) return '🔥 Outstanding! You\'re in the elite!'
+    if (percentile <= 10) return '⭐ Excellent! You\'re crushing it!'
+    if (percentile <= 15) return '💪 Amazing effort! You\'re so close to the top — one more game?'
+    if (percentile <= 20) return '🎯 Great performance! Top 10% is totally within your reach!'
+    if (percentile <= 30) return '🚀 Solid effort! The more you play, the better you get!'
+    return '🌱 Great start! Every top player began right here!'
+  }
+
+  const shareText = percentile <= 1
+    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top 1%! Can you beat me? 🏆\nTry Mathnique → mathniqueplay.com`
+    : percentile <= 5
+    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top 5%! Can you beat me? 🔥\nTry Mathnique → mathniqueplay.com`
+    : percentile <= 15
+    ? `I scored ${score} pts on a 1-minute math challenge and ranked in the top ${percentile}%! Think you can beat me? 💡\nTry Mathnique → mathniqueplay.com`
+    : `I just scored ${score} pts on a 1-minute math challenge! Can you beat my score? 🎯\nTry Mathnique → mathniqueplay.com`
+
+  const shareUrl = 'https://mathniqueplay.com'
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareText)
@@ -95,10 +100,9 @@ const getMessage = () => {
     setShowShare(false)
   }
 
-// バナー表示条件
   const playsRemaining = hasShared ? Math.max(0, 5 - playCount) : Math.max(0, 3 - playCount)
-  const showSharePromo = !hasShared
-  const showPaywall = playsRemaining === 0 
+  const showSharePromo = !hasShared && !isPro
+  const showPaywall = playsRemaining === 0 && !isPro
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
@@ -106,15 +110,14 @@ const getMessage = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
 
-     <div className="relative z-10 w-full max-w-lg flex flex-col items-center gap-6 pt-24">
-           <div className="text-center">
+      <div className="relative z-10 w-full max-w-lg flex flex-col items-center gap-6 pt-24">
+        <div className="text-center">
           <p className="text-yellow-300/70 text-sm tracking-widest mb-2">YOUR SCORE</p>
           <p className="text-7xl font-bold text-white">{score}</p>
-
-  {percentile <= 30 ? (
-  <p className="text-cyan-400 text-lg mt-2">Top {percentile}%</p>
-) : null}
-        <p className="text-white/80 text-sm mt-2">{getMessage()}</p>
+          {percentile <= 30 ? (
+            <p className="text-cyan-400 text-lg mt-2">Top {percentile}%</p>
+          ) : null}
+          <p className="text-white/80 text-sm mt-2">{getMessage()}</p>
         </div>
 
         {/* スコア分布グラフ */}
@@ -160,7 +163,7 @@ const getMessage = () => {
           </ResponsiveContainer>
         </div>
 
-  {/* シェアで+2回バナー（1〜2回目・未シェア時のみ） */}
+        {/* シェアで+2回バナー（未シェア・非Proのみ） */}
         {showSharePromo && (
           <div
             onClick={() => setShowShare(true)}
@@ -170,32 +173,34 @@ const getMessage = () => {
             <p className="text-yellow-300 font-bold text-sm">🎁 Share to unlock 2 more plays!</p>
             <p className="text-white text-xs mt-1">Once per day</p>
           </div>
-              )}
+        )}
 
- {/* 課金バナー（3回目以降） */}
-{showPaywall && (
-  <div
-    onClick={() => router.push('/upgrade')}
-    style={{border: '1px solid rgba(251,146,60,0.6)', backgroundColor: 'rgba(251,146,60,0.1)', cursor: 'pointer'}}
-    className="w-full rounded-2xl p-4 text-center hover:opacity-80 transition"
-  >
-    <p style={{color: '#fb923c'}} className="font-bold text-sm">⚡ Want unlimited plays?</p>
-    <p style={{color: 'white'}} className="text-xs mt-1">Upgrade to Pro · Unlimited plays + Practice Mode</p>
-  </div>
-)}
+        {/* 課金バナー（残りプレイ0・非Proのみ） */}
+        {showPaywall && (
+          <div
+            onClick={() => router.push('/upgrade')}
+            style={{border: '1px solid rgba(251,146,60,0.6)', backgroundColor: 'rgba(251,146,60,0.1)', cursor: 'pointer'}}
+            className="w-full rounded-2xl p-4 text-center hover:opacity-80 transition"
+          >
+            <p style={{color: '#fb923c'}} className="font-bold text-sm">⚡ Want unlimited plays?</p>
+            <p style={{color: 'white'}} className="text-xs mt-1">Upgrade to Pro · Unlimited plays + Practice Mode</p>
+          </div>
+        )}
 
-{/* PWA追加バナー（残りプレイ0のときのみ） */}
-{showPaywall && (
-<div className="w-full p-2 text-center">
-                <p style={{color: 'rgba(255,255,255,0.5)', fontSize: '13px'}}>📲 Add to your Home Screen to never miss your 3 free plays!</p>
-              </div>)}
-       <div className="w-full border-t border-white/10" />
+        {/* PWA追加バナー（残りプレイ0・非Proのみ） */}
+        {showPaywall && (
+          <div className="w-full p-2 text-center">
+            <p style={{color: 'rgba(255,255,255,0.5)', fontSize: '13px'}}>📲 Add to your Home Screen to never miss your 3 free plays!</p>
+          </div>
+        )}
+
+        <div className="w-full border-t border-white/10" />
 
         <div className="w-full flex flex-col gap-3">
-          {/* シェアボタン */}
           <button
             onClick={() => setShowShare(true)}
-  className="w-full py-4 bg-cyan-400 text-[#0A1628] font-bold text-lg rounded-full hover:bg-cyan-300 transition shadow-[0_0_20px_rgba(34,211,238,0.3)]"        >
+            className="w-full py-4 bg-cyan-400 text-[#0A1628] font-bold text-lg rounded-full hover:bg-cyan-300 transition shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+          >
             Share My Result 🚀
           </button>
 
@@ -205,7 +210,8 @@ const getMessage = () => {
           >
             📝 Review My Answers
           </button>
-<button
+
+          <button
             onClick={async () => {
               const ok = await canPlay()
               if (!ok) {
@@ -219,9 +225,13 @@ const getMessage = () => {
           >
             Play Again
           </button>
-          <p className="text-white text-xs text-center">
-            <span style={{color: '#facc15'}}>{playsRemaining}</span> plays remaining today
-          </p>
+
+          {!isPro && (
+            <p className="text-white text-xs text-center">
+              <span style={{color: '#facc15'}}>{playsRemaining}</span> plays remaining today
+            </p>
+          )}
+
           <button
             onClick={() => router.push('/')}
             className="w-full py-3 text-cyan-400/50 text-sm hover:text-cyan-400 transition"
@@ -230,6 +240,7 @@ const getMessage = () => {
           </button>
         </div>
       </div>
+
       {/* シェアポップアップ */}
       {showShare && (
         <div className="fixed inset-0 z-50 flex items-end justify-center pb-8 px-4">
