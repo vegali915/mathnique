@@ -10,8 +10,8 @@ import { getSubscriptionStatus } from '../../lib/subscription'
 function generateDistributionData() {
   const data = []
   for (let i = 0; i <= 1200; i += 20) {
-    const mean = 500
-    const std = 160
+    const mean = 380
+    const std = 130
     const raw = Math.exp(-Math.pow(i - mean, 2) / (2 * std * std))
     const rampUp = Math.min(1, i / 150)
     const value = Math.round(raw * rampUp * 1000)
