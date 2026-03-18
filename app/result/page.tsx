@@ -48,16 +48,26 @@ function ResultContent() {
     }
     loadInfo()
 
-    async function saveScore() {
-      if (!score) return
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      await supabase.from('play_sessions').insert({
-        user_id: user.id,
-        score: score,
-        played_at: new Date().toISOString(),
-      })
-    }
+async function saveScore() {
+  if (!score) return
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+  const today = new Date().toISOString().split('T')[0]
+  const { data: existing } = await supabase
+    .from('play_sessions')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('score', score)
+    .gte('played_at', `${today}T00:00:00`)
+    .limit(1)
+  if (existing && existing.length > 0) return
+  await supabase.from('play_sessions').insert({
+    user_id: user.id,
+    score: score,
+    played_at: new Date().toISOString(),
+  })
+}
+
     saveScore()
   }, [])
 
