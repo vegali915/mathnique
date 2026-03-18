@@ -25,7 +25,7 @@ export default function PrivacyPage() {
 
         <section className="mb-8">
           <h2 className="text-xl font-bold mb-3">4. Children's Privacy (COPPA)</h2>
-          <p className="text-gray-300 leading-relaxed">The Service is intended for users aged 13 and older. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has submitted information to us, please contact us at support@mathnique.com.</p>
+          <p className="text-gray-300 leading-relaxed">The Service is intended for users aged 13 and older. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has submitted information to us, please contact us at support@mathniqueplay.com.</p>
         </section>
 
         <section className="mb-8">
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
 
         <section className="mb-8">
           <h2 className="text-xl font-bold mb-3">9. Your Rights</h2>
-          <p className="text-gray-300 leading-relaxed">Depending on your location, you may have the right to access, correct, or delete your personal data, object to processing, request data portability, or lodge a complaint with a data protection authority. To exercise these rights, contact us at support@mathnique.com.</p>
+          <p className="text-gray-300 leading-relaxed">Depending on your location, you may have the right to access, correct, or delete your personal data, object to processing, request data portability, or lodge a complaint with a data protection authority. To exercise these rights, contact us at support@mathniqueplay.com.</p>
         </section>
 
         <section className="mb-8">
@@ -70,7 +70,7 @@ export default function PrivacyPage() {
 
         <section className="mb-8">
           <h2 className="text-xl font-bold mb-3">13. Contact Us</h2>
-          <p className="text-gray-300 leading-relaxed">If you have any questions, please contact us at: <strong className="text-white">support@mathnique.com</strong></p>
+          <p className="text-gray-300 leading-relaxed">If you have any questions, please contact us at: <strong className="text-white">support@mathniqueplay.com</strong></p>
         </section>
 
         <Link href="/" className="text-yellow-400 hover:text-yellow-300 transition">

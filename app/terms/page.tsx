@@ -35,7 +35,7 @@ export default function TermsPage() {
 
         <section className="mb-8">
           <h2 className="text-xl font-bold mb-3">6. Account Termination and Deletion</h2>
-          <p className="text-gray-300 leading-relaxed">You may terminate your account at any time by contacting us at support@mathnique.com. Upon termination, your right to use the Service will immediately cease.</p>
+          <p className="text-gray-300 leading-relaxed">You may terminate your account at any time by contacting us at support@mathniqueplay.com. Upon termination, your right to use the Service will immediately cease.</p>
         </section>
 
         <section className="mb-8">
@@ -70,7 +70,7 @@ export default function TermsPage() {
 
         <section className="mb-8">
           <h2 className="text-xl font-bold mb-3">13. Contact Us</h2>
-          <p className="text-gray-300 leading-relaxed">If you have any questions, please contact us at: <strong className="text-white">support@mathnique.com</strong></p>
+          <p className="text-gray-300 leading-relaxed">If you have any questions, please contact us at: <strong className="text-white">support@mathniqueplay.com</strong></p>
         </section>
 
         <Link href="/" className="text-yellow-400 hover:text-yellow-300 transition">
