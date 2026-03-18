@@ -251,6 +251,13 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* フッター */}
+      <div className="fixed bottom-0 left-0 right-0 z-10 flex justify-center gap-4 py-3">
+        <a href="/privacy" className="text-white/30 text-xs hover:text-white/50 transition">Privacy Policy</a>
+        <span className="text-white/20 text-xs">·</span>
+        <a href="/terms" className="text-white/30 text-xs hover:text-white/50 transition">Terms</a>
+      </div>
     </main>
   )
 }
