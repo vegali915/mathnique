@@ -38,12 +38,9 @@ export default function VideoPage() {
       backgroundColor: '#0A1628',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-      paddingTop: '60px',
-      paddingBottom: '200px',
-      paddingLeft: '28px',
-      paddingRight: '80px',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '24px',
       overflow: 'hidden',
       position: 'relative',
     }}>
@@ -51,11 +48,11 @@ export default function VideoPage() {
       {/* 背景グロー */}
       <div style={{
         position: 'absolute',
-        top: '40%',
+        top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '500px',
-        height: '500px',
+        width: '400px',
+        height: '400px',
         backgroundColor: 'rgba(34,211,238,0.06)',
         borderRadius: '50%',
         filter: 'blur(80px)',
@@ -67,8 +64,10 @@ export default function VideoPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
+          alignItems: 'center',
           gap: '24px',
           width: '100%',
+          maxWidth: '400px',
           position: 'relative',
           zIndex: 10,
         }}>
@@ -78,12 +77,13 @@ export default function VideoPage() {
             opacity: showHook ? 1 : 0,
             transform: showHook ? 'translateY(0)' : 'translateY(-20px)',
             transition: 'opacity 0.6s ease, transform 0.6s ease',
+            textAlign: 'center',
           }}>
             <p style={{
-              fontSize: '36px',
+              fontSize: '28px',
               fontWeight: 'bold',
               color: 'white',
-              lineHeight: '1.2',
+              lineHeight: '1.3',
             }}>
               <span style={{color: '#facc15'}}>90%</span> of people<br />get this wrong.
             </p>
@@ -95,12 +95,14 @@ export default function VideoPage() {
             transform: showQuestion ? 'translateY(0)' : 'translateY(20px)',
             transition: 'opacity 0.6s ease, transform 0.6s ease',
             backgroundColor: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(34,211,238,0.3)',
+            border: '1px solid rgba(34,211,238,0.2)',
             borderRadius: '20px',
             padding: '24px',
+            width: '100%',
+            textAlign: 'center',
           }}>
             <p style={{
-              fontSize: '20px',
+              fontSize: '22px',
               fontWeight: 'bold',
               color: 'white',
               lineHeight: '1.8',
@@ -115,23 +117,18 @@ export default function VideoPage() {
           {/* カウントダウン */}
           {phase === 1 && (
             <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
+              textAlign: 'center',
+              animation: 'fadeIn 0.3s ease',
             }}>
               <p style={{
-                fontSize: '48px',
+                fontSize: '22px',
                 fontWeight: 'bold',
                 color: countdown <= 3 ? '#ef4444' : '#facc15',
                 transition: 'color 0.3s ease',
                 fontVariantNumeric: 'tabular-nums',
               }}>
-                {countdown}
+                Answer in {countdown}...
               </p>
-              <p style={{
-                fontSize: '18px',
-                color: 'rgba(255,255,255,0.5)',
-              }}>sec</p>
             </div>
           )}
         </div>
@@ -142,22 +139,23 @@ export default function VideoPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           justifyContent: 'center',
           gap: '16px',
           width: '100%',
-          height: '100%',
+          maxWidth: '400px',
           position: 'relative',
           zIndex: 10,
           animation: 'fadeIn 0.4s ease',
+          textAlign: 'center',
         }}>
           <p style={{
-            fontSize: '20px',
-            color: 'rgba(255,255,255,0.6)',
-            letterSpacing: '0.1em',
+            fontSize: '16px',
+            color: 'rgba(255,255,255,0.5)',
+            letterSpacing: '0.15em',
           }}>THE ANSWER IS</p>
           <p style={{
-            fontSize: '56px',
+            fontSize: '48px',
             fontWeight: 'bold',
             color: '#22d3ee',
             animation: 'scaleIn 0.4s ease',
@@ -171,28 +169,32 @@ export default function VideoPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
+          alignItems: 'center',
           gap: '16px',
           width: '100%',
+          maxWidth: '400px',
           position: 'relative',
           zIndex: 10,
           animation: 'fadeIn 0.4s ease',
         }}>
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(34,211,238,0.3)',
+            border: '1px solid rgba(34,211,238,0.2)',
             borderRadius: '20px',
             padding: '28px',
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
+            textAlign: 'center',
           }}>
-            <p style={{fontSize: '22px', fontWeight: 'bold', color: '#22d3ee', animation: 'fadeIn 0.4s ease 0s both'}}>Answer: 23 hours</p>
-            <br />
-            <p style={{fontSize: '20px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.3s both'}}>If it doubles every hour,</p>
-            <p style={{fontSize: '20px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.6s both'}}>then one hour before full</p>
-            <p style={{fontSize: '20px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.9s both'}}>it's half full.</p>
-            <br />
-            <p style={{fontSize: '20px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 1.2s both'}}>So it's 23 hours.</p>
+            <p style={{fontSize: '20px', fontWeight: 'bold', color: '#22d3ee', animation: 'fadeIn 0.4s ease 0s both'}}>Answer: 23 hours</p>
+            <div style={{height: '8px'}} />
+            <p style={{fontSize: '18px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.3s both'}}>If it doubles every hour,</p>
+            <p style={{fontSize: '18px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.6s both'}}>then one hour before full</p>
+            <p style={{fontSize: '18px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.9s both'}}>it's half full.</p>
+            <div style={{height: '8px'}} />
+            <p style={{fontSize: '18px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 1.2s both'}}>So it's 23 hours.</p>
           </div>
         </div>
       )}
@@ -202,20 +204,21 @@ export default function VideoPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           justifyContent: 'center',
           gap: '16px',
           width: '100%',
-          height: '100%',
+          maxWidth: '400px',
           position: 'relative',
           zIndex: 10,
           animation: 'fadeIn 0.4s ease',
+          textAlign: 'center',
         }}>
           <p style={{
-            fontSize: '32px',
+            fontSize: '22px',
             fontWeight: 'bold',
             color: 'white',
-            lineHeight: '1.4',
+            lineHeight: '1.6',
           }}>
             Want more?<br />
             <span style={{color: '#22d3ee'}}>Mathnique</span> — link in bio.<br />
