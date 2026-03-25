@@ -7,14 +7,24 @@ export default function VideoPage() {
   const [countdown, setCountdown] = useState(10)
   const [showHook, setShowHook] = useState(false)
   const [showQuestion, setShowQuestion] = useState(false)
+  const [showBlock1, setShowBlock1] = useState(false)
+  const [showBlock2, setShowBlock2] = useState(false)
+  const [showBlock3, setShowBlock3] = useState(false)
 
   useEffect(() => {
+    // 場面1
     setTimeout(() => setShowHook(true), 100)
-    setTimeout(() => setShowQuestion(true), 1000)
-    setTimeout(() => setPhase(1), 2000)
-    setTimeout(() => setPhase(2), 12000)
-    setTimeout(() => setPhase(3), 14000)
-    setTimeout(() => setPhase(4), 22000)
+    setTimeout(() => setShowQuestion(true), 1500)
+    setTimeout(() => setPhase(1), 2500)
+    // 場面2：解答
+    setTimeout(() => setPhase(2), 12500)
+    // 場面3：解説
+    setTimeout(() => setPhase(3), 14500)
+    setTimeout(() => setShowBlock1(true), 14600)
+    setTimeout(() => setShowBlock2(true), 15800)
+    setTimeout(() => setShowBlock3(true), 17000)
+    // 場面4：誘導
+    setTimeout(() => setPhase(4), 22500)
   }, [])
 
   useEffect(() => {
@@ -39,8 +49,11 @@ export default function VideoPage() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      padding: '24px',
+      justifyContent: 'flex-start',
+      paddingTop: '80px',
+      paddingBottom: '24px',
+      paddingLeft: '24px',
+      paddingRight: '24px',
       overflow: 'hidden',
       position: 'relative',
     }}>
@@ -48,7 +61,7 @@ export default function VideoPage() {
       {/* 背景グロー */}
       <div style={{
         position: 'absolute',
-        top: '50%',
+        top: '40%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: '400px',
@@ -59,7 +72,7 @@ export default function VideoPage() {
         pointerEvents: 'none',
       }} />
 
-      {/* 場面1・2・3：フック＋問題文＋カウントダウン */}
+      {/* 場面1：フック＋問題文＋カウントダウン */}
       {phase <= 1 && (
         <div style={{
           display: 'flex',
@@ -107,10 +120,13 @@ export default function VideoPage() {
               color: 'white',
               lineHeight: '1.8',
             }}>
-              Bacteria in a bottle double every hour.<br />
-              The bottle is full in 24 hours.<br />
+              Bacteria in a bottle<br />
+              double every hour.<br />
               <br />
-              <span style={{color: 'rgba(34,211,238,1)'}}>When was it half full?</span>
+              The bottle is full<br />
+              in 24 hours.<br />
+              <br />
+              When was it half full?
             </p>
           </div>
 
@@ -123,24 +139,24 @@ export default function VideoPage() {
               <p style={{
                 fontSize: '22px',
                 fontWeight: 'bold',
-                color: countdown <= 3 ? '#ef4444' : '#facc15',
-                transition: 'color 0.3s ease',
+                color: 'white',
                 fontVariantNumeric: 'tabular-nums',
               }}>
-                Answer in {countdown}...
+                Answer in <span style={{color: countdown <= 3 ? '#ef4444' : '#facc15'}}>{countdown}</span>...
               </p>
             </div>
           )}
         </div>
       )}
 
-      {/* 場面4：解答 */}
+      {/* 場面2：解答 */}
       {phase === 2 && (
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
+          paddingTop: '80px',
           gap: '16px',
           width: '100%',
           maxWidth: '400px',
@@ -150,9 +166,10 @@ export default function VideoPage() {
           textAlign: 'center',
         }}>
           <p style={{
-            fontSize: '16px',
-            color: 'rgba(255,255,255,0.5)',
+            fontSize: '18px',
+            color: 'white',
             letterSpacing: '0.15em',
+            fontWeight: 'bold',
           }}>THE ANSWER IS</p>
           <p style={{
             fontSize: '48px',
@@ -164,7 +181,7 @@ export default function VideoPage() {
         </div>
       )}
 
-      {/* 場面5：解説 */}
+      {/* 場面3：解説 */}
       {phase === 3 && (
         <div style={{
           display: 'flex',
@@ -175,8 +192,18 @@ export default function VideoPage() {
           maxWidth: '400px',
           position: 'relative',
           zIndex: 10,
-          animation: 'fadeIn 0.4s ease',
         }}>
+          {/* 上部に小さく問題文 */}
+          <p style={{
+            fontSize: '13px',
+            color: 'rgba(255,255,255,0.4)',
+            textAlign: 'center',
+            lineHeight: '1.6',
+          }}>
+            Bacteria double every hour. Full in 24h.<br />When was it half full?
+          </p>
+
+          {/* 解説ボックス */}
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.05)',
             border: '1px solid rgba(34,211,238,0.2)',
@@ -185,28 +212,52 @@ export default function VideoPage() {
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px',
+            gap: '16px',
             textAlign: 'center',
           }}>
-            <p style={{fontSize: '20px', fontWeight: 'bold', color: '#22d3ee', animation: 'fadeIn 0.4s ease 0s both'}}>Answer: 23 hours</p>
-            <div style={{height: '8px'}} />
-            <p style={{fontSize: '18px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.3s both'}}>If it doubles every hour,</p>
-            <p style={{fontSize: '18px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.6s both'}}>then one hour before full</p>
-            <p style={{fontSize: '18px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.9s both'}}>it's half full.</p>
-            <div style={{height: '8px'}} />
-            <p style={{fontSize: '18px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 1.2s both'}}>So it's 23 hours.</p>
+            {/* 塊1：Answer */}
+            <div style={{
+              opacity: showBlock1 ? 1 : 0,
+              transform: showBlock1 ? 'translateY(0)' : 'translateY(10px)',
+              transition: 'opacity 0.5s ease, transform 0.5s ease',
+            }}>
+              <p style={{fontSize: '20px', fontWeight: 'bold', color: '#22d3ee'}}>Answer: 23 hours</p>
+            </div>
+
+            {/* 塊2：理由 */}
+            <div style={{
+              opacity: showBlock2 ? 1 : 0,
+              transform: showBlock2 ? 'translateY(0)' : 'translateY(10px)',
+              transition: 'opacity 0.5s ease, transform 0.5s ease',
+            }}>
+              <p style={{fontSize: '18px', color: 'white', lineHeight: '1.8'}}>
+                If it doubles every hour,<br />
+                then one hour before full<br />
+                it's half full.
+              </p>
+            </div>
+
+            {/* 塊3：結論 */}
+            <div style={{
+              opacity: showBlock3 ? 1 : 0,
+              transform: showBlock3 ? 'translateY(0)' : 'translateY(10px)',
+              transition: 'opacity 0.5s ease, transform 0.5s ease',
+            }}>
+              <p style={{fontSize: '18px', color: 'white', lineHeight: '1.8'}}>So it's 23 hours.</p>
+            </div>
           </div>
         </div>
       )}
 
-      {/* 場面6：プロフィール誘導 */}
+      {/* 場面4：プロフィール誘導 */}
       {phase === 4 && (
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: '16px',
+          justifyContent: 'flex-start',
+          paddingTop: '100px',
+          gap: '20px',
           width: '100%',
           maxWidth: '400px',
           position: 'relative',
@@ -218,10 +269,11 @@ export default function VideoPage() {
             fontSize: '22px',
             fontWeight: 'bold',
             color: 'white',
-            lineHeight: '1.6',
+            lineHeight: '2',
           }}>
             Want more?<br />
-            <span style={{color: '#22d3ee'}}>Mathnique</span> — link in bio.<br />
+            <span style={{fontSize: '26px', color: '#22d3ee'}}>Mathnique</span>
+            <span style={{fontSize: '26px'}}> — link in bio.</span><br />
             Free to try. 1-minute challenges.
           </p>
         </div>
