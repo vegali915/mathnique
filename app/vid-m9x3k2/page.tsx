@@ -15,7 +15,7 @@ export default function VideoPage() {
     // 場面1
     setTimeout(() => setShowHook(true), 100)
     setTimeout(() => setShowQuestion(true), 1500)
-    setTimeout(() => setPhase(1), 2500)
+    setTimeout(() => setPhase(1), 6500)
     // 場面2：解答
     setTimeout(() => setPhase(2), 12500)
     // 場面3：解説
