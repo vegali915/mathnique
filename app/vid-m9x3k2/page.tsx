@@ -15,16 +15,16 @@ export default function VideoPage() {
     // 場面1
     setTimeout(() => setShowHook(true), 100)
     setTimeout(() => setShowQuestion(true), 1500)
-    setTimeout(() => setPhase(1), 6500)
+    setTimeout(() => setPhase(1), 4500)
     // 場面2：解答
-    setTimeout(() => setPhase(2), 12500)
+    setTimeout(() => setPhase(2), 14500)
     // 場面3：解説
-    setTimeout(() => setPhase(3), 14500)
-    setTimeout(() => setShowBlock1(true), 14600)
-    setTimeout(() => setShowBlock2(true), 15800)
-    setTimeout(() => setShowBlock3(true), 17000)
+    setTimeout(() => setPhase(3), 16500)
+    setTimeout(() => setShowBlock1(true), 16600)
+    setTimeout(() => setShowBlock2(true), 17800)
+    setTimeout(() => setShowBlock3(true), 19000)
     // 場面4：誘導
-    setTimeout(() => setPhase(4), 22500)
+    setTimeout(() => setPhase(4), 24500)
   }, [])
 
   useEffect(() => {
