@@ -9,17 +9,11 @@ export default function VideoPage() {
   const [showQuestion, setShowQuestion] = useState(false)
 
   useEffect(() => {
-    // 場面1：フック表示（0秒）
     setTimeout(() => setShowHook(true), 100)
-    // 場面2：問題文表示（1秒後）
     setTimeout(() => setShowQuestion(true), 1000)
-    // 場面3：カウントダウン開始（2秒後）
     setTimeout(() => setPhase(1), 2000)
-    // 場面4：解答表示（12秒後）
     setTimeout(() => setPhase(2), 12000)
-    // 場面5：解説表示（14秒後）
     setTimeout(() => setPhase(3), 14000)
-    // 場面6：プロフィール誘導（22秒後）
     setTimeout(() => setPhase(4), 22000)
   }, [])
 
@@ -44,11 +38,11 @@ export default function VideoPage() {
       backgroundColor: '#0A1628',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'flex-start',
-      paddingTop: '80px',
+      paddingTop: '60px',
       paddingBottom: '200px',
-      paddingLeft: '24px',
+      paddingLeft: '28px',
       paddingRight: '80px',
       overflow: 'hidden',
       position: 'relative',
@@ -73,7 +67,7 @@ export default function VideoPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '32px',
+          gap: '24px',
           width: '100%',
           position: 'relative',
           zIndex: 10,
@@ -86,7 +80,7 @@ export default function VideoPage() {
             transition: 'opacity 0.6s ease, transform 0.6s ease',
           }}>
             <p style={{
-              fontSize: '42px',
+              fontSize: '36px',
               fontWeight: 'bold',
               color: 'white',
               lineHeight: '1.2',
@@ -103,16 +97,17 @@ export default function VideoPage() {
             backgroundColor: 'rgba(255,255,255,0.05)',
             border: '1px solid rgba(34,211,238,0.3)',
             borderRadius: '20px',
-            padding: '28px',
+            padding: '24px',
           }}>
             <p style={{
-              fontSize: '26px',
+              fontSize: '20px',
               fontWeight: 'bold',
               color: 'white',
-              lineHeight: '1.6',
+              lineHeight: '1.8',
             }}>
-              Bacteria in a bottle<br />double every hour.<br /><br />
-              The bottle is full<br />in 24 hours.<br /><br />
+              Bacteria in a bottle double every hour.<br />
+              The bottle is full in 24 hours.<br />
+              <br />
               <span style={{color: 'rgba(34,211,238,1)'}}>When was it half full?</span>
             </p>
           </div>
@@ -147,9 +142,9 @@ export default function VideoPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
-          gap: '24px',
+          gap: '16px',
           width: '100%',
           height: '100%',
           position: 'relative',
@@ -157,15 +152,16 @@ export default function VideoPage() {
           animation: 'fadeIn 0.4s ease',
         }}>
           <p style={{
-            fontSize: '24px',
+            fontSize: '20px',
             color: 'rgba(255,255,255,0.6)',
             letterSpacing: '0.1em',
           }}>THE ANSWER IS</p>
           <p style={{
-            fontSize: '72px',
+            fontSize: '56px',
             fontWeight: 'bold',
             color: '#22d3ee',
             animation: 'scaleIn 0.4s ease',
+            whiteSpace: 'nowrap',
           }}>23 hours</p>
         </div>
       )}
@@ -175,18 +171,12 @@ export default function VideoPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '20px',
+          gap: '16px',
           width: '100%',
           position: 'relative',
           zIndex: 10,
           animation: 'fadeIn 0.4s ease',
         }}>
-          <p style={{
-            fontSize: '22px',
-            color: '#22d3ee',
-            fontWeight: 'bold',
-            letterSpacing: '0.05em',
-          }}>Why?</p>
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.05)',
             border: '1px solid rgba(34,211,238,0.3)',
@@ -194,21 +184,15 @@ export default function VideoPage() {
             padding: '28px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '16px',
+            gap: '8px',
           }}>
-            {[
-              'If it doubles every hour,',
-              'then one hour before full',
-              "it's half full.",
-              'So it\'s 23 hours.',
-            ].map((line, i) => (
-              <p key={i} style={{
-                fontSize: '24px',
-                color: 'white',
-                lineHeight: '1.5',
-                animation: `fadeIn 0.4s ease ${i * 0.3}s both`,
-              }}>{line}</p>
-            ))}
+            <p style={{fontSize: '22px', fontWeight: 'bold', color: '#22d3ee', animation: 'fadeIn 0.4s ease 0s both'}}>Answer: 23 hours</p>
+            <br />
+            <p style={{fontSize: '20px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.3s both'}}>If it doubles every hour,</p>
+            <p style={{fontSize: '20px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.6s both'}}>then one hour before full</p>
+            <p style={{fontSize: '20px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 0.9s both'}}>it's half full.</p>
+            <br />
+            <p style={{fontSize: '20px', color: 'white', lineHeight: '1.6', animation: 'fadeIn 0.4s ease 1.2s both'}}>So it's 23 hours.</p>
           </div>
         </div>
       )}
@@ -218,9 +202,9 @@ export default function VideoPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
-          gap: '24px',
+          gap: '16px',
           width: '100%',
           height: '100%',
           position: 'relative',
@@ -231,17 +215,11 @@ export default function VideoPage() {
             fontSize: '32px',
             fontWeight: 'bold',
             color: 'white',
-            textAlign: 'center',
             lineHeight: '1.4',
           }}>
-            Think you can<br />beat <span style={{color: '#facc15'}}>90%</span>?
-          </p>
-          <p style={{
-            fontSize: '20px',
-            color: 'rgba(34,211,238,0.9)',
-            textAlign: 'center',
-          }}>
-            🔗 Link in bio → Mathnique
+            Want more?<br />
+            <span style={{color: '#22d3ee'}}>Mathnique</span> — link in bio.<br />
+            Free to try. 1-minute challenges.
           </p>
         </div>
       )}
