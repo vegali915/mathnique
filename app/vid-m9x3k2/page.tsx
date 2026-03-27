@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 export default function VideoPage() {
   const [phase, setPhase] = useState(0)
+  const [showAnswer, setShowAnswer] = useState(false)
   const [countdown, setCountdown] = useState(10)
   const [showHook, setShowHook] = useState(false)
   const [showQuestion, setShowQuestion] = useState(false)
@@ -18,13 +19,15 @@ export default function VideoPage() {
     setTimeout(() => setPhase(1), 4500)
     // 場面2：解答
     setTimeout(() => setPhase(2), 14500)
+    setTimeout(() => setShowAnswer(true), 15500)  // 1秒後に答え表示
     // 場面3：解説
-    setTimeout(() => setPhase(3), 16500)
-    setTimeout(() => setShowBlock1(true), 16600)
-    setTimeout(() => setShowBlock2(true), 17800)
-    setTimeout(() => setShowBlock3(true), 19000)
+    setTimeout(() => setPhase(3), 17500)
+    setTimeout(() => setShowBlock1(true), 17600)
+    setTimeout(() => setShowBlock2(true), 18800)
+    setTimeout(() => setShowBlock3(true), 20000)
     // 場面4：誘導
-    setTimeout(() => setPhase(4), 24500)
+    setTimeout(() => setPhase(4), 25000)
+    setTimeout(() => setPhase(5), 30000)          // 背景のみ（10秒）
   }, [])
 
   useEffect(() => {
@@ -171,16 +174,17 @@ export default function VideoPage() {
             letterSpacing: '0.15em',
             fontWeight: 'bold',
           }}>THE ANSWER IS</p>
-          <p style={{
-            fontSize: '48px',
-            fontWeight: 'bold',
-            color: '#22d3ee',
-            animation: 'scaleIn 0.4s ease',
-            whiteSpace: 'nowrap',
-          }}>23 hours</p>
+{showAnswer && (
+            <p style={{
+              fontSize: '48px',
+              fontWeight: 'bold',
+              color: '#22d3ee',
+              animation: 'scaleIn 0.4s ease',
+              whiteSpace: 'nowrap',
+            }}>23 hours</p>
+          )}
         </div>
       )}
-
       {/* 場面3：解説 */}
       {phase === 3 && (
         <div style={{
@@ -278,6 +282,11 @@ export default function VideoPage() {
           </p>
         </div>
       )}
+
+      {/* 場面5：背景のみ */}
+{phase === 5 && (
+  <div style={{width: '100%', height: '100%'}} />
+)}
 
       <style>{`
         @keyframes fadeIn {
