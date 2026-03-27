@@ -277,7 +277,7 @@ export default function VideoPage() {
           }}>
             Want more?<br />
             <span style={{fontSize: '26px', color: '#22d3ee'}}>Mathnique</span>
-            <span style={{fontSize: '26px'}}> — link in bio.</span><br />
+            <span style={{fontSize: '26px'}}> — link in bio</span><br />
             Free to try. 1-minute challenges.
           </p>
         </div>
