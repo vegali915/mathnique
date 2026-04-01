@@ -185,7 +185,7 @@ export default function VideoPage() {
           )}
         </div>
       )}
-      {/* 場面3：解説 */}
+{/* 場面3：解説 */}
       {phase === 3 && (
         <div style={{
           display: 'flex',
@@ -196,6 +196,7 @@ export default function VideoPage() {
           maxWidth: '400px',
           position: 'relative',
           zIndex: 10,
+          paddingTop: '40px',
         }}>
           {/* 上部に小さく問題文 */}
           <p style={{
@@ -206,7 +207,6 @@ export default function VideoPage() {
           }}>
             Bacteria double every hour. Full in 24h.<br />When was it half full?
           </p>
-
           {/* 解説ボックス */}
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.05)',
