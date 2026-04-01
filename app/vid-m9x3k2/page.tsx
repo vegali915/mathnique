@@ -253,14 +253,14 @@ export default function VideoPage() {
         </div>
       )}
 
-      {/* 場面4：プロフィール誘導 */}
+{/* 場面4：プロフィール誘導 */}
       {phase === 4 && (
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          paddingTop: '100px',
+          paddingTop: '120px',
           gap: '20px',
           width: '100%',
           maxWidth: '400px',
@@ -270,19 +270,18 @@ export default function VideoPage() {
           textAlign: 'center',
         }}>
           <p style={{
-            fontSize: '22px',
+            fontSize: '20px',
             fontWeight: 'bold',
             color: 'white',
             lineHeight: '2',
           }}>
             Want more?<br />
-            <span style={{fontSize: '26px', color: '#22d3ee'}}>Mathnique</span>
-            <span style={{fontSize: '26px'}}> — link in bio</span><br />
-            Free to try. 1-minute challenges.
+            <span style={{fontSize: '24px', color: '#22d3ee'}}>Mathnique</span>
+            <span style={{fontSize: '24px'}}> — link in bio</span><br />
+            <span style={{fontSize: '16px'}}>Free to try. 1-minute challenges.</span>
           </p>
         </div>
       )}
-
       {/* 場面5：背景のみ */}
 {phase === 5 && (
   <div style={{width: '100%', height: '100%'}} />
