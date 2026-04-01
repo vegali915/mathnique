@@ -75,7 +75,7 @@ export default function VideoPage() {
         pointerEvents: 'none',
       }} />
 
-      {/* 場面1：フック＋問題文＋カウントダウン */}
+{/* 場面1：フック＋問題文＋カウントダウン */}
       {phase <= 1 && (
         <div style={{
           display: 'flex',
@@ -86,8 +86,8 @@ export default function VideoPage() {
           maxWidth: '400px',
           position: 'relative',
           zIndex: 10,
+          marginTop: '-40px',
         }}>
-
           {/* フック */}
           <div style={{
             opacity: showHook ? 1 : 0,
