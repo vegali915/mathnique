@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import MathBackground from "./components/MathBackground"
+// import MathBackground from "./components/MathBackground"
 import { getTodayPlayInfo, recordPlay, canPlay } from '../lib/playCount'
 import { supabase } from '../lib/supabase'
 import { getSubscriptionStatus } from '../lib/subscription'
@@ -22,7 +22,6 @@ export default function Home() {
     loadPlayInfo()
     loadUser()
   }, [])
-
 
   async function loadUser() {
     const { data: { session } } = await supabase.auth.getSession()
@@ -57,8 +56,8 @@ export default function Home() {
   ]
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-      <MathBackground />
+    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden" style={{background: 'linear-gradient(135deg, #0A1628 0%, #0d1f3c 50%, #0A1628 100%)'}}>
+      {/* <MathBackground /> */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
@@ -74,10 +73,9 @@ export default function Home() {
         </button>
       </div>
 
-{/* 右上：ログイン/アカウントボタン＋ミュートボタン */}
+      {/* 右上：ログイン/アカウントボタン＋ミュートボタン */}
       <div style={{position: 'fixed', top: '24px', right: '24px', zIndex: 20}} className="flex flex-col items-end gap-2">
         {user ? (
-
           <button
             onClick={() => router.push('/account')}
             className="text-cyan-400 text-sm border border-cyan-400/30 px-4 py-2 rounded-full hover:bg-cyan-400/10 transition"
@@ -91,11 +89,11 @@ export default function Home() {
           >
             Login
           </button>
-)}
+        )}
       </div>
+
       {/* メインコンテンツ */}
       <div className="relative z-10 flex flex-col items-center gap-8">
-
         {/* ロゴ */}
         <div className="text-center">
           <h1 className="text-5xl font-bold text-white tracking-wider">
@@ -157,7 +155,6 @@ export default function Home() {
               ✕
             </button>
 
-            {/* Daily Quest */}
             <button
               onClick={() => { setMenuOpen(false); router.push('/daily-quest') }}
               className="w-full py-3 font-bold rounded-xl border transition"
@@ -166,7 +163,6 @@ export default function Home() {
               🎯 Daily Quest
             </button>
 
-            {/* 未課金ユーザーのみUpgrade to Proを表示 */}
             {!isPro && (
               <button
                 onClick={() => { setMenuOpen(false); router.push('/upgrade') }}
@@ -176,7 +172,6 @@ export default function Home() {
               </button>
             )}
 
-            {/* Practice Mode アコーディオン */}
             <div className="flex flex-col gap-2">
               <button
                 onClick={() => {
@@ -212,7 +207,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Expert Mode */}
             <button
               onClick={() => { setMenuOpen(false); isPro ? router.push('/countdown?mode=expert') : router.push('/upgrade') }}
               className={`w-full py-3 font-bold rounded-xl border transition ${isPro ? 'bg-yellow-400/20 text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/30' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'}`}
