@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-// import MathBackground from "./components/MathBackground"
+import MathBackground from "./components/MathBackground"
 import { getTodayPlayInfo, recordPlay, canPlay } from '../lib/playCount'
 import { supabase } from '../lib/supabase'
 import { getSubscriptionStatus } from '../lib/subscription'
@@ -56,8 +56,8 @@ export default function Home() {
   ]
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden" style={{background: 'linear-gradient(135deg, #0A1628 0%, #0d1f3c 50%, #0A1628 100%)'}}>
-      {/* <MathBackground /> */}
+    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+      <MathBackground />
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
