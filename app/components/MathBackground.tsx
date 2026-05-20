@@ -32,7 +32,7 @@ export default function MathBackground() {
       ctx.fillStyle = 'rgba(10, 22, 40, 0.2)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
       particles.forEach(p => {
-        p.z -= isMobile ? 2 : 4
+        p.z -= isMobile ? 4 : 4
         if (p.z <= 0) {
           p.x = Math.random() * canvas.width
           p.y = Math.random() * canvas.height
